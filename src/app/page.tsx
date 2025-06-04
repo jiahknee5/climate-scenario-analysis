@@ -28,12 +28,24 @@ export default function Home() {
               Advanced stress testing and portfolio risk assessment for regulatory compliance and strategic decision making
             </p>
             
-            {/* Clean Compliance Indicators */}
-            <div className="flex justify-center flex-wrap gap-6 animate-fade-in text-white/80 text-sm">
-              <span>CCAR Compliant</span>
-              <span>Basel III</span>
-              <span>Fed Scenarios</span>
-              <span>IFRS 9</span>
+            {/* Executive Compliance Indicators */}
+            <div className="flex justify-center flex-wrap gap-8 animate-fade-in mt-8">
+              <div className="flex items-center text-white/90 text-sm font-light">
+                <div className="w-2 h-2 rounded-full bg-teal-400 mr-3"></div>
+                CCAR Compliant
+              </div>
+              <div className="flex items-center text-white/90 text-sm font-light">
+                <div className="w-2 h-2 rounded-full bg-teal-400 mr-3"></div>
+                Basel III
+              </div>
+              <div className="flex items-center text-white/90 text-sm font-light">
+                <div className="w-2 h-2 rounded-full bg-teal-400 mr-3"></div>
+                Fed Scenarios
+              </div>
+              <div className="flex items-center text-white/90 text-sm font-light">
+                <div className="w-2 h-2 rounded-full bg-teal-400 mr-3"></div>
+                IFRS 9
+              </div>
             </div>
           </div>
         </div>

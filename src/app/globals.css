@@ -1,45 +1,47 @@
 @import "tailwindcss";
 
-/* High Contrast Readable Design System */
+/* McKinsey Executive Presentation Design System */
 :root {
-  /* High Contrast Color Palette */
-  --primary-900: #1a365d;   /* Deep navy blue */
-  --primary-800: #2c5282;   /* Navy blue */
-  --primary-700: #2d3748;   /* Dark slate */
-  --primary-600: #4a5568;   /* Medium slate */
-  --primary-500: #718096;   /* Light slate */
-  --primary-400: #a0aec0;   /* Very light slate */
-  --primary-300: #cbd5e0;   /* Light blue grey */
-  --primary-200: #e2e8f0;   /* Very light blue grey */
-  --primary-100: #f7fafc;   /* Off white blue */
-  --primary-50: #ffffff;    /* Pure white */
-
-  /* Text Colors - High Contrast */
-  --text-primary: #1a202c;    /* Dark charcoal - excellent readability */
-  --text-secondary: #2d3748;  /* Medium charcoal */
-  --text-muted: #4a5568;      /* Muted but still readable */
-  --text-light: #718096;      /* Light but readable on white */
-  --text-white: #ffffff;      /* Pure white */
-
-  /* Background Colors */
-  --bg-primary: #ffffff;      /* Pure white */
-  --bg-secondary: #f8fafc;    /* Subtle off-white */
-  --bg-tertiary: #edf2f7;     /* Light grey */
-  --bg-accent: #e6fffa;       /* Very light teal accent */
-  --bg-warning: #fffaf0;      /* Very light orange */
-  --bg-error: #fed7d7;        /* Very light red */
-
-  /* Border Colors */
-  --border-primary: #e2e8f0;  /* Light grey border */
-  --border-secondary: #cbd5e0; /* Medium grey border */
-  --border-accent: #38b2ac;   /* Teal accent */
-
-  /* Accent Colors - High Contrast */
-  --accent-primary: #2b6cb0;  /* Strong blue */
-  --accent-secondary: #38b2ac; /* Teal */
-  --accent-success: #38a169;  /* Green */
-  --accent-warning: #d69e2e;  /* Orange */
-  --accent-error: #e53e3e;    /* Red */
+  /* McKinsey Primary Colors - Sophisticated Navy & White */
+  --mckinsey-navy: #002855;      /* Deep McKinsey navy */
+  --mckinsey-navy-light: #1e4470; /* Lighter navy */
+  --mckinsey-navy-dark: #001633;  /* Darker navy */
+  --mckinsey-blue: #0066cc;      /* McKinsey blue */
+  --mckinsey-blue-light: #4d9fff; /* Light blue */
+  
+  /* Executive Greys - Sophisticated and Clean */
+  --executive-charcoal: #2c3e50;  /* Dark charcoal for headings */
+  --executive-slate: #34495e;     /* Medium slate for body text */
+  --executive-grey: #7f8c8d;      /* Light grey for secondary text */
+  --executive-silver: #bdc3c7;    /* Silver for borders */
+  --executive-platinum: #ecf0f1;  /* Platinum for backgrounds */
+  
+  /* Presentation Backgrounds */
+  --bg-presentation: #ffffff;     /* Pure white for slides */
+  --bg-slide: #fafbfc;           /* Subtle slide background */
+  --bg-section: #f8f9fa;         /* Section backgrounds */
+  --bg-highlight: #e8f4fd;       /* Highlight backgrounds */
+  
+  /* McKinsey Accent Colors - Strategic and Impactful */
+  --accent-teal: #1abc9c;        /* McKinsey teal */
+  --accent-emerald: #27ae60;     /* Success/growth */
+  --accent-amber: #f39c12;       /* Warning/attention */
+  --accent-crimson: #e74c3c;     /* Risk/critical */
+  --accent-violet: #9b59b6;      /* Innovation/strategy */
+  
+  /* Text Hierarchy - Executive Presentation */
+  --text-primary: var(--executive-charcoal);    /* Headlines */
+  --text-secondary: var(--executive-slate);     /* Body text */
+  --text-muted: var(--executive-grey);          /* Supporting text */
+  --text-light: #95a5a6;                        /* Captions */
+  --text-white: #ffffff;                        /* White text */
+  --text-navy: var(--mckinsey-navy);            /* Navy text */
+  
+  /* Professional Borders and Lines */
+  --border-subtle: #dee2e6;      /* Subtle borders */
+  --border-medium: #adb5bd;      /* Medium borders */
+  --border-strong: var(--executive-silver); /* Strong borders */
+  --border-accent: var(--accent-teal);       /* Accent borders */
 
   /* Surface System */
   --surface-primary: var(--bg-primary);
@@ -133,55 +135,54 @@ body {
   font-family: var(--font-family-primary);
   font-size: var(--text-base);
   line-height: var(--leading-normal);
-  color: var(--text-primary);
-  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  background-color: var(--bg-slide);
   margin: 0;
   padding: 0;
 }
 
-/* High Contrast Typography */
+/* McKinsey Executive Typography */
 .display-1 {
   font-size: var(--text-6xl);
-  font-weight: 800;
+  font-weight: 300;
   line-height: var(--leading-tight);
-  letter-spacing: -0.025em;
-  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  color: var(--mckinsey-navy);
 }
 
 .display-2 {
   font-size: var(--text-5xl);
-  font-weight: 700;
+  font-weight: 300;
   line-height: var(--leading-tight);
-  letter-spacing: -0.02em;
-  color: var(--text-primary);
+  letter-spacing: -0.015em;
+  color: var(--mckinsey-navy);
 }
 
 .headline-1 {
   font-size: var(--text-4xl);
-  font-weight: 700;
+  font-weight: 300;
   line-height: var(--leading-tight);
-  letter-spacing: -0.015em;
-  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  color: var(--mckinsey-navy);
 }
 
 .headline-2 {
   font-size: var(--text-3xl);
-  font-weight: 600;
+  font-weight: 400;
   line-height: var(--leading-snug);
-  letter-spacing: -0.01em;
   color: var(--text-primary);
 }
 
 .headline-3 {
   font-size: var(--text-2xl);
-  font-weight: 600;
+  font-weight: 400;
   line-height: var(--leading-snug);
   color: var(--text-primary);
 }
 
 .headline-4 {
   font-size: var(--text-xl);
-  font-weight: 600;
+  font-weight: 500;
   line-height: var(--leading-snug);
   color: var(--text-primary);
 }
@@ -190,27 +191,30 @@ body {
   font-size: var(--text-lg);
   line-height: var(--leading-relaxed);
   color: var(--text-secondary);
+  font-weight: 300;
 }
 
 .body-base {
   font-size: var(--text-base);
-  line-height: var(--leading-normal);
+  line-height: var(--leading-relaxed);
   color: var(--text-secondary);
+  font-weight: 300;
 }
 
 .body-small {
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
   color: var(--text-muted);
+  font-weight: 300;
 }
 
 .caption {
   font-size: var(--text-xs);
   line-height: var(--leading-normal);
-  color: var(--text-muted);
+  color: var(--text-light);
   text-transform: uppercase;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-weight: 500;
+  letter-spacing: 0.1em;
 }
 
 /* Layout Components */
@@ -238,30 +242,47 @@ body {
   padding: var(--space-24) 0;
 }
 
-/* High Contrast Card System */
+/* McKinsey Executive Card System */
 .card {
-  background: var(--surface-primary);
-  border-radius: var(--radius-lg);
-  border: 2px solid var(--border-primary);
-  padding: var(--space-6);
+  background: var(--bg-presentation);
+  border-radius: var(--radius-sm);
+  border: none;
+  padding: var(--space-8);
   transition: all var(--transition-base);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px 0 rgba(0, 40, 85, 0.08);
 }
 
 .card:hover {
-  border-color: var(--border-secondary);
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px 0 rgba(0, 40, 85, 0.12);
 }
 
 .card-interactive {
   cursor: pointer;
   transition: all var(--transition-base);
+  position: relative;
+}
+
+.card-interactive::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--accent-teal);
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.card-interactive:hover::before {
+  opacity: 1;
 }
 
 .card-interactive:hover {
-  border-color: var(--accent-primary);
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 12px 32px 0 rgba(0, 40, 85, 0.15);
 }
 
 .card-header {
@@ -434,39 +455,49 @@ body {
   font-size: var(--text-base);
 }
 
-/* High Contrast Navigation */
+/* McKinsey Executive Navigation */
 .nav-tabs {
   display: flex;
-  background: var(--surface-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-2);
-  border: 2px solid var(--border-primary);
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  background: var(--bg-presentation);
+  border-radius: var(--radius-md);
+  padding: var(--space-1);
+  box-shadow: 0 2px 8px 0 rgba(0, 40, 85, 0.08);
+  border: 1px solid var(--border-subtle);
 }
 
 .nav-tab {
-  padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius-md);
-  font-weight: 600;
+  padding: var(--space-4) var(--space-6);
+  border-radius: var(--radius-sm);
+  font-weight: 400;
   font-size: var(--text-sm);
   color: var(--text-muted);
   text-decoration: none;
-  transition: all var(--transition-fast);
+  transition: all var(--transition-base);
   position: relative;
-  border: 1px solid transparent;
+  background: transparent;
 }
 
 .nav-tab:hover {
   color: var(--text-primary);
-  background: var(--bg-tertiary);
-  border-color: var(--border-primary);
+  background: var(--bg-section);
 }
 
 .nav-tab.active {
-  color: var(--accent-primary);
-  background: var(--bg-accent);
-  border-color: var(--accent-secondary);
-  font-weight: 700;
+  color: var(--mckinsey-navy);
+  background: var(--bg-highlight);
+  font-weight: 500;
+  position: relative;
+}
+
+.nav-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  height: 2px;
+  background: var(--accent-teal);
 }
 
 /* Clean Data Visualization */
@@ -551,12 +582,28 @@ body {
   border: 1px solid var(--border-light);
 }
 
-/* High Contrast Hero Section */
+/* McKinsey Executive Hero Section */
 .hero {
-  background: linear-gradient(135deg, var(--primary-900) 0%, var(--primary-800) 100%);
+  background: linear-gradient(135deg, var(--mckinsey-navy) 0%, var(--mckinsey-navy-light) 100%);
   color: var(--text-white);
   position: relative;
-  border-bottom: 4px solid var(--accent-secondary);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, transparent 30%, rgba(26, 188, 156, 0.1) 50%, transparent 70%);
+  animation: shimmer 8s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 }
 
 .hero-content {
@@ -761,7 +808,18 @@ body {
 .mckinsey-header {
   margin-bottom: var(--space-8);
   padding-bottom: var(--space-6);
-  border-bottom: 3px solid var(--accent-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+}
+
+.mckinsey-header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 80px;
+  height: 3px;
+  background: var(--accent-teal);
 }
 
 .mckinsey-title-section {
