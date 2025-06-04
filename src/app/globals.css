@@ -135,31 +135,63 @@ html {
 }
 
 body {
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: var(--text-base);
-  line-height: var(--leading-normal);
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
   color: #000000;
-  background-color: var(--bg-slide);
+  background-color: #fafbfc;
   margin: 0;
   padding: 0;
 }
 
-/* Default text color for all elements */
-* {
+/* Safari-compatible font and color rules */
+html {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #000000;
 }
 
-/* Ensure font variables are applied to all text elements */
+/* Default text color for all elements - Safari compatible */
 *, *::before, *::after {
+  color: #000000;
   font-family: inherit;
 }
 
-h1, h2, h3, h4, h5, h6, p, div, span, button, input, textarea, select {
-  font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+/* Explicit font declarations for Safari */
+h1, h2, h3, h4, h5, h6, p, div, span, button, input, textarea, select, label, a {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  color: #000000 !important;
 }
 
 code, pre, .font-mono {
-  font-family: var(--font-jetbrains-mono), 'Fira Code', 'Consolas', monospace;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
+}
+
+/* Safari WebKit font rendering */
+body, html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Safari-specific catch-all rules */
+@supports (-webkit-appearance: none) {
+  * {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    color: #000000 !important;
+  }
+  
+  body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    color: #000000 !important;
+  }
+}
+
+/* WebKit specific font loading */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+  body, h1, h2, h3, h4, h5, h6, p, div, span, button, input, textarea, select, label, a {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+    color: #000000 !important;
+  }
 }
 
 /* CRITICAL: Force black text on white/light backgrounds */
@@ -177,14 +209,27 @@ code, pre, .font-mono {
   color: #000000 !important;
 }
 
-/* Force black text on card and container elements */
-.card, .card *,
-.container, .container *,
-.executive-card, .executive-card *,
-.mckinsey-slide, .mckinsey-slide *,
-.alert, .alert *,
-.nav-tabs, .nav-tabs * {
+/* Safari-specific: Force black text on card and container elements */
+.card,
+.card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
+.card p, .card div, .card span, .card button, .card input, .card textarea, .card select, .card label, .card a,
+.container,
+.container h1, .container h2, .container h3, .container h4, .container h5, .container h6,
+.container p, .container div, .container span, .container button, .container input, .container textarea, .container select, .container label, .container a,
+.executive-card,
+.executive-card h1, .executive-card h2, .executive-card h3, .executive-card h4, .executive-card h5, .executive-card h6,
+.executive-card p, .executive-card div, .executive-card span, .executive-card button, .executive-card input, .executive-card textarea, .executive-card select, .executive-card label, .executive-card a,
+.mckinsey-slide,
+.mckinsey-slide h1, .mckinsey-slide h2, .mckinsey-slide h3, .mckinsey-slide h4, .mckinsey-slide h5, .mckinsey-slide h6,
+.mckinsey-slide p, .mckinsey-slide div, .mckinsey-slide span, .mckinsey-slide button, .mckinsey-slide input, .mckinsey-slide textarea, .mckinsey-slide select, .mckinsey-slide label, .mckinsey-slide a,
+.alert,
+.alert h1, .alert h2, .alert h3, .alert h4, .alert h5, .alert h6,
+.alert p, .alert div, .alert span, .alert button, .alert input, .alert textarea, .alert select, .alert label, .alert a,
+.nav-tabs,
+.nav-tabs h1, .nav-tabs h2, .nav-tabs h3, .nav-tabs h4, .nav-tabs h5, .nav-tabs h6,
+.nav-tabs p, .nav-tabs div, .nav-tabs span, .nav-tabs button, .nav-tabs input, .nav-tabs textarea, .nav-tabs select, .nav-tabs label, .nav-tabs a {
   color: #000000 !important;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
 }
 
 /* White text ONLY on dark backgrounds */
