@@ -194,21 +194,21 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
         <h4 className="text-lg font-semibold mb-4">{reportType.toUpperCase()} Executive Summary</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">
+            <div className="text-2xl font-bold text-blue-700">
               ${regulatoryMetrics ? (regulatoryMetrics.totalExposure / 1000000000).toFixed(1) : '0'}B
             </div>
             <div className="text-sm text-black">Total Exposure</div>
           </div>
           
           <div className="text-center">
-            <div className="text-2xl font-bold text-red-600">
+            <div className="text-2xl font-bold text-red-700">
               {regulatoryMetrics ? (regulatoryMetrics.ccarStress * 100).toFixed(2) : '0.00'}%
             </div>
             <div className="text-sm text-black">CCAR Stress Rate</div>
           </div>
           
           <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-2xl font-bold text-green-700">
               {regulatoryMetrics ? (regulatoryMetrics.stressedCapitalRatio * 100).toFixed(1) : '0.0'}%
             </div>
             <div className="text-sm text-black">Stressed Tier 1 Ratio</div>
@@ -216,7 +216,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
           
           <div className="text-center">
             <div className={`text-2xl font-bold ${
-              regulatoryMetrics && regulatoryMetrics.stressedCapitalRatio > 0.045 ? 'text-green-600' : 'text-red-600'
+              regulatoryMetrics && regulatoryMetrics.stressedCapitalRatio > 0.045 ? 'text-green-700' : 'text-red-700'
             }`}>
               {regulatoryMetrics && regulatoryMetrics.stressedCapitalRatio > 0.045 ? 'PASS' : 'FAIL'}
             </div>
@@ -263,7 +263,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
                 <div className="text-right">
                   <div className="text-lg font-bold">{item.value.toFixed(1)}%</div>
                   <div className={`text-xs ${
-                    item.status === 'compliant' ? 'text-green-600' : 'text-red-600'
+                    item.status === 'compliant' ? 'text-green-700' : 'text-red-700'
                   }`}>
                     {item.status.toUpperCase()}
                   </div>

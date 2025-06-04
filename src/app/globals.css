@@ -1011,6 +1011,23 @@ body {
   color: var(--text-secondary) !important;
 }
 
+/* Background-Based Text Color Rules */
+/* Dark backgrounds need white text */
+[style*="background: linear-gradient"][style*="navy"],
+[style*="background: linear-gradient"][style*="dark"],
+[style*="background-color: var(--mckinsey-navy)"],
+.bg-slate-700, .bg-slate-800, .bg-slate-900,
+.bg-gray-700, .bg-gray-800, .bg-gray-900,
+.hero {
+  color: var(--text-white) !important;
+}
+
+/* Light backgrounds need dark text */
+.bg-white, .bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100,
+.card, .alert, .nav-tabs {
+  color: var(--text-primary) !important;
+}
+
 /* Responsive McKinsey Layout */
 @media (max-width: 1024px) {
   .mckinsey-content {
