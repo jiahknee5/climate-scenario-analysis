@@ -204,7 +204,7 @@ export default function AdvancedAnalytics({ portfolio, scenarios }: AdvancedAnal
                     { param: 'Insurance Cost Multiplier', impact: 'Low', elasticity: 0.4 },
                     { param: 'Correlation Factor', impact: 'Low', elasticity: 0.3 },
                   ].map((item, index) => (
-                    <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                    <div key={index} className="flex justify-between items-center p-3 bg-white border border-gray-200 rounded">
                       <span className="font-medium">{item.param}</span>
                       <div className="text-right">
                         <div className={`text-sm font-medium ${
@@ -231,7 +231,7 @@ export default function AdvancedAnalytics({ portfolio, scenarios }: AdvancedAnal
                       sum + loan.outstanding_balance * 0.005 * stressMultiplier, 0)
                     
                     return (
-                      <div key={scenario.id} className="p-3 bg-gray-50 rounded">
+                      <div key={scenario.id} className="p-3 bg-white border border-gray-200 rounded">
                         <div className="flex justify-between items-center">
                           <span className="font-medium">{scenario.name}</span>
                           <span className="font-bold">
@@ -297,7 +297,7 @@ export default function AdvancedAnalytics({ portfolio, scenarios }: AdvancedAnal
                     : 0
                   
                   return (
-                    <div key={type} className="p-4 bg-gray-50 rounded">
+                    <div key={type} className="p-4 bg-white border border-gray-200 rounded">
                       <h4 className="font-medium mb-2">{type} Portfolio</h4>
                       <div className="grid grid-cols-2 gap-2 text-sm">
                         <div>Loans: {typeLoans.length}</div>

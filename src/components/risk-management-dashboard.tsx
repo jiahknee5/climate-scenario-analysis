@@ -256,7 +256,7 @@ export default function RiskManagementDashboard({ portfolio, scenarios }: RiskMa
           </div>
         </div>
         
-        <div className="mt-4 p-4 bg-slate-50 rounded">
+        <div className="mt-4 p-4 bg-white border border-gray-200 rounded">
           <h4 className="font-medium text-slate-700 mb-2">Key Risk Insights</h4>
           <ul className="text-sm text-slate-600 space-y-1">
             <li>• VaR increases by {((Math.max(...varAnalysis.map(v => v.var99)) / Math.min(...varAnalysis.map(v => v.var99))) - 1) * 100}% from best to worst scenario</li>

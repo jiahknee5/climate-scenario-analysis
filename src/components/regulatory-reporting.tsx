@@ -251,7 +251,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
         <h4 className="text-lg font-semibold mb-4">Capital Adequacy Assessment</h4>
         <div className="space-y-4">
           {capitalAdequacyData.map((item, index) => (
-            <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded">
+            <div key={index} className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded">
               <div className="flex-1">
                 <div className="font-medium">{item.metric}</div>
                 <div className="text-sm text-black">
@@ -269,7 +269,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
                   </div>
                 </div>
                 
-                <div className="w-32 bg-gray-200 rounded-full h-3">
+                <div className="w-32 bg-gray-100 rounded-full h-3">
                   <div 
                     className={`h-3 rounded-full ${
                       item.value >= (item.requirement + item.buffer) ? 'bg-green-500' :
@@ -332,7 +332,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
       </div>
 
       {/* Compliance Status */}
-      <div className="bg-gray-50 border rounded-lg p-6">
+      <div className="bg-white border border-gray-200 border rounded-lg p-6">
         <h4 className="font-medium mb-3">Regulatory Compliance Status</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
