@@ -50,8 +50,8 @@
   --surface-elevated: var(--bg-primary);
 
   /* Typography System */
-  --font-family-primary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-family-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  --font-family-primary: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-family-mono: var(--font-jetbrains-mono), 'Fira Code', 'Consolas', monospace;
 
   /* Type Scale */
   --text-xs: 0.75rem;    /* 12px */
@@ -1011,10 +1011,13 @@ body {
   color: var(--text-secondary) !important;
 }
 
-/* Background-Based Text Color Rules */
+/* Comprehensive Background-Based Text Color Rules */
 /* Dark backgrounds need white text */
 [style*="background: linear-gradient"][style*="navy"],
 [style*="background: linear-gradient"][style*="dark"],
+[style*="background: linear-gradient"][style*="slate-7"],
+[style*="background: linear-gradient"][style*="slate-8"],
+[style*="background: linear-gradient"][style*="slate-9"],
 [style*="background-color: var(--mckinsey-navy)"],
 .bg-slate-700, .bg-slate-800, .bg-slate-900,
 .bg-gray-700, .bg-gray-800, .bg-gray-900,
@@ -1024,8 +1027,39 @@ body {
 
 /* Light backgrounds need dark text */
 .bg-white, .bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100,
-.card, .alert, .nav-tabs {
+.card, .alert, .nav-tabs, .bg-blue-50, .bg-green-50, .bg-yellow-50, 
+.bg-red-50, .bg-purple-50, .bg-orange-50 {
   color: var(--text-primary) !important;
+}
+
+/* Force specific text color overrides for common problematic combinations */
+.text-slate-500, .text-slate-600, .text-slate-700, .text-slate-800 {
+  color: var(--text-primary) !important;
+}
+
+.text-gray-500, .text-gray-600, .text-gray-700, .text-gray-800 {
+  color: var(--text-primary) !important;
+}
+
+/* Colored text on light backgrounds - ensure dark variants */
+.text-blue-500, .text-blue-600, .text-blue-700, .text-blue-800 {
+  color: #1e3a8a !important; /* blue-900 equivalent */
+}
+
+.text-green-500, .text-green-600, .text-green-700, .text-green-800 {
+  color: #14532d !important; /* green-900 equivalent */
+}
+
+.text-red-500, .text-red-600, .text-red-700, .text-red-800 {
+  color: #7f1d1d !important; /* red-900 equivalent */
+}
+
+.text-yellow-500, .text-yellow-600, .text-yellow-700, .text-yellow-800 {
+  color: #713f12 !important; /* yellow-900 equivalent */
+}
+
+.text-purple-500, .text-purple-600, .text-purple-700, .text-purple-800 {
+  color: #581c87 !important; /* purple-900 equivalent */
 }
 
 /* Responsive McKinsey Layout */

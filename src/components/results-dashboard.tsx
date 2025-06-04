@@ -166,14 +166,14 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
 
         <div className="bg-white border rounded-lg p-6">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-slate-800">Risk Appetite Threshold Analysis</h3>
+            <h3 className="text-lg font-semibold text-black">Risk Appetite Threshold Analysis</h3>
             <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-3">
-              <div className="text-sm font-semibold text-red-800 mb-1">EXECUTIVE OBJECTIVE</div>
-              <div className="text-red-700">Monitor portfolio loss rates against established risk appetite limits to trigger strategic portfolio rebalancing decisions</div>
+              <div className="text-sm font-semibold text-red-900 mb-1">EXECUTIVE OBJECTIVE</div>
+              <div className="text-red-900">Monitor portfolio loss rates against established risk appetite limits to trigger strategic portfolio rebalancing decisions</div>
             </div>
             <div className="bg-yellow-50 border-l-4 border-yellow-500 p-3">
-              <div className="text-xs font-semibold text-yellow-800 mb-1">CRITICAL THRESHOLD ALERT</div>
-              <div className="text-yellow-700 text-sm">Loss rates exceed {Math.max(...chartData.map(d => d.expectedLossRate)).toFixed(1)}% in severe scenarios - consider geographic diversification strategy</div>
+              <div className="text-xs font-semibold text-yellow-900 mb-1">CRITICAL THRESHOLD ALERT</div>
+              <div className="text-yellow-900 text-sm">Loss rates exceed {Math.max(...chartData.map(d => d.expectedLossRate)).toFixed(1)}% in severe scenarios - consider geographic diversification strategy</div>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={300}>
@@ -189,14 +189,14 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
 
         <div className="bg-white border rounded-lg p-6">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-slate-800">Strategic Asset Allocation Review</h3>
+            <h3 className="text-lg font-semibold text-black">Strategic Asset Allocation Review</h3>
             <div className="bg-purple-50 border-l-4 border-purple-500 p-4 mb-3">
-              <div className="text-sm font-semibold text-purple-800 mb-1">EXECUTIVE OBJECTIVE</div>
-              <div className="text-purple-700">Evaluate current portfolio composition to identify concentration risks and optimize asset allocation for climate resilience</div>
+              <div className="text-sm font-semibold text-purple-900 mb-1">EXECUTIVE OBJECTIVE</div>
+              <div className="text-purple-900">Evaluate current portfolio composition to identify concentration risks and optimize asset allocation for climate resilience</div>
             </div>
             <div className="bg-green-50 border-l-4 border-green-500 p-3">
-              <div className="text-xs font-semibold text-green-800 mb-1">PORTFOLIO OPTIMIZATION INSIGHT</div>
-              <div className="text-green-700 text-sm">{loanTypeData[0]?.name} represents {((loanTypeData[0]?.exposure || 0) / (loanTypeData.reduce((sum, d) => sum + d.exposure, 0)) * 100).toFixed(0)}% of exposure - evaluate rebalancing opportunities</div>
+              <div className="text-xs font-semibold text-green-900 mb-1">PORTFOLIO OPTIMIZATION INSIGHT</div>
+              <div className="text-green-900 text-sm">{loanTypeData[0]?.name} represents {((loanTypeData[0]?.exposure || 0) / (loanTypeData.reduce((sum, d) => sum + d.exposure, 0)) * 100).toFixed(0)}% of exposure - evaluate rebalancing opportunities</div>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={300}>
@@ -222,14 +222,14 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
 
         <div className="bg-white border rounded-lg p-6">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-slate-800">Risk Escalation Management</h3>
+            <h3 className="text-lg font-semibold text-black">Risk Escalation Management</h3>
             <div className="bg-orange-50 border-l-4 border-orange-500 p-4 mb-3">
               <div className="text-sm font-semibold text-orange-800 mb-1">EXECUTIVE OBJECTIVE</div>
               <div className="text-orange-700">Identify assets requiring immediate attention for enhanced monitoring, repricing, or potential portfolio exit strategies</div>
             </div>
             <div className="bg-red-50 border-l-4 border-red-500 p-3">
-              <div className="text-xs font-semibold text-red-800 mb-1">IMMEDIATE ACTION REQUIRED</div>
-              <div className="text-red-700 text-sm">Up to {Math.max(...chartData.map(d => d.highRiskLoans))} assets require enhanced risk management protocols and potential restructuring</div>
+              <div className="text-xs font-semibold text-red-900 mb-1">IMMEDIATE ACTION REQUIRED</div>
+              <div className="text-red-900 text-sm">Up to {Math.max(...chartData.map(d => d.highRiskLoans))} assets require enhanced risk management protocols and potential restructuring</div>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={300}>
@@ -372,8 +372,8 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
       </div>
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-3 text-blue-800">Regulatory Export & Documentation</h3>
-        <p className="text-blue-700 mb-4">
+        <h3 className="text-lg font-semibold mb-3 text-blue-900">Regulatory Export & Documentation</h3>
+        <p className="text-blue-900 mb-4">
           Download comprehensive results for CCAR submission and regulatory compliance documentation.
         </p>
         <div className="space-x-4">

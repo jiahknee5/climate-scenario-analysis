@@ -221,10 +221,10 @@ export default function GeographicalOptimizationDashboard({
                   </h4>
                   <span className={`text-xs px-2 py-1 rounded ${
                     rec.implementation_priority === 'high' 
-                      ? 'bg-red-200 text-red-800' 
+                      ? 'bg-red-200 text-red-900' 
                       : rec.implementation_priority === 'medium'
-                      ? 'bg-yellow-200 text-yellow-800'
-                      : 'bg-green-200 text-green-800'
+                      ? 'bg-yellow-200 text-yellow-900'
+                      : 'bg-green-200 text-green-900'
                   }`}>
                     {rec.implementation_priority.toUpperCase()} PRIORITY
                   </span>
@@ -259,8 +259,8 @@ export default function GeographicalOptimizationDashboard({
       {/* Summary Metrics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <div className="text-sm text-blue-600 font-medium">Portfolio Diversification</div>
-          <div className="text-lg font-bold text-blue-800">
+          <div className="text-sm text-blue-900 font-medium">Portfolio Diversification</div>
+          <div className="text-lg font-bold text-blue-900">
             {geographicMetrics.length > 0 
               ? (geographicMetrics.reduce((sum, m) => sum + m.diversification_benefit, 0) / geographicMetrics.length * 100).toFixed(1)
               : '0'}%
@@ -268,8 +268,8 @@ export default function GeographicalOptimizationDashboard({
         </div>
         
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <div className="text-sm text-green-600 font-medium">Avg Climate Beta</div>
-          <div className="text-lg font-bold text-green-800">
+          <div className="text-sm text-green-900 font-medium">Avg Climate Beta</div>
+          <div className="text-lg font-bold text-green-900">
             {geographicMetrics.length > 0 
               ? (geographicMetrics.reduce((sum, m) => sum + m.climate_beta, 0) / geographicMetrics.length).toFixed(2)
               : '0.00'}
@@ -277,15 +277,15 @@ export default function GeographicalOptimizationDashboard({
         </div>
         
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <div className="text-sm text-yellow-600 font-medium">High Priority Actions</div>
-          <div className="text-lg font-bold text-yellow-800">
+          <div className="text-sm text-yellow-900 font-medium">High Priority Actions</div>
+          <div className="text-lg font-bold text-yellow-900">
             {optimizationRecommendations.filter(r => r.implementation_priority === 'high').length}
           </div>
         </div>
         
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div className="text-sm text-red-600 font-medium">Max Regional Risk</div>
-          <div className="text-lg font-bold text-red-800">
+          <div className="text-sm text-red-900 font-medium">Max Regional Risk</div>
+          <div className="text-lg font-bold text-red-900">
             {geographicMetrics.length > 0 
               ? (Math.max(...geographicMetrics.map(m => m.risk_contribution)) * 100).toFixed(1)
               : '0.0'}%
@@ -295,7 +295,7 @@ export default function GeographicalOptimizationDashboard({
       
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
         <h4 className="font-medium mb-2">Key Insights & Recommendations</h4>
-        <div className="text-sm text-blue-700 space-y-1">
+        <div className="text-sm text-blue-900 space-y-1">
           <p>• Geographic diversification can significantly reduce portfolio climate risk</p>
           <p>• Focus on high-priority recommendations to achieve maximum risk reduction</p>
           <p>• Monitor climate beta for regions with increasing physical risk exposure</p>

@@ -337,7 +337,7 @@ export default function PortfolioInput({ onPortfolioUpdate }: PortfolioInputProp
         <div>
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-lg font-semibold">Current Portfolio ({loans.length} loans)</h3>
-            <div className="text-sm text-slate-600">
+            <div className="text-sm text-black">
               Total Exposure: ${loans.reduce((sum, loan) => sum + loan.outstanding_balance, 0).toLocaleString()}
             </div>
           </div>
@@ -345,26 +345,26 @@ export default function PortfolioInput({ onPortfolioUpdate }: PortfolioInputProp
           {/* Portfolio Summary Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-              <div className="text-sm text-blue-600 font-medium">RRE Loans</div>
-              <div className="text-2xl font-bold text-blue-800">
+              <div className="text-sm text-blue-900 font-medium">RRE Loans</div>
+              <div className="text-2xl font-bold text-blue-900">
                 {loans.filter(l => l.type === 'RRE').length}
               </div>
             </div>
             <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-              <div className="text-sm text-green-600 font-medium">CRE Loans</div>
-              <div className="text-2xl font-bold text-green-800">
+              <div className="text-sm text-green-900 font-medium">CRE Loans</div>
+              <div className="text-2xl font-bold text-green-900">
                 {loans.filter(l => l.type === 'CRE').length}
               </div>
             </div>
             <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-              <div className="text-sm text-yellow-600 font-medium">Avg LTV</div>
-              <div className="text-2xl font-bold text-yellow-800">
+              <div className="text-sm text-yellow-900 font-medium">Avg LTV</div>
+              <div className="text-2xl font-bold text-yellow-900">
                 {(loans.reduce((sum, l) => sum + l.ltv_ratio, 0) / loans.length * 100).toFixed(1)}%
               </div>
             </div>
             <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
-              <div className="text-sm text-purple-600 font-medium">States</div>
-              <div className="text-2xl font-bold text-purple-800">
+              <div className="text-sm text-purple-900 font-medium">States</div>
+              <div className="text-2xl font-bold text-purple-900">
                 {new Set(loans.map(l => l.location.state)).size}
               </div>
             </div>
@@ -374,37 +374,37 @@ export default function PortfolioInput({ onPortfolioUpdate }: PortfolioInputProp
             <table className="min-w-full bg-white border border-slate-200 rounded-lg">
               <thead>
                 <tr className="bg-slate-100">
-                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">ID</th>
-                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Type</th>
-                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Property Type</th>
-                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Location</th>
-                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Balance</th>
-                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">LTV</th>
-                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Rate</th>
-                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Risk Rating</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-black">ID</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-black">Type</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-black">Property Type</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-black">Location</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-black">Balance</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-black">LTV</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-black">Rate</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-black">Risk Rating</th>
                 </tr>
               </thead>
               <tbody>
                 {loans.slice(0, 50).map((loan, index) => (
                   <tr key={loan.id} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                    <td className="px-4 py-2 border-b text-sm text-slate-600">{loan.id}</td>
+                    <td className="px-4 py-2 border-b text-sm text-black">{loan.id}</td>
                     <td className="px-4 py-2 border-b text-sm">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        loan.type === 'RRE' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+                        loan.type === 'RRE' ? 'bg-blue-100 text-blue-900' : 'bg-green-100 text-green-900'
                       }`}>
                         {loan.type}
                       </span>
                     </td>
-                    <td className="px-4 py-2 border-b text-sm text-slate-700 capitalize">{loan.property_type.replace('_', ' ')}</td>
-                    <td className="px-4 py-2 border-b text-sm text-slate-600">{loan.location.state}, {loan.location.county}</td>
-                    <td className="px-4 py-2 border-b text-sm font-medium text-slate-800">${loan.outstanding_balance.toLocaleString()}</td>
-                    <td className="px-4 py-2 border-b text-sm text-slate-600">{(loan.ltv_ratio * 100).toFixed(1)}%</td>
-                    <td className="px-4 py-2 border-b text-sm text-slate-600">{loan.interest_rate.toFixed(2)}%</td>
+                    <td className="px-4 py-2 border-b text-sm text-black capitalize">{loan.property_type.replace('_', ' ')}</td>
+                    <td className="px-4 py-2 border-b text-sm text-black">{loan.location.state}, {loan.location.county}</td>
+                    <td className="px-4 py-2 border-b text-sm font-medium text-black">${loan.outstanding_balance.toLocaleString()}</td>
+                    <td className="px-4 py-2 border-b text-sm text-black">{(loan.ltv_ratio * 100).toFixed(1)}%</td>
+                    <td className="px-4 py-2 border-b text-sm text-black">{loan.interest_rate.toFixed(2)}%</td>
                     <td className="px-4 py-2 border-b text-sm">
                       <span className={`px-2 py-1 rounded text-xs font-medium ${
-                        ['AAA', 'AA', 'A'].includes(loan.risk_rating) ? 'bg-green-100 text-green-800' :
-                        loan.risk_rating === 'BBB' ? 'bg-yellow-100 text-yellow-800' :
-                        'bg-red-100 text-red-800'
+                        ['AAA', 'AA', 'A'].includes(loan.risk_rating) ? 'bg-green-100 text-green-900' :
+                        loan.risk_rating === 'BBB' ? 'bg-yellow-100 text-yellow-900' :
+                        'bg-red-100 text-red-900'
                       }`}>
                         {loan.risk_rating}
                       </span>
@@ -414,7 +414,7 @@ export default function PortfolioInput({ onPortfolioUpdate }: PortfolioInputProp
               </tbody>
             </table>
             {loans.length > 50 && (
-              <div className="mt-4 text-center text-sm text-slate-500 bg-slate-50 py-3 rounded-b-lg">
+              <div className="mt-4 text-center text-sm text-black bg-slate-50 py-3 rounded-b-lg">
                 Showing first 50 loans. Total portfolio: {loans.length} loans
               </div>
             )}

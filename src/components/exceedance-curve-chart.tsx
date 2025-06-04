@@ -195,36 +195,36 @@ export default function ExceedanceCurveChart({
       {riskMetrics && (
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <div className="text-sm text-blue-600 font-medium">VaR (95%)</div>
-            <div className="text-lg font-bold text-blue-800">
+            <div className="text-sm text-blue-900 font-medium">VaR (95%)</div>
+            <div className="text-lg font-bold text-blue-900">
               ${(riskMetrics.var_95 / 1000000).toFixed(1)}M
             </div>
           </div>
           
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <div className="text-sm text-red-600 font-medium">VaR (99%)</div>
-            <div className="text-lg font-bold text-red-800">
+            <div className="text-sm text-red-900 font-medium">VaR (99%)</div>
+            <div className="text-lg font-bold text-red-900">
               ${(riskMetrics.var_99 / 1000000).toFixed(1)}M
             </div>
           </div>
           
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-            <div className="text-sm text-yellow-600 font-medium">TVaR (95%)</div>
-            <div className="text-lg font-bold text-yellow-800">
+            <div className="text-sm text-yellow-900 font-medium">TVaR (95%)</div>
+            <div className="text-lg font-bold text-yellow-900">
               ${(riskMetrics.tvar_95 / 1000000).toFixed(1)}M
             </div>
           </div>
           
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <div className="text-sm text-green-600 font-medium">Expected Loss</div>
-            <div className="text-lg font-bold text-green-800">
+            <div className="text-sm text-green-900 font-medium">Expected Loss</div>
+            <div className="text-lg font-bold text-green-900">
               ${(riskMetrics.expected_loss / 1000000).toFixed(1)}M
             </div>
           </div>
           
           <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <div className="text-sm text-purple-600 font-medium">Max Probable Loss</div>
-            <div className="text-lg font-bold text-purple-800">
+            <div className="text-sm text-purple-900 font-medium">Max Probable Loss</div>
+            <div className="text-lg font-bold text-purple-900">
               ${(riskMetrics.max_probable_loss / 1000000).toFixed(1)}M
             </div>
           </div>

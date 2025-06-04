@@ -257,8 +257,8 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
       {/* Summary Statistics */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <div className="text-sm text-blue-600 font-medium">Worst Case Scenario</div>
-          <div className="text-lg font-bold text-blue-800">
+          <div className="text-sm text-blue-900 font-medium">Worst Case Scenario</div>
+          <div className="text-lg font-bold text-blue-900">
             {impactComparisonData.length > 0 
               ? impactComparisonData.reduce((max, curr) => curr.expectedLoss > max.expectedLoss ? curr : max).scenario
               : 'N/A'}
@@ -266,8 +266,8 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
         </div>
         
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <div className="text-sm text-green-600 font-medium">Best Case Scenario</div>
-          <div className="text-lg font-bold text-green-800">
+          <div className="text-sm text-green-900 font-medium">Best Case Scenario</div>
+          <div className="text-lg font-bold text-green-900">
             {impactComparisonData.length > 0 
               ? impactComparisonData.reduce((min, curr) => curr.expectedLoss < min.expectedLoss ? curr : min).scenario
               : 'N/A'}
@@ -275,8 +275,8 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
         </div>
         
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-          <div className="text-sm text-yellow-600 font-medium">Range of Impact</div>
-          <div className="text-lg font-bold text-yellow-800">
+          <div className="text-sm text-yellow-900 font-medium">Range of Impact</div>
+          <div className="text-lg font-bold text-yellow-900">
             {impactComparisonData.length > 0 
               ? `${(Math.max(...impactComparisonData.map(d => d.expectedLoss)) - Math.min(...impactComparisonData.map(d => d.expectedLoss))).toFixed(1)}M`
               : '$0M'}
@@ -284,8 +284,8 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
         </div>
         
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div className="text-sm text-red-600 font-medium">Avg Stress Factor</div>
-          <div className="text-lg font-bold text-red-800">
+          <div className="text-sm text-red-900 font-medium">Avg Stress Factor</div>
+          <div className="text-lg font-bold text-red-900">
             {impactComparisonData.length > 0 
               ? (impactComparisonData.reduce((sum, d) => sum + d.avgStressFactor, 0) / impactComparisonData.length).toFixed(2)
               : '1.00'}x

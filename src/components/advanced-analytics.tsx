@@ -208,8 +208,8 @@ export default function AdvancedAnalytics({ portfolio, scenarios }: AdvancedAnal
                       <span className="font-medium">{item.param}</span>
                       <div className="text-right">
                         <div className={`text-sm font-medium ${
-                          item.impact === 'High' ? 'text-red-600' : 
-                          item.impact === 'Medium' ? 'text-yellow-600' : 'text-green-600'
+                          item.impact === 'High' ? 'text-red-900' : 
+                          item.impact === 'Medium' ? 'text-yellow-900' : 'text-green-900'
                         }`}>
                           {item.impact} Impact
                         </div>

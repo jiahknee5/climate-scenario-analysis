@@ -96,14 +96,14 @@ export default function ScenarioSelection({ onScenariosChange }: ScenarioSelecti
 
       {selectedScenarios.length > 0 && (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-          <h3 className="font-semibold text-green-800 mb-2">
+          <h3 className="font-semibold text-green-900 mb-2">
             Selected Scenarios ({selectedScenarios.length})
           </h3>
           <div className="flex flex-wrap gap-2">
             {selectedScenarios.map((scenario) => (
               <span
                 key={scenario.id}
-                className="px-3 py-1 bg-green-200 text-green-800 rounded-full text-sm"
+                className="px-3 py-1 bg-green-200 text-green-900 rounded-full text-sm"
               >
                 {scenario.name}
               </span>

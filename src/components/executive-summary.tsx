@@ -48,7 +48,7 @@ export default function ExecutiveSummary() {
             <div>
               <div className="card card-interactive">
                 <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm mr-3">1</div>
+                  <div className="w-8 h-8 rounded-full bg-red-100 text-red-900 flex items-center justify-center font-bold text-sm mr-3">1</div>
                   <h4 className="headline-4 mb-0">Portfolio Setup</h4>
                 </div>
                 <p className="body-base mb-3">
@@ -59,7 +59,7 @@ export default function ExecutiveSummary() {
                 
               <div className="card card-interactive">
                 <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center font-bold text-sm mr-3">2</div>
+                  <div className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-900 flex items-center justify-center font-bold text-sm mr-3">2</div>
                   <h4 className="headline-4 mb-0">Climate Scenarios</h4>
                 </div>
                 <p className="body-base mb-3">
@@ -70,7 +70,7 @@ export default function ExecutiveSummary() {
                 
               <div className="card card-interactive">
                 <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mr-3">3</div>
+                  <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-sm mr-3">3</div>
                   <h4 className="headline-4 mb-0">Methodology</h4>
                 </div>
                 <p className="body-base mb-3">
@@ -83,7 +83,7 @@ export default function ExecutiveSummary() {
             <div>
               <div className="card card-interactive">
                 <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm mr-3">4</div>
+                  <div className="w-8 h-8 rounded-full bg-red-100 text-red-900 flex items-center justify-center font-bold text-sm mr-3">4</div>
                   <h4 className="headline-4 mb-0">Executive Summary</h4>
                 </div>
                 <p className="body-base mb-3">
@@ -94,7 +94,7 @@ export default function ExecutiveSummary() {
                 
               <div className="card card-interactive">
                 <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center font-bold text-sm mr-3">5</div>
+                  <div className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-900 flex items-center justify-center font-bold text-sm mr-3">5</div>
                   <h4 className="headline-4 mb-0">Risk Management</h4>
                 </div>
                 <p className="body-base mb-3">
@@ -105,7 +105,7 @@ export default function ExecutiveSummary() {
                 
               <div className="card card-interactive">
                 <div className="flex items-center mb-3">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm mr-3">6</div>
+                  <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-sm mr-3">6</div>
                   <h4 className="headline-4 mb-0">Regulatory</h4>
                 </div>
                 <p className="body-base mb-3">
