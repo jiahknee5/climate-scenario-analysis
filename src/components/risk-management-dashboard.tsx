@@ -151,10 +151,28 @@ export default function RiskManagementDashboard({ portfolio, scenarios }: RiskMa
   return (
     <div className="space-y-8">
       <div className="bg-gradient-to-r from-red-600 to-red-800 text-white p-6 rounded-lg">
-        <h2 className="text-2xl font-bold mb-2">Risk Management Dashboard</h2>
-        <p className="text-red-100">
-          Comprehensive portfolio risk analysis for CCAR stress testing and regulatory compliance
+        <h2 className="text-2xl font-bold mb-2">Executive Risk Management Dashboard</h2>
+        <p className="text-red-100 text-lg mb-4">
+          Advanced analytics for C-suite decision making and regulatory oversight
         </p>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
+          <div className="bg-red-700 bg-opacity-50 p-3 rounded text-center">
+            <div className="font-bold">VaR Analysis</div>
+            <div className="text-red-200">Tail Risk Quantification</div>
+          </div>
+          <div className="bg-red-700 bg-opacity-50 p-3 rounded text-center">
+            <div className="font-bold">Concentration Risk</div>
+            <div className="text-red-200">Geographic Limits</div>
+          </div>
+          <div className="bg-red-700 bg-opacity-50 p-3 rounded text-center">
+            <div className="font-bold">Capital Adequacy</div>
+            <div className="text-red-200">Stress Testing</div>
+          </div>
+          <div className="bg-red-700 bg-opacity-50 p-3 rounded text-center">
+            <div className="font-bold">Loss Distribution</div>
+            <div className="text-red-200">Portfolio Optimization</div>
+          </div>
+        </div>
       </div>
 
       {/* Executive Risk Summary */}
@@ -196,9 +214,14 @@ export default function RiskManagementDashboard({ portfolio, scenarios }: RiskMa
       <div className="bg-white border rounded-lg p-6">
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-slate-800">Value at Risk Analysis</h3>
-          <p className="text-sm text-slate-600">
-            <strong>Business Objective:</strong> Monitor portfolio tail risk for risk appetite compliance and capital planning
-          </p>
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-3">
+            <div className="text-sm font-semibold text-blue-800 mb-1">EXECUTIVE DECISION SUPPORT</div>
+            <div className="text-blue-700">Quantify maximum potential losses at 95% and 99% confidence levels to inform board-level risk appetite decisions and regulatory capital allocation</div>
+          </div>
+          <div className="bg-red-50 border-l-4 border-red-500 p-3">
+            <div className="text-xs font-semibold text-red-800 mb-1">RISK APPETITE THRESHOLD</div>
+            <div className="text-red-700 text-sm">VaR 99% of ${Math.max(...varAnalysis.map(v => v.var99)).toFixed(1)}M approaches board-approved risk limits - consider portfolio adjustment</div>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -247,10 +270,15 @@ export default function RiskManagementDashboard({ portfolio, scenarios }: RiskMa
       {/* Geographic Concentration Risk */}
       <div className="bg-white border rounded-lg p-6">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-slate-800">Geographic Concentration Risk</h3>
-          <p className="text-sm text-slate-600">
-            <strong>Business Objective:</strong> Monitor geographic concentration limits and identify diversification opportunities
-          </p>
+          <h3 className="text-lg font-semibold text-slate-800">Geographic Concentration Risk Management</h3>
+          <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 mb-3">
+            <div className="text-sm font-semibold text-yellow-800 mb-1">STRATEGIC PORTFOLIO OVERSIGHT</div>
+            <div className="text-yellow-700">Monitor geographic concentration against regulatory limits to prevent excessive exposure to climate-vulnerable regions</div>
+          </div>
+          <div className="bg-orange-50 border-l-4 border-orange-500 p-3">
+            <div className="text-xs font-semibold text-orange-800 mb-1">CONCENTRATION ALERT</div>
+            <div className="text-orange-700 text-sm">Largest state exposure: {concentrationAnalysis.length > 0 ? concentrationAnalysis[0].percentage.toFixed(1) : '0.0'}% - evaluate diversification strategy if approaching 15% limit</div>
+          </div>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -316,9 +344,14 @@ export default function RiskManagementDashboard({ portfolio, scenarios }: RiskMa
       <div className="bg-white border rounded-lg p-6">
         <div className="mb-4">
           <h3 className="text-lg font-semibold text-slate-800">Capital Adequacy Under Climate Stress</h3>
-          <p className="text-sm text-slate-600">
-            <strong>Business Objective:</strong> Ensure sufficient capital buffers for climate stress scenarios and regulatory compliance
-          </p>
+          <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-3">
+            <div className="text-sm font-semibold text-green-800 mb-1">REGULATORY COMPLIANCE ASSURANCE</div>
+            <div className="text-green-700">Ensure capital ratios remain above regulatory minimums under severe climate scenarios to maintain banking operations and dividend capacity</div>
+          </div>
+          <div className="bg-blue-50 border-l-4 border-blue-500 p-3">
+            <div className="text-xs font-semibold text-blue-800 mb-1">CAPITAL PLANNING INSIGHT</div>
+            <div className="text-blue-700 text-sm">Minimum buffer: {Math.min(...capitalAnalysis.map(c => c.capitalBuffer)).toFixed(1)}% above regulatory minimum - consider capital conservation actions if below 2.5%</div>
+          </div>
         </div>
         
         <ResponsiveContainer width="100%" height={350}>

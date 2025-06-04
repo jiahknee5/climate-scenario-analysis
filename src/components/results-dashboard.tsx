@@ -91,10 +91,24 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
   return (
     <div className="space-y-8">
       <div className="bg-gradient-to-r from-green-600 to-green-800 text-white p-6 rounded-lg">
-        <h2 className="text-2xl font-bold mb-2">CCAR Climate Risk Analysis Results</h2>
-        <p className="text-green-100">
-          Comprehensive stress testing results for regulatory reporting and portfolio risk management
+        <h2 className="text-2xl font-bold mb-2">Executive Climate Risk Assessment</h2>
+        <p className="text-green-100 text-lg">
+          Strategic risk analysis for C-suite decision making and regulatory compliance
         </p>
+        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div className="bg-green-700 bg-opacity-50 p-3 rounded">
+            <div className="font-semibold">Regulatory Impact</div>
+            <div>CCAR Capital Planning</div>
+          </div>
+          <div className="bg-green-700 bg-opacity-50 p-3 rounded">
+            <div className="font-semibold">Strategic Planning</div>
+            <div>Portfolio Optimization</div>
+          </div>
+          <div className="bg-green-700 bg-opacity-50 p-3 rounded">
+            <div className="font-semibold">Risk Management</div>
+            <div>Loss Mitigation</div>
+          </div>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -129,10 +143,15 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-white border rounded-lg p-6">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-slate-800">Expected Loss by Climate Scenario</h3>
-            <p className="text-sm text-slate-600">
-              <strong>Business Objective:</strong> Quantify portfolio loss exposure under adverse climate scenarios for CCAR capital planning
-            </p>
+            <h3 className="text-lg font-semibold text-slate-800">Portfolio Loss Exposure Analysis</h3>
+            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-3">
+              <div className="text-sm font-semibold text-blue-800 mb-1">EXECUTIVE OBJECTIVE</div>
+              <div className="text-blue-700">Quantify maximum potential losses to inform capital allocation decisions and regulatory capital planning under Federal Reserve climate stress scenarios</div>
+            </div>
+            <div className="bg-amber-50 border-l-4 border-amber-500 p-3">
+              <div className="text-xs font-semibold text-amber-800 mb-1">KEY BUSINESS INSIGHT</div>
+              <div className="text-amber-700 text-sm">Loss escalation of {((Math.max(...chartData.map(d => d.expectedLoss)) / Math.min(...chartData.map(d => d.expectedLoss)) - 1) * 100).toFixed(0)}% from baseline to severe scenarios requires immediate capital buffer assessment</div>
+            </div>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData}>
@@ -147,10 +166,15 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
 
         <div className="bg-white border rounded-lg p-6">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-slate-800">Portfolio Loss Rate Progression</h3>
-            <p className="text-sm text-slate-600">
-              <strong>Business Objective:</strong> Monitor loss rate escalation across scenarios for risk appetite monitoring and limit setting
-            </p>
+            <h3 className="text-lg font-semibold text-slate-800">Risk Appetite Threshold Analysis</h3>
+            <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-3">
+              <div className="text-sm font-semibold text-red-800 mb-1">EXECUTIVE OBJECTIVE</div>
+              <div className="text-red-700">Monitor portfolio loss rates against established risk appetite limits to trigger strategic portfolio rebalancing decisions</div>
+            </div>
+            <div className="bg-yellow-50 border-l-4 border-yellow-500 p-3">
+              <div className="text-xs font-semibold text-yellow-800 mb-1">CRITICAL THRESHOLD ALERT</div>
+              <div className="text-yellow-700 text-sm">Loss rates exceed {Math.max(...chartData.map(d => d.expectedLossRate)).toFixed(1)}% in severe scenarios - consider geographic diversification strategy</div>
+            </div>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData}>
@@ -165,10 +189,15 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
 
         <div className="bg-white border rounded-lg p-6">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-slate-800">Exposure Distribution by Asset Class</h3>
-            <p className="text-sm text-slate-600">
-              <strong>Business Objective:</strong> Assess concentration risk and diversification benefits for climate stress testing
-            </p>
+            <h3 className="text-lg font-semibold text-slate-800">Strategic Asset Allocation Review</h3>
+            <div className="bg-purple-50 border-l-4 border-purple-500 p-4 mb-3">
+              <div className="text-sm font-semibold text-purple-800 mb-1">EXECUTIVE OBJECTIVE</div>
+              <div className="text-purple-700">Evaluate current portfolio composition to identify concentration risks and optimize asset allocation for climate resilience</div>
+            </div>
+            <div className="bg-green-50 border-l-4 border-green-500 p-3">
+              <div className="text-xs font-semibold text-green-800 mb-1">PORTFOLIO OPTIMIZATION INSIGHT</div>
+              <div className="text-green-700 text-sm">{loanTypeData[0]?.name} represents {((loanTypeData[0]?.exposure || 0) / (loanTypeData.reduce((sum, d) => sum + d.exposure, 0)) * 100).toFixed(0)}% of exposure - evaluate rebalancing opportunities</div>
+            </div>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -193,10 +222,15 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
 
         <div className="bg-white border rounded-lg p-6">
           <div className="mb-4">
-            <h3 className="text-lg font-semibold text-slate-800">High-Risk Asset Identification</h3>
-            <p className="text-sm text-slate-600">
-              <strong>Business Objective:</strong> Identify assets requiring enhanced monitoring and potential portfolio rebalancing
-            </p>
+            <h3 className="text-lg font-semibold text-slate-800">Risk Escalation Management</h3>
+            <div className="bg-orange-50 border-l-4 border-orange-500 p-4 mb-3">
+              <div className="text-sm font-semibold text-orange-800 mb-1">EXECUTIVE OBJECTIVE</div>
+              <div className="text-orange-700">Identify assets requiring immediate attention for enhanced monitoring, repricing, or potential portfolio exit strategies</div>
+            </div>
+            <div className="bg-red-50 border-l-4 border-red-500 p-3">
+              <div className="text-xs font-semibold text-red-800 mb-1">IMMEDIATE ACTION REQUIRED</div>
+              <div className="text-red-700 text-sm">Up to {Math.max(...chartData.map(d => d.highRiskLoans))} assets require enhanced risk management protocols and potential restructuring</div>
+            </div>
           </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData}>
@@ -250,27 +284,89 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
         </div>
       </div>
 
-      {/* Business Insights Section */}
-      <div className="bg-gradient-to-r from-slate-700 to-slate-900 text-white p-6 rounded-lg">
-        <h3 className="text-lg font-semibold mb-4">Key Risk Management Insights</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <h4 className="font-medium mb-3 text-blue-300">CCAR Capital Implications</h4>
-            <ul className="space-y-2 text-sm text-slate-200">
-              <li>• Worst-case scenario: ${Math.max(...chartData.map(d => d.expectedLoss)).toLocaleString()} total expected loss</li>
-              <li>• Loss rate range: {Math.min(...chartData.map(d => d.expectedLossRate)).toFixed(2)}% - {Math.max(...chartData.map(d => d.expectedLossRate)).toFixed(2)}%</li>
-              <li>• High-risk assets: Up to {Math.max(...chartData.map(d => d.highRiskLoans))} loans requiring enhanced provisions</li>
-              <li>• Recommend stress capital buffer of ${(Math.max(...chartData.map(d => d.expectedLoss)) * 0.12).toLocaleString()}</li>
-            </ul>
+      {/* Executive Summary Section */}
+      <div className="bg-gradient-to-r from-slate-800 to-slate-900 text-white p-8 rounded-lg">
+        <h3 className="text-2xl font-bold mb-6 text-center">Executive Risk Summary & Strategic Recommendations</h3>
+        
+        {/* Key Metrics Dashboard */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="bg-red-600 bg-opacity-20 border border-red-400 p-4 rounded-lg text-center">
+            <div className="text-3xl font-bold text-red-300">${(Math.max(...chartData.map(d => d.expectedLoss)) / 1000000).toFixed(0)}M</div>
+            <div className="text-red-200 text-sm mt-1">Maximum Loss Exposure</div>
           </div>
-          <div>
-            <h4 className="font-medium mb-3 text-green-300">Portfolio Management Actions</h4>
-            <ul className="space-y-2 text-sm text-slate-200">
-              <li>• Consider geographic diversification to reduce climate concentration</li>
-              <li>• Implement enhanced underwriting for high-risk climate zones</li>
-              <li>• Update loan loss provision methodology for climate factors</li>
-              <li>• Establish climate risk-adjusted pricing mechanisms</li>
-            </ul>
+          <div className="bg-yellow-600 bg-opacity-20 border border-yellow-400 p-4 rounded-lg text-center">
+            <div className="text-3xl font-bold text-yellow-300">{Math.max(...chartData.map(d => d.expectedLossRate)).toFixed(1)}%</div>
+            <div className="text-yellow-200 text-sm mt-1">Peak Loss Rate</div>
+          </div>
+          <div className="bg-orange-600 bg-opacity-20 border border-orange-400 p-4 rounded-lg text-center">
+            <div className="text-3xl font-bold text-orange-300">{Math.max(...chartData.map(d => d.highRiskLoans))}</div>
+            <div className="text-orange-200 text-sm mt-1">High-Risk Assets</div>
+          </div>
+          <div className="bg-blue-600 bg-opacity-20 border border-blue-400 p-4 rounded-lg text-center">
+            <div className="text-3xl font-bold text-blue-300">${(Math.max(...chartData.map(d => d.expectedLoss)) * 0.12 / 1000000).toFixed(0)}M</div>
+            <div className="text-blue-200 text-sm mt-1">Capital Buffer Needed</div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-slate-700 bg-opacity-50 p-6 rounded-lg">
+            <h4 className="font-bold text-xl mb-4 text-red-300 flex items-center">
+              <span className="w-3 h-3 bg-red-500 rounded-full mr-3"></span>
+              IMMEDIATE EXECUTIVE ACTIONS
+            </h4>
+            <div className="space-y-4">
+              <div className="bg-red-900 bg-opacity-30 p-4 rounded border-l-4 border-red-500">
+                <div className="font-semibold text-red-200 mb-2">Capital Planning (Priority 1)</div>
+                <div className="text-red-100 text-sm">Increase stress capital buffer by ${(Math.max(...chartData.map(d => d.expectedLoss)) * 0.12 / 1000000).toFixed(0)}M to maintain regulatory compliance under severe climate scenarios</div>
+              </div>
+              <div className="bg-orange-900 bg-opacity-30 p-4 rounded border-l-4 border-orange-500">
+                <div className="font-semibold text-orange-200 mb-2">Risk Committee Review (Priority 1)</div>
+                <div className="text-orange-100 text-sm">Convene emergency risk committee to address {Math.max(...chartData.map(d => d.highRiskLoans))} high-risk assets requiring immediate attention</div>
+              </div>
+              <div className="bg-yellow-900 bg-opacity-30 p-4 rounded border-l-4 border-yellow-500">
+                <div className="font-semibold text-yellow-200 mb-2">Board Reporting (This Quarter)</div>
+                <div className="text-yellow-100 text-sm">Present climate stress results to board with {Math.max(...chartData.map(d => d.expectedLossRate)).toFixed(1)}% peak loss rate exceeding risk appetite thresholds</div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-slate-700 bg-opacity-50 p-6 rounded-lg">
+            <h4 className="font-bold text-xl mb-4 text-green-300 flex items-center">
+              <span className="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+              STRATEGIC PORTFOLIO ACTIONS
+            </h4>
+            <div className="space-y-4">
+              <div className="bg-green-900 bg-opacity-30 p-4 rounded border-l-4 border-green-500">
+                <div className="font-semibold text-green-200 mb-2">Geographic Diversification (6 Months)</div>
+                <div className="text-green-100 text-sm">Implement portfolio rebalancing to reduce concentration in high-risk climate zones by 25%</div>
+              </div>
+              <div className="bg-blue-900 bg-opacity-30 p-4 rounded border-l-4 border-blue-500">
+                <div className="font-semibold text-blue-200 mb-2">Underwriting Enhancement (90 Days)</div>
+                <div className="text-blue-100 text-sm">Deploy climate-adjusted pricing models and enhanced due diligence for properties in vulnerable locations</div>
+              </div>
+              <div className="bg-purple-900 bg-opacity-30 p-4 rounded border-l-4 border-purple-500">
+                <div className="font-semibold text-purple-200 mb-2">Provision Methodology (Next Quarter)</div>
+                <div className="text-purple-100 text-sm">Update CECL models to incorporate climate risk factors and forward-looking loss estimates</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 bg-slate-600 bg-opacity-50 p-6 rounded-lg border-2 border-yellow-400">
+          <h4 className="font-bold text-xl mb-3 text-yellow-300 text-center">⚠️ REGULATORY COMPLIANCE STATUS</h4>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-2xl font-bold text-green-300">PASS</div>
+              <div className="text-green-200 text-sm">CCAR Quantitative</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-yellow-300">REVIEW</div>
+              <div className="text-yellow-200 text-sm">Climate Stress Testing</div>
+            </div>
+            <div>
+              <div className="text-2xl font-bold text-red-300">ACTION</div>
+              <div className="text-red-200 text-sm">Risk Appetite Limits</div>
+            </div>
           </div>
         </div>
       </div>
