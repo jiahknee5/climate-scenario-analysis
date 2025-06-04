@@ -1,1248 +1,265 @@
 @import "tailwindcss";
 
-/* McKinsey Executive Presentation Design System */
+/* Simple, Clean Design System */
 :root {
-  /* Font Variable Definitions */
-  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), 'Fira Code', 'Consolas', monospace;
-  /* McKinsey Primary Colors - Sophisticated Navy & White */
-  --mckinsey-navy: #002855;      /* Deep McKinsey navy */
-  --mckinsey-navy-light: #1e4470; /* Lighter navy */
-  --mckinsey-navy-dark: #001633;  /* Darker navy */
-  --mckinsey-blue: #0066cc;      /* McKinsey blue */
-  --mckinsey-blue-light: #4d9fff; /* Light blue */
-  
-  /* Executive Greys - Sophisticated and Clean */
-  --executive-charcoal: #2c3e50;  /* Dark charcoal for headings */
-  --executive-slate: #34495e;     /* Medium slate for body text */
-  --executive-grey: #7f8c8d;      /* Light grey for secondary text */
-  --executive-silver: #bdc3c7;    /* Silver for borders */
-  --executive-platinum: #ecf0f1;  /* Platinum for backgrounds */
-  
-  /* Presentation Backgrounds */
-  --bg-presentation: #ffffff;     /* Pure white for slides */
-  --bg-slide: #fafbfc;           /* Subtle slide background */
-  --bg-section: #f8f9fa;         /* Section backgrounds */
-  --bg-highlight: #e8f4fd;       /* Highlight backgrounds */
-  
-  /* McKinsey Accent Colors - Strategic and Impactful */
-  --accent-teal: #1abc9c;        /* McKinsey teal */
-  --accent-emerald: #27ae60;     /* Success/growth */
-  --accent-amber: #f39c12;       /* Warning/attention */
-  --accent-crimson: #e74c3c;     /* Risk/critical */
-  --accent-violet: #9b59b6;      /* Innovation/strategy */
-  
-  /* Text Hierarchy - Executive Presentation */
-  --text-primary: #000000;                      /* Black for headlines on white */
-  --text-secondary: #000000;                    /* Black for body text */
-  --text-muted: #333333;                        /* Dark grey for supporting text */
-  --text-light: #666666;                        /* Medium grey for captions */
-  --text-white: #ffffff;                        /* White text */
-  --text-navy: var(--mckinsey-navy);            /* Navy text */
-  
-  /* Professional Borders and Lines */
-  --border-subtle: #dee2e6;      /* Subtle borders */
-  --border-medium: #adb5bd;      /* Medium borders */
-  --border-strong: var(--executive-silver); /* Strong borders */
-  --border-accent: var(--accent-teal);       /* Accent borders */
-
-  /* Surface System */
-  --surface-primary: var(--bg-primary);
-  --surface-secondary: var(--bg-secondary);
-  --surface-tertiary: var(--bg-tertiary);
-  --surface-elevated: var(--bg-primary);
-
-  /* Typography System */
-  --font-family-primary: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-family-mono: var(--font-jetbrains-mono), 'Fira Code', 'Consolas', monospace;
-
-  /* Type Scale */
-  --text-xs: 0.75rem;    /* 12px */
-  --text-sm: 0.875rem;   /* 14px */
-  --text-base: 1rem;     /* 16px */
-  --text-lg: 1.125rem;   /* 18px */
-  --text-xl: 1.25rem;    /* 20px */
-  --text-2xl: 1.5rem;    /* 24px */
-  --text-3xl: 1.875rem;  /* 30px */
-  --text-4xl: 2.25rem;   /* 36px */
-  --text-5xl: 3rem;      /* 48px */
-  --text-6xl: 3.75rem;   /* 60px */
-
-  /* Line Heights */
-  --leading-tight: 1.25;
-  --leading-snug: 1.375;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
-  --leading-loose: 2;
-
-  /* Spacing System - 8pt Grid */
-  --space-0: 0;
-  --space-1: 0.25rem;    /* 4px */
-  --space-2: 0.5rem;     /* 8px */
-  --space-3: 0.75rem;    /* 12px */
-  --space-4: 1rem;       /* 16px */
-  --space-5: 1.25rem;    /* 20px */
-  --space-6: 1.5rem;     /* 24px */
-  --space-8: 2rem;       /* 32px */
-  --space-10: 2.5rem;    /* 40px */
-  --space-12: 3rem;      /* 48px */
-  --space-16: 4rem;      /* 64px */
-  --space-20: 5rem;      /* 80px */
-  --space-24: 6rem;      /* 96px */
-
-  /* Border Radius */
-  --radius-none: 0;
-  --radius-sm: 0.25rem;
-  --radius-base: 0.375rem;
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.5rem;
-  --radius-full: 9999px;
-
-  /* Shadows - Layered Design */
-  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-base: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-
-  /* Transitions */
-  --transition-fast: 150ms ease;
-  --transition-base: 200ms ease;
-  --transition-slow: 300ms ease;
-
-  /* Z-Index System */
-  --z-dropdown: 1000;
-  --z-sticky: 1020;
-  --z-fixed: 1030;
-  --z-modal-backdrop: 1040;
-  --z-modal: 1050;
-  --z-popover: 1060;
-  --z-tooltip: 1070;
+  /* Simple Colors */
+  --blue: #2563eb;
+  --green: #16a34a;
+  --red: #dc2626;
+  --yellow: #ca8a04;
+  --gray: #6b7280;
+  --light-gray: #f3f4f6;
+  --dark-gray: #374151;
 }
 
-/* Reset and Base Styles */
+/* Universal Reset */
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+/* Base Styles */
 html {
-  scroll-behavior: smooth;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  font-size: 1rem;
+  font-size: 16px;
   line-height: 1.5;
   color: #000000;
-  background-color: #fafbfc;
-  margin: 0;
-  padding: 0;
+  background-color: #ffffff;
 }
 
-/* Safari-compatible font and color rules */
-html {
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: #000000;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 1rem;
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.875rem; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.125rem; }
+h6 { font-size: 1rem; }
+
+p, div, span, button, input, textarea, select, label, a {
   font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   color: #000000;
 }
 
-/* Default text color for all elements - Safari compatible */
-*, *::before, *::after {
+/* Code Elements */
+code, pre {
+  font-family: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  background-color: #f3f4f6;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
   color: #000000;
-  font-family: inherit;
-}
-
-/* Explicit font declarations for Safari */
-h1, h2, h3, h4, h5, h6, p, div, span, button, input, textarea, select, label, a {
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-  color: #000000 !important;
-}
-
-code, pre, .font-mono {
-  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace !important;
-}
-
-/* Safari WebKit font rendering */
-body, html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-/* Safari-specific catch-all rules */
-@supports (-webkit-appearance: none) {
-  * {
-    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-    color: #000000 !important;
-  }
-  
-  body {
-    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-    color: #000000 !important;
-  }
-}
-
-/* WebKit specific font loading */
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  body, h1, h2, h3, h4, h5, h6, p, div, span, button, input, textarea, select, label, a {
-    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-    color: #000000 !important;
-  }
-}
-
-/* CRITICAL: Force black text on white/light backgrounds */
-.bg-white, .bg-white *, 
-.bg-gray-50, .bg-gray-50 *,
-.bg-gray-100, .bg-gray-100 *,
-.bg-slate-50, .bg-slate-50 *,
-.bg-slate-100, .bg-slate-100 *,
-[style*="background-color: white"], [style*="background-color: white"] *,
-[style*="background-color: #ffffff"], [style*="background-color: #ffffff"] *,
-[style*="background-color: #fff"], [style*="background-color: #fff"] *,
-[style*="background: white"], [style*="background: white"] *,
-[style*="background: #ffffff"], [style*="background: #ffffff"] *,
-[style*="background: #fff"], [style*="background: #fff"] * {
-  color: #000000 !important;
-}
-
-/* Safari-specific: Force black text on card and container elements */
-.card,
-.card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
-.card p, .card div, .card span, .card button, .card input, .card textarea, .card select, .card label, .card a,
-.container,
-.container h1, .container h2, .container h3, .container h4, .container h5, .container h6,
-.container p, .container div, .container span, .container button, .container input, .container textarea, .container select, .container label, .container a,
-.executive-card,
-.executive-card h1, .executive-card h2, .executive-card h3, .executive-card h4, .executive-card h5, .executive-card h6,
-.executive-card p, .executive-card div, .executive-card span, .executive-card button, .executive-card input, .executive-card textarea, .executive-card select, .executive-card label, .executive-card a,
-.mckinsey-slide,
-.mckinsey-slide h1, .mckinsey-slide h2, .mckinsey-slide h3, .mckinsey-slide h4, .mckinsey-slide h5, .mckinsey-slide h6,
-.mckinsey-slide p, .mckinsey-slide div, .mckinsey-slide span, .mckinsey-slide button, .mckinsey-slide input, .mckinsey-slide textarea, .mckinsey-slide select, .mckinsey-slide label, .mckinsey-slide a,
-.alert,
-.alert h1, .alert h2, .alert h3, .alert h4, .alert h5, .alert h6,
-.alert p, .alert div, .alert span, .alert button, .alert input, .alert textarea, .alert select, .alert label, .alert a,
-.nav-tabs,
-.nav-tabs h1, .nav-tabs h2, .nav-tabs h3, .nav-tabs h4, .nav-tabs h5, .nav-tabs h6,
-.nav-tabs p, .nav-tabs div, .nav-tabs span, .nav-tabs button, .nav-tabs input, .nav-tabs textarea, .nav-tabs select, .nav-tabs label, .nav-tabs a {
-  color: #000000 !important;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
-}
-
-/* White text ONLY on dark backgrounds */
-.hero, .hero *,
-.bg-slate-700, .bg-slate-700 *,
-.bg-slate-800, .bg-slate-800 *,
-.bg-slate-900, .bg-slate-900 *,
-.bg-gray-700, .bg-gray-700 *,
-.bg-gray-800, .bg-gray-800 *,
-.bg-gray-900, .bg-gray-900 *,
-[style*="background-color: var(--mckinsey-navy)"], [style*="background-color: var(--mckinsey-navy)"] *,
-[style*="background: linear-gradient"][style*="navy"], [style*="background: linear-gradient"][style*="navy"] *,
-[style*="background: linear-gradient"][style*="dark"], [style*="background: linear-gradient"][style*="dark"] * {
-  color: #ffffff !important;
-}
-
-/* McKinsey Executive Typography */
-.display-1 {
-  font-size: var(--text-6xl);
-  font-weight: 300;
-  line-height: var(--leading-tight);
-  letter-spacing: -0.02em;
-  color: var(--mckinsey-navy);
-}
-
-.display-2 {
-  font-size: var(--text-5xl);
-  font-weight: 300;
-  line-height: var(--leading-tight);
-  letter-spacing: -0.015em;
-  color: var(--mckinsey-navy);
-}
-
-.headline-1 {
-  font-size: var(--text-4xl);
-  font-weight: 300;
-  line-height: var(--leading-tight);
-  letter-spacing: -0.01em;
-  color: var(--mckinsey-navy);
-}
-
-.headline-2 {
-  font-size: var(--text-3xl);
-  font-weight: 400;
-  line-height: var(--leading-snug);
-  color: var(--text-primary);
-}
-
-.headline-3 {
-  font-size: var(--text-2xl);
-  font-weight: 400;
-  line-height: var(--leading-snug);
-  color: var(--text-primary);
-}
-
-.headline-4 {
-  font-size: var(--text-xl);
-  font-weight: 500;
-  line-height: var(--leading-snug);
-  color: var(--text-primary);
-}
-
-.body-large {
-  font-size: var(--text-lg);
-  line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
-  font-weight: 300;
-}
-
-.body-base {
-  font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
-  color: var(--text-secondary);
-  font-weight: 300;
-}
-
-.body-small {
-  font-size: var(--text-sm);
-  line-height: var(--leading-normal);
-  color: var(--text-muted);
-  font-weight: 300;
-}
-
-.caption {
-  font-size: var(--text-xs);
-  line-height: var(--leading-normal);
-  color: var(--text-light);
-  text-transform: uppercase;
-  font-weight: 500;
-  letter-spacing: 0.1em;
 }
 
 /* Layout Components */
 .container {
-  max-width: 1280px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 var(--space-6);
+  padding: 0 1.5rem;
 }
 
-.container-narrow {
-  max-width: 768px;
-  margin: 0 auto;
-  padding: 0 var(--space-6);
-}
-
-.section {
-  padding: var(--space-20) 0;
-}
-
-.section-sm {
-  padding: var(--space-12) 0;
-}
-
-.section-lg {
-  padding: var(--space-24) 0;
-}
-
-/* McKinsey Executive Card System */
+/* Cards */
 .card {
-  background: var(--bg-presentation);
-  border-radius: var(--radius-sm);
-  border: none;
-  padding: var(--space-8);
-  transition: all var(--transition-base);
-  box-shadow: 0 2px 8px 0 rgba(0, 40, 85, 0.08);
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.card:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px 0 rgba(0, 40, 85, 0.12);
+.card h1, .card h2, .card h3, .card h4, .card h5, .card h6,
+.card p, .card div, .card span, .card button, .card input, 
+.card textarea, .card select, .card label, .card a {
+  color: #000000;
 }
 
-.card-interactive {
-  cursor: pointer;
-  transition: all var(--transition-base);
-  position: relative;
-}
-
-.card-interactive::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 4px;
-  height: 100%;
-  background: var(--accent-teal);
-  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
-  opacity: 0;
-  transition: opacity var(--transition-base);
-}
-
-.card-interactive:hover::before {
-  opacity: 1;
-}
-
-.card-interactive:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px 0 rgba(0, 40, 85, 0.15);
-}
-
-.card-header {
-  padding-bottom: var(--space-4);
-  border-bottom: 2px solid var(--border-primary);
-  margin-bottom: var(--space-6);
-}
-
-.card-content {
-  padding: var(--space-6);
-}
-
-.card-footer {
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--neutral-200);
-  margin-top: var(--space-6);
-}
-
-/* Minimalist Metric Card */
-.metric-card {
-  background: var(--surface-primary);
-  border-radius: var(--radius-md);
-  padding: var(--space-6);
-  text-align: center;
-  border: 1px solid var(--border-light);
-  transition: all var(--transition-base);
-}
-
-.metric-card:hover {
-  border-color: var(--border-medium);
-}
-
-.metric-value {
-  font-size: var(--text-3xl);
-  font-weight: 700;
-  line-height: var(--leading-tight);
-  margin-bottom: var(--space-2);
-}
-
-.metric-label {
-  font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--neutral-900);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.metric-change {
-  font-size: var(--text-xs);
-  margin-top: var(--space-1);
-}
-
-.metric-change.positive {
-  color: var(--success-600);
-}
-
-.metric-change.negative {
-  color: var(--error-600);
-}
-
-/* High Contrast Alert System */
-.alert {
-  border-radius: var(--radius-md);
-  padding: var(--space-5);
-  margin-bottom: var(--space-4);
-  border: 2px solid var(--border-primary);
-  font-weight: 500;
-}
-
-.alert-info {
-  background: var(--bg-accent);
-  border-color: var(--accent-secondary);
-  color: var(--text-primary);
-}
-
-.alert-success {
-  background: #f0fff4;
-  border-color: var(--accent-success);
-  color: var(--text-primary);
-}
-
-.alert-warning {
-  background: var(--bg-warning);
-  border-color: var(--accent-warning);
-  color: var(--text-primary);
-}
-
-.alert-error {
-  background: var(--bg-error);
-  border-color: var(--accent-error);
-  color: var(--text-primary);
-}
-
-.alert-title {
-  font-weight: 600;
-  font-size: var(--text-sm);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: var(--space-1);
-}
-
-.alert-content {
-  font-size: var(--text-sm);
-  line-height: var(--leading-relaxed);
-}
-
-/* High Contrast Button System */
+/* Buttons */
 .btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-3) var(--space-6);
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: var(--text-sm);
-  line-height: 1;
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
   text-decoration: none;
-  transition: all var(--transition-fast);
+  font-weight: 500;
+  border: none;
   cursor: pointer;
-  border: 2px solid;
+  color: #ffffff;
+  background-color: var(--blue);
 }
 
-.btn:focus {
-  outline: 3px solid var(--accent-primary);
-  outline-offset: 2px;
-}
-
-.btn-primary {
-  background: var(--accent-primary);
-  color: var(--text-white);
-  border-color: var(--accent-primary);
-}
-
-.btn-primary:hover {
-  background: var(--primary-900);
-  border-color: var(--primary-900);
-  transform: translateY(-1px);
+.btn:hover {
+  opacity: 0.9;
 }
 
 .btn-secondary {
-  background: var(--surface-primary);
-  color: var(--text-primary);
-  border-color: var(--border-secondary);
+  background-color: #6b7280;
+  color: #ffffff;
 }
 
-.btn-secondary:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--accent-primary);
-  color: var(--accent-primary);
+.btn-success {
+  background-color: var(--green);
+  color: #ffffff;
 }
 
-.btn-ghost {
-  background: transparent;
-  color: var(--text-primary);
-  border-color: transparent;
+.btn-danger {
+  background-color: var(--red);
+  color: #ffffff;
 }
 
-.btn-ghost:hover {
-  background: var(--bg-tertiary);
-  border-color: var(--border-primary);
+/* Alerts */
+.alert {
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid;
 }
 
-.btn-sm {
-  padding: var(--space-2) var(--space-4);
-  font-size: var(--text-xs);
+.alert-info {
+  background-color: #dbeafe;
+  border-color: var(--blue);
+  color: #1e40af;
 }
 
-.btn-lg {
-  padding: var(--space-4) var(--space-8);
-  font-size: var(--text-base);
+.alert-success {
+  background-color: #dcfce7;
+  border-color: var(--green);
+  color: #166534;
 }
 
-/* McKinsey Executive Navigation */
+.alert-warning {
+  background-color: #fef3c7;
+  border-color: var(--yellow);
+  color: #92400e;
+}
+
+.alert-error {
+  background-color: #fee2e2;
+  border-color: var(--red);
+  color: #991b1b;
+}
+
+/* Navigation */
 .nav-tabs {
   display: flex;
-  background: var(--bg-presentation);
-  border-radius: var(--radius-md);
-  padding: var(--space-1);
-  box-shadow: 0 2px 8px 0 rgba(0, 40, 85, 0.08);
-  border: 1px solid var(--border-subtle);
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 1rem;
 }
 
 .nav-tab {
-  padding: var(--space-4) var(--space-6);
-  border-radius: var(--radius-sm);
-  font-weight: 400;
-  font-size: var(--text-sm);
-  color: var(--text-muted);
+  padding: 0.75rem 1rem;
   text-decoration: none;
-  transition: all var(--transition-base);
-  position: relative;
-  background: transparent;
+  color: #6b7280;
+  border-bottom: 2px solid transparent;
 }
 
 .nav-tab:hover {
-  color: var(--text-primary);
-  background: var(--bg-section);
+  color: #000000;
 }
 
 .nav-tab.active {
-  color: var(--mckinsey-navy);
-  background: var(--bg-highlight);
-  font-weight: 500;
-  position: relative;
-}
-
-.nav-tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 24px;
-  height: 2px;
-  background: var(--accent-teal);
-}
-
-/* Clean Data Visualization */
-.chart-container {
-  background: var(--surface-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-8);
-  border: 1px solid var(--border-light);
-  margin-bottom: var(--space-8);
-}
-
-.chart-header {
-  margin-bottom: var(--space-6);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--border-light);
-}
-
-.chart-title {
-  font-size: var(--text-xl);
-  font-weight: 600;
-  color: var(--neutral-900);
-  margin-bottom: var(--space-2);
-}
-
-.chart-subtitle {
-  font-size: var(--text-sm);
-  color: var(--neutral-900);
-  line-height: var(--leading-relaxed);
+  color: var(--blue);
+  border-bottom-color: var(--blue);
 }
 
 /* Tables */
-.table-container {
-  background: var(--surface-primary);
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--neutral-200);
-}
-
 .table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 1rem;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  color: #000000;
 }
 
 .table th {
-  background: var(--bg-tertiary);
-  padding: var(--space-4);
-  text-align: left;
-  font-weight: 700;
-  font-size: var(--text-sm);
-  color: var(--text-primary);
-  border-bottom: 2px solid var(--border-secondary);
+  font-weight: 600;
+  background-color: #f9fafb;
 }
 
-.table td {
-  padding: var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-  border-bottom: 1px solid var(--border-primary);
-}
-
-.table tr:last-child td {
-  border-bottom: none;
-}
-
-.table tr:hover td {
-  background: var(--neutral-25);
-}
-
-/* Minimal Status Indicators */
-.status {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-md);
-  font-size: var(--text-xs);
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: var(--bg-subtle);
-  color: var(--neutral-900);
-  border: 1px solid var(--border-light);
-}
-
-/* McKinsey Executive Hero Section */
-.hero {
-  background: linear-gradient(135deg, var(--mckinsey-navy) 0%, var(--mckinsey-navy-light) 100%);
-  color: var(--text-white);
-  position: relative;
-  overflow: hidden;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, transparent 30%, rgba(26, 188, 156, 0.1) 50%, transparent 70%);
-  animation: shimmer 8s infinite;
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-.hero-content {
-  position: relative;
-  z-index: 1;
-  text-align: center;
-  padding: var(--space-20) 0;
-}
-
-.hero-title {
-  font-size: var(--text-5xl);
-  font-weight: 800;
-  line-height: var(--leading-tight);
-  margin-bottom: var(--space-6);
-  letter-spacing: -0.025em;
-}
-
-.hero-subtitle {
-  font-size: var(--text-xl);
-  line-height: var(--leading-relaxed);
-  opacity: 0.9;
-  margin-bottom: var(--space-8);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-/* Minimal Badge System */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-md);
-  font-size: var(--text-xs);
-  font-weight: 500;
-  background: var(--bg-subtle);
-  color: var(--neutral-900);
-  border: 1px solid var(--border-light);
-}
-
-/* Grid System */
+/* Grid */
 .grid {
   display: grid;
-  gap: var(--space-6);
+  gap: 1.5rem;
 }
 
 .grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
 .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
 .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
-.grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
 
-/* Responsive Grid */
-@media (max-width: 768px) {
-  .grid-cols-2 { grid-template-columns: 1fr; }
-  .grid-cols-3 { grid-template-columns: 1fr; }
-  .grid-cols-4 { grid-template-columns: repeat(2, 1fr); }
-  .grid-cols-6 { grid-template-columns: repeat(2, 1fr); }
+/* Utilities */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.font-medium { font-weight: 500; }
+
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+
+/* Background Colors */
+.bg-white { background-color: #ffffff; }
+.bg-gray-50 { background-color: #f9fafb; }
+.bg-gray-100 { background-color: #f3f4f6; }
+.bg-blue-50 { background-color: #eff6ff; }
+.bg-green-50 { background-color: #f0fdf4; }
+.bg-red-50 { background-color: #fef2f2; }
+.bg-yellow-50 { background-color: #fefce8; }
+
+/* Text Colors */
+.text-blue-600 { color: var(--blue); }
+.text-green-600 { color: var(--green); }
+.text-red-600 { color: var(--red); }
+.text-yellow-600 { color: var(--yellow); }
+.text-gray-600 { color: var(--gray); }
+
+/* Force black text everywhere */
+.bg-white, .bg-white *,
+.bg-gray-50, .bg-gray-50 *,
+.bg-gray-100, .bg-gray-100 *,
+.bg-blue-50, .bg-blue-50 *,
+.bg-green-50, .bg-green-50 *,
+.bg-red-50, .bg-red-50 *,
+.bg-yellow-50, .bg-yellow-50 * {
+  color: #000000 !important;
 }
 
-@media (max-width: 480px) {
-  .grid-cols-4 { grid-template-columns: 1fr; }
-  .grid-cols-6 { grid-template-columns: 1fr; }
-}
-
-/* Spacing Utilities */
-.space-y-1 > * + * { margin-top: var(--space-1); }
-.space-y-2 > * + * { margin-top: var(--space-2); }
-.space-y-3 > * + * { margin-top: var(--space-3); }
-.space-y-4 > * + * { margin-top: var(--space-4); }
-.space-y-6 > * + * { margin-top: var(--space-6); }
-.space-y-8 > * + * { margin-top: var(--space-8); }
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .container {
-    padding: 0 var(--space-4);
-  }
-  
-  .section {
-    padding: var(--space-16) 0;
-  }
-  
-  .hero-title {
-    font-size: var(--text-4xl);
-  }
-  
-  .display-1 {
-    font-size: var(--text-5xl);
-  }
-  
-  .display-2 {
-    font-size: var(--text-4xl);
-  }
-}
-
+/* Responsive */
 @media (max-width: 768px) {
   .container {
-    padding: 0 var(--space-4);
+    padding: 0 1rem;
   }
   
-  .section {
-    padding: var(--space-12) 0;
-  }
-  
-  .hero-title {
-    font-size: var(--text-3xl);
-  }
-  
-  .hero-subtitle {
-    font-size: var(--text-lg);
-  }
-  
-  .card {
-    padding: var(--space-4);
-  }
-  
-  .chart-container {
-    padding: var(--space-6);
-  }
-  
-  .nav-tabs {
-    flex-wrap: wrap;
-    gap: var(--space-1);
-  }
-  
-  .nav-tab {
-    flex: 1;
-    text-align: center;
-    min-width: 120px;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero-title {
-    font-size: var(--text-2xl);
-  }
-  
-  .display-1 {
-    font-size: var(--text-3xl);
-  }
-  
-  .display-2 {
-    font-size: var(--text-2xl);
-  }
-  
-  .headline-1 {
-    font-size: var(--text-2xl);
-  }
-  
-  .metric-card {
-    padding: var(--space-4);
-  }
-  
-  .btn {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .nav-tab {
-    min-width: 100px;
-    font-size: var(--text-xs);
-  }
-}
-
-/* Animation & Transitions */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideIn {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(0); }
-}
-
-@keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.6s ease-out;
-}
-
-.animate-slide-in {
-  animation: slideIn 0.4s ease-out;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.3s ease-out;
-}
-
-/* McKinsey Presentation Styles */
-.mckinsey-slide {
-  background: var(--surface-primary);
-  min-height: 100vh;
-  padding: var(--space-8);
-  font-family: var(--font-family-primary);
-}
-
-.mckinsey-header {
-  margin-bottom: var(--space-8);
-  padding-bottom: var(--space-6);
-  border-bottom: 1px solid var(--border-subtle);
-  position: relative;
-}
-
-.mckinsey-header::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 80px;
-  height: 3px;
-  background: var(--accent-teal);
-}
-
-.mckinsey-title-section {
-  margin-bottom: var(--space-6);
-}
-
-.mckinsey-title {
-  font-size: var(--text-4xl);
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: var(--leading-tight);
-  margin-bottom: var(--space-3);
-  letter-spacing: -0.02em;
-}
-
-.mckinsey-subtitle {
-  font-size: var(--text-lg);
-  color: var(--text-secondary);
-  line-height: var(--leading-relaxed);
-  max-width: 800px;
-}
-
-.mckinsey-context-boxes {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: var(--space-6);
-  margin-top: var(--space-6);
-}
-
-.mckinsey-context-box {
-  padding: var(--space-6);
-  border-radius: var(--radius-lg);
-  border-left: 4px solid;
-  box-shadow: var(--shadow-sm);
-}
-
-.mckinsey-context-box.problem {
-  background: var(--bg-error);
-  border-color: var(--accent-error);
-}
-
-.mckinsey-context-box.approach {
-  background: var(--bg-warning);
-  border-color: var(--accent-warning);
-}
-
-.mckinsey-box-label {
-  font-size: var(--text-xs);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-primary);
-  margin-bottom: var(--space-2);
-}
-
-.mckinsey-box-content {
-  font-size: var(--text-sm);
-  color: var(--text-primary);
-  line-height: var(--leading-relaxed);
-  font-weight: 500;
-}
-
-.mckinsey-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: var(--space-8);
-  align-items: start;
-}
-
-.mckinsey-insights-panel {
-  background: var(--bg-subtle);
-  padding: var(--space-6);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--border-light);
-  position: sticky;
-  top: var(--space-8);
-}
-
-.mckinsey-section-title {
-  font-size: var(--text-sm);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-primary);
-  margin-bottom: var(--space-4);
-  padding-bottom: var(--space-2);
-  border-bottom: 2px solid var(--text-primary);
-}
-
-.mckinsey-insights-section {
-  margin-bottom: var(--space-6);
-}
-
-.mckinsey-insights-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.mckinsey-insight-item {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: var(--space-3);
-  font-size: var(--text-sm);
-  color: var(--text-primary);
-  line-height: var(--leading-relaxed);
-}
-
-.mckinsey-bullet {
-  color: var(--accent-teal);
-  font-weight: 700;
-  margin-right: var(--space-2);
-  margin-top: 2px;
-  font-size: var(--text-lg);
-}
-
-.mckinsey-recommendations-section {
-  margin-top: var(--space-6);
-}
-
-.mckinsey-recommendations-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.mckinsey-recommendation-item {
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: var(--space-4);
-  font-size: var(--text-sm);
-  color: var(--text-primary);
-  line-height: var(--leading-relaxed);
-  font-weight: 500;
-}
-
-.mckinsey-number {
-  background: var(--mckinsey-navy);
-  color: white;
-  border-radius: var(--radius-full);
-  width: 24px;
-  height: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: var(--text-xs);
-  font-weight: 700;
-  margin-right: var(--space-3);
-  margin-top: 2px;
-  flex-shrink: 0;
-}
-
-/* Clean Executive Card */
-.executive-card {
-  background: var(--surface-primary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-8);
-  border: 1px solid var(--border-light);
-  margin-bottom: var(--space-8);
-}
-
-.section-title {
-  font-size: var(--text-2xl);
-  font-weight: 700;
-  color: var(--neutral-900);
-  line-height: var(--leading-tight);
-  margin-bottom: var(--space-4);
-}
-
-/* Enhanced Contrast for Text */
-.body-base, .body-large, .body-small {
-  color: var(--text-primary) !important;
-}
-
-.caption {
-  color: var(--text-light) !important;
-}
-
-.alert-content {
-  color: var(--text-primary) !important;
-}
-
-/* Table Text Enhancement */
-.table th {
-  color: var(--text-primary) !important;
-}
-
-.table td {
-  color: var(--text-secondary) !important;
-}
-
-/* Comprehensive Background-Based Text Color Rules */
-/* Dark backgrounds need white text */
-[style*="background: linear-gradient"][style*="navy"],
-[style*="background: linear-gradient"][style*="dark"],
-[style*="background: linear-gradient"][style*="slate-7"],
-[style*="background: linear-gradient"][style*="slate-8"],
-[style*="background: linear-gradient"][style*="slate-9"],
-[style*="background-color: var(--mckinsey-navy)"],
-.bg-slate-700, .bg-slate-800, .bg-slate-900,
-.bg-gray-700, .bg-gray-800, .bg-gray-900,
-.hero {
-  color: var(--text-white) !important;
-}
-
-/* Light backgrounds need dark text */
-.bg-white, .bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100,
-.card, .alert, .nav-tabs, .bg-blue-50, .bg-green-50, .bg-yellow-50, 
-.bg-red-50, .bg-purple-50, .bg-orange-50 {
-  color: var(--text-primary) !important;
-}
-
-/* Force specific text color overrides for common problematic combinations */
-.text-slate-500, .text-slate-600, .text-slate-700, .text-slate-800 {
-  color: var(--text-primary) !important;
-}
-
-.text-gray-500, .text-gray-600, .text-gray-700, .text-gray-800 {
-  color: var(--text-primary) !important;
-}
-
-/* Colored text on light backgrounds - ensure dark variants */
-.text-blue-500, .text-blue-600, .text-blue-700, .text-blue-800 {
-  color: #1e3a8a !important; /* blue-900 equivalent */
-}
-
-.text-green-500, .text-green-600, .text-green-700, .text-green-800 {
-  color: #14532d !important; /* green-900 equivalent */
-}
-
-.text-red-500, .text-red-600, .text-red-700, .text-red-800 {
-  color: #7f1d1d !important; /* red-900 equivalent */
-}
-
-.text-yellow-500, .text-yellow-600, .text-yellow-700, .text-yellow-800 {
-  color: #713f12 !important; /* yellow-900 equivalent */
-}
-
-.text-purple-500, .text-purple-600, .text-purple-700, .text-purple-800 {
-  color: #581c87 !important; /* purple-900 equivalent */
-}
-
-/* Responsive McKinsey Layout */
-@media (max-width: 1024px) {
-  .mckinsey-content {
-    grid-template-columns: 1fr;
-    gap: var(--space-6);
-  }
-  
-  .mckinsey-insights-panel {
-    position: static;
-  }
-  
-  .mckinsey-context-boxes {
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
     grid-template-columns: 1fr;
   }
   
-  .mckinsey-title {
-    font-size: var(--text-3xl);
-  }
-}
-
-@media (max-width: 768px) {
-  .mckinsey-slide {
-    padding: var(--space-4);
-  }
-  
-  .mckinsey-title {
-    font-size: var(--text-2xl);
-  }
-  
-  .mckinsey-subtitle {
-    font-size: var(--text-base);
-  }
-}
-
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --neutral-900: #f9fafb;
-    --neutral-800: #f3f4f6;
-    --neutral-700: #e5e7eb;
-    --neutral-600: #d1d5db;
-    --neutral-500: #9ca3af;
-    --neutral-400: #6b7280;
-    --neutral-300: #4b5563;
-    --neutral-200: #374151;
-    --neutral-100: #1f2937;
-    --neutral-50: #111827;
-    --neutral-25: #0a0a0a;
-    
-    --surface-primary: #1f2937;
-    --surface-secondary: #111827;
-    --surface-tertiary: #0f172a;
-  }
-}
-
-/* Print Styles */
-@media print {
-  body {
-    background: white;
-    color: black;
-    font-size: 12pt;
-    line-height: 1.4;
-  }
-  
-  .card, .chart-container {
-    break-inside: avoid;
-    box-shadow: none;
-    border: 1px solid #ccc;
-  }
-  
-  .btn, .nav-tabs {
-    display: none;
-  }
-  
-  .hero {
-    background: none;
-    color: black;
-  }
+  h1 { font-size: 1.875rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.25rem; }
 }
