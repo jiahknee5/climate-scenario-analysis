@@ -16,108 +16,111 @@ export default function Home() {
   const [selectedScenarios, setSelectedScenarios] = useState<ClimateScenario[]>([])
 
   return (
-    <div className="min-h-screen" style={{background: 'var(--background)'}}>
-      {/* Executive Header */}
-      <header className="bg-white border-b" style={{borderColor: 'var(--border-light)', boxShadow: 'var(--shadow-light)'}}>
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          {/* Executive Title Section */}
-          <div className="text-center mb-6">
-            <h1 className="executive-title">
+    <div className="min-h-screen">
+      {/* Modern Hero Header */}
+      <header className="hero">
+        <div className="hero-content">
+          <div className="container">
+            <h1 className="hero-title animate-fade-in">
               Climate Risk Analysis Platform
             </h1>
-            <div className="body-text max-w-3xl mx-auto mb-6">
+            <p className="hero-subtitle animate-fade-in">
               Advanced stress testing and portfolio risk assessment for regulatory compliance and strategic decision making
-            </div>
+            </p>
             
-            {/* Compliance Badges */}
-            <div className="flex justify-center flex-wrap gap-3">
-              <div className="flex items-center px-4 py-2 rounded-lg border" style={{borderColor: 'var(--border-light)', background: 'var(--surface)'}}>
-                <div className="w-2 h-2 rounded-full mr-2" style={{background: 'var(--success)'}}></div>
-                <span className="text-sm font-medium" style={{color: 'var(--text-secondary)'}}>CCAR Compliant</span>
+            {/* Modern Badge System */}
+            <div className="flex justify-center flex-wrap gap-4 animate-fade-in">
+              <div className="badge badge-success">
+                <div className="w-2 h-2 rounded-full mr-2 bg-current opacity-60"></div>
+                CCAR Compliant
               </div>
-              <div className="flex items-center px-4 py-2 rounded-lg border" style={{borderColor: 'var(--border-light)', background: 'var(--surface)'}}>
-                <div className="w-2 h-2 rounded-full mr-2" style={{background: 'var(--info)'}}></div>
-                <span className="text-sm font-medium" style={{color: 'var(--text-secondary)'}}>Basel III</span>
+              <div className="badge badge-primary">
+                <div className="w-2 h-2 rounded-full mr-2 bg-current opacity-60"></div>
+                Basel III
               </div>
-              <div className="flex items-center px-4 py-2 rounded-lg border" style={{borderColor: 'var(--border-light)', background: 'var(--surface)'}}>
-                <div className="w-2 h-2 rounded-full mr-2" style={{background: 'var(--primary-blue)'}}></div>
-                <span className="text-sm font-medium" style={{color: 'var(--text-secondary)'}}>Fed Scenarios</span>
+              <div className="badge badge-primary">
+                <div className="w-2 h-2 rounded-full mr-2 bg-current opacity-60"></div>
+                Fed Scenarios
               </div>
-              <div className="flex items-center px-4 py-2 rounded-lg border" style={{borderColor: 'var(--border-light)', background: 'var(--surface)'}}>
-                <div className="w-2 h-2 rounded-full mr-2" style={{background: 'var(--accent-orange)'}}></div>
-                <span className="text-sm font-medium" style={{color: 'var(--text-secondary)'}}>IFRS 9</span>
+              <div className="badge badge-warning">
+                <div className="w-2 h-2 rounded-full mr-2 bg-current opacity-60"></div>
+                IFRS 9
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-8">
-        {/* Executive Summary - Always Visible */}
-        <ExecutiveSummary />
-        
-        <Tabs defaultValue="portfolio" className="space-y-8">
-          {/* Executive Navigation */}
-          <div className="flex justify-center">
-            <TabsList className="inline-flex bg-white border rounded-lg p-1" style={{borderColor: 'var(--border-light)', boxShadow: 'var(--shadow-light)'}}>
-              <TabsTrigger value="portfolio" className="px-6 py-3 text-sm font-medium transition-all data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">Portfolio Setup</TabsTrigger>
-              <TabsTrigger value="scenarios" className="px-6 py-3 text-sm font-medium transition-all data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">Climate Scenarios</TabsTrigger>
-              <TabsTrigger value="calculations" className="px-6 py-3 text-sm font-medium transition-all data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">Methodology</TabsTrigger>
-              <TabsTrigger value="results" className="px-6 py-3 text-sm font-medium transition-all data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">Executive Summary</TabsTrigger>
-              <TabsTrigger value="advanced" className="px-6 py-3 text-sm font-medium transition-all data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">Risk Management</TabsTrigger>
-              <TabsTrigger value="regulatory" className="px-6 py-3 text-sm font-medium transition-all data-[state=active]:bg-blue-50 data-[state=active]:text-blue-700">Regulatory</TabsTrigger>
-            </TabsList>
+      {/* Main Content with Modern Layout */}
+      <main className="section">
+        <div className="container">
+          {/* Executive Summary - Always Visible */}
+          <div className="animate-fade-in">
+            <ExecutiveSummary />
           </div>
+          
+          <Tabs defaultValue="portfolio" className="space-y-8">
+            {/* Modern Navigation */}
+            <div className="flex justify-center animate-scale-in">
+              <TabsList className="nav-tabs">
+                <TabsTrigger value="portfolio">Portfolio Setup</TabsTrigger>
+                <TabsTrigger value="scenarios">Climate Scenarios</TabsTrigger>
+                <TabsTrigger value="calculations">Methodology</TabsTrigger>
+                <TabsTrigger value="results">Executive Summary</TabsTrigger>
+                <TabsTrigger value="advanced">Risk Management</TabsTrigger>
+                <TabsTrigger value="regulatory">Regulatory</TabsTrigger>
+              </TabsList>
+            </div>
 
-          <TabsContent value="portfolio" className="space-y-6">
-            <PortfolioInput onPortfolioUpdate={setPortfolio} />
-          </TabsContent>
+            <TabsContent value="portfolio" className="space-y-8 animate-fade-in">
+              <PortfolioInput onPortfolioUpdate={setPortfolio} />
+            </TabsContent>
 
-          <TabsContent value="scenarios" className="space-y-6">
-            <ScenarioSelection onScenariosChange={setSelectedScenarios} />
-          </TabsContent>
+            <TabsContent value="scenarios" className="space-y-8 animate-fade-in">
+              <ScenarioSelection onScenariosChange={setSelectedScenarios} />
+            </TabsContent>
 
-          <TabsContent value="calculations" className="space-y-6">
-            <CalculationWalkthrough 
-              portfolio={portfolio} 
-              scenarios={selectedScenarios}
-            />
-          </TabsContent>
+            <TabsContent value="calculations" className="space-y-8 animate-fade-in">
+              <CalculationWalkthrough 
+                portfolio={portfolio} 
+                scenarios={selectedScenarios}
+              />
+            </TabsContent>
 
-          <TabsContent value="results" className="space-y-6">
-            <ResultsDashboard 
-              portfolio={portfolio} 
-              scenarios={selectedScenarios}
-            />
-          </TabsContent>
+            <TabsContent value="results" className="space-y-8 animate-fade-in">
+              <ResultsDashboard 
+                portfolio={portfolio} 
+                scenarios={selectedScenarios}
+              />
+            </TabsContent>
 
-          <TabsContent value="advanced" className="space-y-6">
-            <RiskManagementDashboard 
-              portfolio={portfolio} 
-              scenarios={selectedScenarios}
-            />
-          </TabsContent>
+            <TabsContent value="advanced" className="space-y-8 animate-fade-in">
+              <RiskManagementDashboard 
+                portfolio={portfolio} 
+                scenarios={selectedScenarios}
+              />
+            </TabsContent>
 
-          <TabsContent value="regulatory" className="space-y-6">
-            <RegulatoryReporting 
-              portfolio={portfolio} 
-              scenarios={selectedScenarios}
-            />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="regulatory" className="space-y-8 animate-fade-in">
+              <RegulatoryReporting 
+                portfolio={portfolio} 
+                scenarios={selectedScenarios}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
       </main>
 
-      {/* Executive Footer */}
-      <footer className="mt-16 pt-8" style={{borderTop: '1px solid var(--border-light)'}}>
-        <div className="max-w-7xl mx-auto px-6 py-6">
+      {/* Modern Footer */}
+      <footer className="section-sm" style={{borderTop: '1px solid var(--neutral-200)', background: 'var(--surface-primary)'}}>
+        <div className="container">
           <div className="text-center">
-            <div className="caption-text mb-2">
+            <p className="body-small mb-2">
               Professional Climate Risk Analysis Platform
-            </div>
-            <div className="caption-text">
+            </p>
+            <p className="caption">
               Designed for executive decision making and regulatory compliance
-            </div>
+            </p>
           </div>
         </div>
       </footer>
