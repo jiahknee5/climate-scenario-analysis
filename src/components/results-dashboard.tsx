@@ -90,7 +90,12 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
 
   return (
     <div className="space-y-8">
-      <h2 className="text-2xl font-bold">Scenario Analysis Results</h2>
+      <div className="bg-gradient-to-r from-green-600 to-green-800 text-white p-6 rounded-lg">
+        <h2 className="text-2xl font-bold mb-2">CCAR Climate Risk Analysis Results</h2>
+        <p className="text-green-100">
+          Comprehensive stress testing results for regulatory reporting and portfolio risk management
+        </p>
+      </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {scenarios.map((scenario) => {
@@ -123,7 +128,12 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">Expected Loss by Scenario</h3>
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-slate-800">Expected Loss by Climate Scenario</h3>
+            <p className="text-sm text-slate-600">
+              <strong>Business Objective:</strong> Quantify portfolio loss exposure under adverse climate scenarios for CCAR capital planning
+            </p>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -136,7 +146,12 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
         </div>
 
         <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">Expected Loss Rate by Scenario</h3>
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-slate-800">Portfolio Loss Rate Progression</h3>
+            <p className="text-sm text-slate-600">
+              <strong>Business Objective:</strong> Monitor loss rate escalation across scenarios for risk appetite monitoring and limit setting
+            </p>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -149,7 +164,12 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
         </div>
 
         <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">Portfolio Composition</h3>
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-slate-800">Exposure Distribution by Asset Class</h3>
+            <p className="text-sm text-slate-600">
+              <strong>Business Objective:</strong> Assess concentration risk and diversification benefits for climate stress testing
+            </p>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -172,7 +192,12 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
         </div>
 
         <div className="bg-white border rounded-lg p-6">
-          <h3 className="text-lg font-semibold mb-4">High Risk Loans by Scenario</h3>
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-slate-800">High-Risk Asset Identification</h3>
+            <p className="text-sm text-slate-600">
+              <strong>Business Objective:</strong> Identify assets requiring enhanced monitoring and potential portfolio rebalancing
+            </p>
+          </div>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
@@ -225,10 +250,35 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
         </div>
       </div>
 
+      {/* Business Insights Section */}
+      <div className="bg-gradient-to-r from-slate-700 to-slate-900 text-white p-6 rounded-lg">
+        <h3 className="text-lg font-semibold mb-4">Key Risk Management Insights</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="font-medium mb-3 text-blue-300">CCAR Capital Implications</h4>
+            <ul className="space-y-2 text-sm text-slate-200">
+              <li>• Worst-case scenario: ${Math.max(...chartData.map(d => d.expectedLoss)).toLocaleString()} total expected loss</li>
+              <li>• Loss rate range: {Math.min(...chartData.map(d => d.expectedLossRate)).toFixed(2)}% - {Math.max(...chartData.map(d => d.expectedLossRate)).toFixed(2)}%</li>
+              <li>• High-risk assets: Up to {Math.max(...chartData.map(d => d.highRiskLoans))} loans requiring enhanced provisions</li>
+              <li>• Recommend stress capital buffer of ${(Math.max(...chartData.map(d => d.expectedLoss)) * 0.12).toLocaleString()}</li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-medium mb-3 text-green-300">Portfolio Management Actions</h4>
+            <ul className="space-y-2 text-sm text-slate-200">
+              <li>• Consider geographic diversification to reduce climate concentration</li>
+              <li>• Implement enhanced underwriting for high-risk climate zones</li>
+              <li>• Update loan loss provision methodology for climate factors</li>
+              <li>• Establish climate risk-adjusted pricing mechanisms</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-3 text-blue-800">Export Results</h3>
+        <h3 className="text-lg font-semibold mb-3 text-blue-800">Regulatory Export & Documentation</h3>
         <p className="text-blue-700 mb-4">
-          Download results for regulatory reporting and further analysis.
+          Download comprehensive results for CCAR submission and regulatory compliance documentation.
         </p>
         <div className="space-x-4">
           <button 
