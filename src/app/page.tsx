@@ -28,24 +28,12 @@ export default function Home() {
               Advanced stress testing and portfolio risk assessment for regulatory compliance and strategic decision making
             </p>
             
-            {/* Modern Badge System */}
-            <div className="flex justify-center flex-wrap gap-4 animate-fade-in">
-              <div className="badge badge-success">
-                <div className="w-2 h-2 rounded-full mr-2 bg-current opacity-60"></div>
-                CCAR Compliant
-              </div>
-              <div className="badge badge-primary">
-                <div className="w-2 h-2 rounded-full mr-2 bg-current opacity-60"></div>
-                Basel III
-              </div>
-              <div className="badge badge-primary">
-                <div className="w-2 h-2 rounded-full mr-2 bg-current opacity-60"></div>
-                Fed Scenarios
-              </div>
-              <div className="badge badge-warning">
-                <div className="w-2 h-2 rounded-full mr-2 bg-current opacity-60"></div>
-                IFRS 9
-              </div>
+            {/* Clean Compliance Indicators */}
+            <div className="flex justify-center flex-wrap gap-6 animate-fade-in text-white/80 text-sm">
+              <span>CCAR Compliant</span>
+              <span>Basel III</span>
+              <span>Fed Scenarios</span>
+              <span>IFRS 9</span>
             </div>
           </div>
         </div>
