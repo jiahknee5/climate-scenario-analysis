@@ -1,50 +1,35 @@
 "use client"
 
 import { useState } from 'react'
+import McKinseySlide from './mckinsey-slide'
 
 export default function ExecutiveSummary() {
   const [isExpanded, setIsExpanded] = useState(false)
 
+  const keyInsights = [
+    "Climate risk stress testing reveals portfolio vulnerability to 2.3% baseline scenario impact",
+    "Geographic concentration in high-risk coastal markets exceeds 15% board-approved limit", 
+    "Current capital buffers adequate for orderly transition, insufficient for disorderly scenarios",
+    "Insurance modeling shows 45% premium increases under hot house world pathway"
+  ]
+
+  const recommendations = [
+    "Implement immediate geographic diversification strategy targeting 10% coastal exposure reduction",
+    "Establish $125M additional capital buffer for climate scenario stress coverage", 
+    "Update underwriting criteria to incorporate forward-looking climate risk adjustments",
+    "Execute quarterly stress testing and reporting framework for regulatory compliance"
+  ]
+
   return (
-    <div className="space-y-8">
-      {/* Executive Overview Card */}
-      <div className="card animate-fade-in">
-        <div className="card-header">
-          <h2 className="headline-2">Executive Summary</h2>
-          <p className="body-large">
-            This platform provides comprehensive climate risk analysis for banking portfolios, 
-            designed specifically for C-suite executives and risk management teams making strategic decisions.
-          </p>
-        </div>
-
-        {/* Key Context */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="alert alert-info">
-            <div className="alert-title">Business Problem</div>
-            <div className="alert-content">
-              Climate change poses significant financial risks to banking portfolios through physical damage and transition costs, 
-              requiring quantitative assessment for regulatory compliance and strategic planning.
-            </div>
-          </div>
-          
-          <div className="alert alert-warning">
-            <div className="alert-title">Our Approach</div>
-            <div className="alert-content">
-              Advanced stress testing using Federal Reserve climate scenarios to quantify portfolio-level impacts 
-              on expected losses, capital adequacy, and geographic concentration risks.
-            </div>
-          </div>
-          
-          <div className="alert alert-success">
-            <div className="alert-title">Expected Outcome</div>
-            <div className="alert-content">
-              Actionable insights for capital planning, portfolio optimization, and regulatory reporting 
-              with specific recommendations and timelines.
-            </div>
-          </div>
-        </div>
-
-      </div>
+    <McKinseySlide
+      title="Climate Risk Analysis Platform"
+      subtitle="Executive insights for strategic decision making and regulatory compliance in banking portfolios"
+      businessProblem="Climate change poses significant financial risks to banking portfolios through physical damage and transition costs, requiring quantitative assessment for CCAR compliance and strategic capital planning"
+      methodology="Advanced stress testing using Federal Reserve climate scenarios to quantify portfolio-level impacts on expected losses, capital adequacy, and geographic concentration risks"
+      keyInsights={keyInsights}
+      recommendations={recommendations}
+    >
+      <div className="space-y-8">
 
       {/* Platform Navigation Guide */}
       <div className="card animate-scale-in">
@@ -216,6 +201,7 @@ export default function ExecutiveSummary() {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </McKinseySlide>
   )
 }
