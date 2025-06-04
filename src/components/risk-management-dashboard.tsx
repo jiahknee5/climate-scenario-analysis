@@ -133,6 +133,7 @@ export default function RiskManagementDashboard({ portfolio, scenarios }: RiskMa
         capitalBuffer: (stressedCapitalRatio - 0.08) * 100, // Buffer above 8% minimum
         passesStress: stressedCapitalRatio > 0.08,
         capitalDeficit: Math.max(0, (0.08 - stressedCapitalRatio) * totalExposure / 1000000),
+        regulatoryMinimum: 8,
       }
     })
   }, [riskAnalysis, portfolio, scenarios])
@@ -330,7 +331,7 @@ export default function RiskManagementDashboard({ portfolio, scenarios }: RiskMa
             <Legend />
             <Bar yAxisId="left" dataKey="baseCapitalRatio" fill="#10b981" name="Base Capital Ratio" />
             <Bar yAxisId="left" dataKey="stressedCapitalRatio" fill="#3b82f6" name="Stressed Capital Ratio" />
-            <Line yAxisId="left" type="monotone" dataKey={8} stroke="#dc2626" strokeWidth={2} strokeDasharray="5 5" name="Regulatory Minimum (8%)" />
+            <Line yAxisId="left" type="monotone" dataKey="regulatoryMinimum" stroke="#dc2626" strokeWidth={2} strokeDasharray="5 5" name="Regulatory Minimum (8%)" />
             <Area yAxisId="right" type="monotone" dataKey="capitalDeficit" fill="#ef4444" fillOpacity={0.3} name="Capital Deficit" />
           </ComposedChart>
         </ResponsiveContainer>

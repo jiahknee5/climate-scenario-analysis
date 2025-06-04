@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useMemo } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { LoanPortfolio, ClimateScenario } from '@/types'
 
 interface CalculationWalkthroughProps {
@@ -47,6 +47,8 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
       technology_disruption: 0.8,
     },
   }
+
+  const baselineLTV = exampleLoan ? exampleLoan.outstanding_balance / exampleLoan.property_value : 0
 
   const calculations = useMemo(() => {
     if (!exampleLoan) return null
@@ -116,7 +118,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
         capitalIncrease: capitalRequirementStressed - capitalRequirementBaseline,
       }
     }
-  }, [exampleLoan, exampleScenario])
+  }, [exampleLoan, exampleScenario, baselineLTV])
 
   const sensitivityData = useMemo(() => {
     if (!calculations) return []
@@ -138,7 +140,6 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
     )
   }
 
-  const baselineLTV = exampleLoan.outstanding_balance / exampleLoan.property_value
 
   return (
     <div className="space-y-8">
