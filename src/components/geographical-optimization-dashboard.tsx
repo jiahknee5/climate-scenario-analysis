@@ -100,7 +100,7 @@ export default function GeographicalOptimizationDashboard({
 
   if (!loans.length) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-black">
         No loan data available for geographical analysis
       </div>
     )
@@ -230,24 +230,24 @@ export default function GeographicalOptimizationDashboard({
                   </span>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm text-gray-600">Expected Benefit</div>
+                  <div className="text-sm text-black">Expected Benefit</div>
                   <div className="font-bold">{(rec.expected_benefit * 100).toFixed(1)}%</div>
                 </div>
               </div>
               
-              <p className="text-sm text-gray-700 mb-2">{rec.rationale}</p>
+              <p className="text-sm text-black mb-2">{rec.rationale}</p>
               
               <div className="grid grid-cols-3 gap-4 text-xs">
                 <div>
-                  <span className="text-gray-500">Current: </span>
+                  <span className="text-black">Current: </span>
                   <span className="font-medium">{(rec.current_exposure * 100).toFixed(1)}%</span>
                 </div>
                 <div>
-                  <span className="text-gray-500">Recommended: </span>
+                  <span className="text-black">Recommended: </span>
                   <span className="font-medium">{(rec.recommended_exposure * 100).toFixed(1)}%</span>
                 </div>
                 <div>
-                  <span className="text-gray-500">Timeline: </span>
+                  <span className="text-black">Timeline: </span>
                   <span className="font-medium">{rec.time_horizon}</span>
                 </div>
               </div>

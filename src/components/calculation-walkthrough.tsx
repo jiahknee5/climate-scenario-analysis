@@ -134,7 +134,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
 
   if (!calculations) {
     return (
-      <div className="text-center py-8 text-slate-500">
+      <div className="text-center py-8 text-black">
         Please load a portfolio to see detailed calculations
       </div>
     )
@@ -160,7 +160,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
               const loan = portfolio.find(l => l.id === e.target.value)
               setSelectedLoan(loan || null)
             }}
-            className="w-full p-3 border rounded-lg text-slate-700"
+            className="w-full p-3 border rounded-lg text-black"
           >
             <option value={exampleLoan.id}>Example Property (Miami SFR)</option>
             {portfolio.slice(0, 20).map(loan => (
@@ -179,7 +179,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
               const scenario = scenarios.find(s => s.id === e.target.value)
               setSelectedScenario(scenario || null)
             }}
-            className="w-full p-3 border rounded-lg text-slate-700"
+            className="w-full p-3 border rounded-lg text-black"
           >
             <option value={exampleScenario.id}>Disorderly Transition (2°C)</option>
             {scenarios.map(scenario => (
@@ -196,20 +196,20 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
         <h3 className="text-lg font-semibold mb-4">Property Characteristics</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="bg-slate-50 p-4 rounded">
-            <div className="text-sm text-slate-600">Property Value</div>
-            <div className="text-xl font-bold text-slate-800">${exampleLoan.property_value.toLocaleString()}</div>
+            <div className="text-sm text-black">Property Value</div>
+            <div className="text-xl font-bold text-black">${exampleLoan.property_value.toLocaleString()}</div>
           </div>
           <div className="bg-slate-50 p-4 rounded">
-            <div className="text-sm text-slate-600">Outstanding Balance</div>
-            <div className="text-xl font-bold text-slate-800">${exampleLoan.outstanding_balance.toLocaleString()}</div>
+            <div className="text-sm text-black">Outstanding Balance</div>
+            <div className="text-xl font-bold text-black">${exampleLoan.outstanding_balance.toLocaleString()}</div>
           </div>
           <div className="bg-slate-50 p-4 rounded">
-            <div className="text-sm text-slate-600">Current LTV</div>
-            <div className="text-xl font-bold text-slate-800">{(baselineLTV * 100).toFixed(1)}%</div>
+            <div className="text-sm text-black">Current LTV</div>
+            <div className="text-xl font-bold text-black">{(baselineLTV * 100).toFixed(1)}%</div>
           </div>
           <div className="bg-slate-50 p-4 rounded">
-            <div className="text-sm text-slate-600">Risk Rating</div>
-            <div className="text-xl font-bold text-slate-800">{exampleLoan.risk_rating}</div>
+            <div className="text-sm text-black">Risk Rating</div>
+            <div className="text-xl font-bold text-black">{exampleLoan.risk_rating}</div>
           </div>
         </div>
       </div>
@@ -221,21 +221,21 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
           <h3 className="text-lg font-semibold mb-4 text-blue-800">Step 1: Baseline Risk Parameters</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <h4 className="font-medium text-slate-700 mb-2">Probability of Default (PD)</h4>
+              <h4 className="font-medium text-black mb-2">Probability of Default (PD)</h4>
               <div className="bg-blue-50 p-4 rounded border border-blue-200">
                 <div className="text-sm text-blue-600 mb-1">Based on Risk Rating: {exampleLoan.risk_rating}</div>
                 <div className="text-2xl font-bold text-blue-800">{(calculations.baseline.pd * 100).toFixed(3)}%</div>
               </div>
             </div>
             <div>
-              <h4 className="font-medium text-slate-700 mb-2">Loss Given Default (LGD)</h4>
+              <h4 className="font-medium text-black mb-2">Loss Given Default (LGD)</h4>
               <div className="bg-green-50 p-4 rounded border border-green-200">
                 <div className="text-sm text-green-600 mb-1">LTV-Adjusted: {(baselineLTV * 100).toFixed(1)}%</div>
                 <div className="text-2xl font-bold text-green-800">{(calculations.baseline.lgd * 100).toFixed(1)}%</div>
               </div>
             </div>
             <div>
-              <h4 className="font-medium text-slate-700 mb-2">Expected Loss (EL)</h4>
+              <h4 className="font-medium text-black mb-2">Expected Loss (EL)</h4>
               <div className="bg-yellow-50 p-4 rounded border border-yellow-200">
                 <div className="text-sm text-yellow-600 mb-1">PD × LGD × EAD</div>
                 <div className="text-2xl font-bold text-yellow-800">${calculations.baseline.expectedLoss.toLocaleString()}</div>
@@ -249,7 +249,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
           <h3 className="text-lg font-semibold mb-4 text-red-800">Step 2: Climate Risk Assessment</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium text-slate-700 mb-3">Physical Risk Multiplier</h4>
+              <h4 className="font-medium text-black mb-3">Physical Risk Multiplier</h4>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Flood Risk Increase:</span>
@@ -272,7 +272,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
               </div>
             </div>
             <div>
-              <h4 className="font-medium text-slate-700 mb-3">Transition Risk Multiplier</h4>
+              <h4 className="font-medium text-black mb-3">Transition Risk Multiplier</h4>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Carbon Price:</span>
@@ -308,7 +308,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
           <h3 className="text-lg font-semibold mb-4 text-purple-800">Step 3: Climate-Adjusted Risk Parameters</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <h4 className="font-medium text-slate-700 mb-2">Stressed PD</h4>
+              <h4 className="font-medium text-black mb-2">Stressed PD</h4>
               <div className="bg-purple-50 p-4 rounded border border-purple-200">
                 <div className="text-sm text-purple-600 mb-1">
                   {(calculations.baseline.pd * 100).toFixed(3)}% × {calculations.adjustments.combinedStressFactor.toFixed(2)}
@@ -320,7 +320,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
               </div>
             </div>
             <div>
-              <h4 className="font-medium text-slate-700 mb-2">Stressed LGD</h4>
+              <h4 className="font-medium text-black mb-2">Stressed LGD</h4>
               <div className="bg-purple-50 p-4 rounded border border-purple-200">
                 <div className="text-sm text-purple-600 mb-1">
                   Collateral value adjustment
@@ -332,7 +332,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
               </div>
             </div>
             <div>
-              <h4 className="font-medium text-slate-700 mb-2">Stressed EL</h4>
+              <h4 className="font-medium text-black mb-2">Stressed EL</h4>
               <div className="bg-purple-50 p-4 rounded border border-purple-200">
                 <div className="text-sm text-purple-600 mb-1">
                   Climate-adjusted expected loss
@@ -351,7 +351,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
           <h3 className="text-lg font-semibold mb-4 text-indigo-800">Step 4: Property Value Impact Assessment</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div>
-              <h4 className="font-medium text-slate-700 mb-2">Value Change</h4>
+              <h4 className="font-medium text-black mb-2">Value Change</h4>
               <div className="bg-indigo-50 p-4 rounded border border-indigo-200">
                 <div className="text-sm text-indigo-600 mb-1">Physical + Transition impacts</div>
                 <div className="text-2xl font-bold text-indigo-800">
@@ -361,7 +361,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
               </div>
             </div>
             <div>
-              <h4 className="font-medium text-slate-700 mb-2">Adjusted Value</h4>
+              <h4 className="font-medium text-black mb-2">Adjusted Value</h4>
               <div className="bg-indigo-50 p-4 rounded border border-indigo-200">
                 <div className="text-sm text-indigo-600 mb-1">Climate-adjusted property value</div>
                 <div className="text-2xl font-bold text-indigo-800">
@@ -370,7 +370,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
               </div>
             </div>
             <div>
-              <h4 className="font-medium text-slate-700 mb-2">New LTV</h4>
+              <h4 className="font-medium text-black mb-2">New LTV</h4>
               <div className="bg-indigo-50 p-4 rounded border border-indigo-200">
                 <div className="text-sm text-indigo-600 mb-1">Post-climate adjustment</div>
                 <div className="text-2xl font-bold text-indigo-800">
@@ -386,7 +386,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
           <h3 className="text-lg font-semibold mb-4 text-orange-800">Step 5: Insurance Premium Calculation (Young 2004 Model)</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium text-slate-700 mb-3">Baseline Premium Components</h4>
+              <h4 className="font-medium text-black mb-3">Baseline Premium Components</h4>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Expected Loss:</span>
@@ -409,7 +409,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
               </div>
             </div>
             <div>
-              <h4 className="font-medium text-slate-700 mb-3">Climate-Adjusted Premium</h4>
+              <h4 className="font-medium text-black mb-3">Climate-Adjusted Premium</h4>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Stressed Expected Loss:</span>
@@ -445,7 +445,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
           <h3 className="text-lg font-semibold mb-4 text-green-800">Step 6: Regulatory Capital Impact</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-medium text-slate-700 mb-3">Baseline Capital Requirement</h4>
+              <h4 className="font-medium text-black mb-3">Baseline Capital Requirement</h4>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Risk Weight ({exampleLoan.risk_rating}):</span>
@@ -468,7 +468,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
               </div>
             </div>
             <div>
-              <h4 className="font-medium text-slate-700 mb-3">Stressed Capital Requirement</h4>
+              <h4 className="font-medium text-black mb-3">Stressed Capital Requirement</h4>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Stressed Risk Weight:</span>
@@ -537,7 +537,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <h4 className="font-medium mb-3 text-blue-300">CCAR Implications</h4>
-            <ul className="space-y-2 text-sm text-slate-200">
+            <ul className="space-y-2 text-sm text-white">
               <li>• Expected loss increases by {((calculations.adjustments.elIncrease / calculations.baseline.expectedLoss) * 100).toFixed(0)}% under climate stress</li>
               <li>• Additional capital requirement: ${calculations.adjustments.capitalIncrease.toLocaleString()}</li>
               <li>• Loan loss provision impact: ${(calculations.adjustments.elIncrease * 0.6).toLocaleString()}</li>
@@ -546,7 +546,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
           </div>
           <div>
             <h4 className="font-medium mb-3 text-green-300">Risk Mitigation Strategies</h4>
-            <ul className="space-y-2 text-sm text-slate-200">
+            <ul className="space-y-2 text-sm text-white">
               <li>• Enhanced insurance requirements for high-risk properties</li>
               <li>• Geographic diversification to reduce concentration risk</li>
               <li>• Lower LTV limits for climate-vulnerable locations</li>

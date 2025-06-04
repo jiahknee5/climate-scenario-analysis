@@ -114,7 +114,7 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
 
   if (!portfolio.length || !scenarios.length) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-black">
         Please add loans and scenarios to see comparison analysis
       </div>
     )
@@ -298,8 +298,8 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
         <h4 className="font-medium mb-3">Scenario Analysis Insights</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <h5 className="font-medium text-gray-800 mb-2">Key Findings:</h5>
-            <ul className="space-y-1 text-gray-600">
+            <h5 className="font-medium text-black mb-2">Key Findings:</h5>
+            <ul className="space-y-1 text-black">
               <li>• {scenarios.length} scenarios analyzed across {portfolio.length} loans</li>
               <li>• Range of expected losses: ${impactComparisonData.length > 0 ? `${Math.min(...impactComparisonData.map(d => d.expectedLoss)).toFixed(1)}M - ${Math.max(...impactComparisonData.map(d => d.expectedLoss)).toFixed(1)}M` : '0M'}</li>
               <li>• Timeline analysis shows progressive impact through {selectedYear}</li>
@@ -307,8 +307,8 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
             </ul>
           </div>
           <div>
-            <h5 className="font-medium text-gray-800 mb-2">Recommendations:</h5>
-            <ul className="space-y-1 text-gray-600">
+            <h5 className="font-medium text-black mb-2">Recommendations:</h5>
+            <ul className="space-y-1 text-black">
               <li>• Focus mitigation efforts on worst-case scenarios</li>
               <li>• Monitor early indicators for high-impact pathways</li>
               <li>• Develop contingency plans for stress factor &gt; 2.0x</li>

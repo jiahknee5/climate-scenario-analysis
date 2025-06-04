@@ -66,7 +66,7 @@ export default function ScenarioSelection({ onScenariosChange }: ScenarioSelecti
                 />
               </div>
               
-              <p className="text-gray-600 mb-4">{scenario.description}</p>
+              <p className="text-black mb-4">{scenario.description}</p>
               
               <div className="space-y-3">
                 <div>

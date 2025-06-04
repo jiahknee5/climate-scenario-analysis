@@ -83,7 +83,7 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
   if (!portfolio.length || !scenarios.length) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">Please add loans to your portfolio and select scenarios to see results.</p>
+        <p className="text-black">Please add loans to your portfolio and select scenarios to see results.</p>
       </div>
     )
   }
@@ -119,19 +119,19 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
               <h3 className="font-semibold text-lg mb-3">{scenario.name}</h3>
               <div className="space-y-2">
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Expected Loss:</span>
+                  <span className="text-black">Expected Loss:</span>
                   <span className="font-medium">${summary.expected_loss.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Loss Rate:</span>
+                  <span className="text-black">Loss Rate:</span>
                   <span className="font-medium">{summary.expected_loss_rate.toFixed(2)}%</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">High Risk Loans:</span>
+                  <span className="text-black">High Risk Loans:</span>
                   <span className="font-medium">{summary.high_risk_loans}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600">Avg Property Decline:</span>
+                  <span className="text-black">Avg Property Decline:</span>
                   <span className="font-medium">{Math.abs(summary.property_value_decline).toFixed(1)}%</span>
                 </div>
               </div>
@@ -277,7 +277,7 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
             </tbody>
           </table>
           {results.length > 20 && (
-            <p className="text-gray-500 text-sm mt-2">
+            <p className="text-black text-sm mt-2">
               Showing first 20 results. Total: {results.length} results.
             </p>
           )}

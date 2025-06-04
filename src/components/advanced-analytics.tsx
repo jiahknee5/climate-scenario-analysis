@@ -95,7 +95,7 @@ export default function AdvancedAnalytics({ portfolio, scenarios }: AdvancedAnal
   if (!portfolio.length || !scenarios.length) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">Please add loans to your portfolio and select scenarios to see advanced analytics.</p>
+        <p className="text-black">Please add loans to your portfolio and select scenarios to see advanced analytics.</p>
       </div>
     )
   }
@@ -213,7 +213,7 @@ export default function AdvancedAnalytics({ portfolio, scenarios }: AdvancedAnal
                         }`}>
                           {item.impact} Impact
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-black">
                           Elasticity: {item.elasticity}
                         </div>
                       </div>
@@ -238,7 +238,7 @@ export default function AdvancedAnalytics({ portfolio, scenarios }: AdvancedAnal
                             ${(stressedLoss / 1000000).toFixed(1)}M
                           </span>
                         </div>
-                        <div className="text-xs text-gray-500 mt-1">
+                        <div className="text-xs text-black mt-1">
                           Stress Factor: {stressMultiplier.toFixed(1)}x
                         </div>
                       </div>

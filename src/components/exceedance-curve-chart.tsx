@@ -137,7 +137,7 @@ export default function ExceedanceCurveChart({
 
   if (!chartData.length) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-black">
         No data available for exceedance curve analysis
       </div>
     )
@@ -233,7 +233,7 @@ export default function ExceedanceCurveChart({
       
       <div className="bg-gray-50 border rounded-lg p-4">
         <h4 className="font-medium mb-2">Key Insights</h4>
-        <div className="text-sm text-gray-600 space-y-1">
+        <div className="text-sm text-black space-y-1">
           <p>• The exceedance curve shows the relationship between loss amounts and their probability of occurrence</p>
           <p>• Steeper curves indicate higher concentration of risk in extreme events</p>
           <p>• VaR metrics show potential losses at different confidence levels for regulatory reporting</p>

@@ -155,7 +155,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
 
   if (!portfolio.length || !scenarios.length) {
     return (
-      <div className="text-center py-8 text-gray-500">
+      <div className="text-center py-8 text-black">
         Please add loans and scenarios to generate regulatory reports
       </div>
     )
@@ -197,21 +197,21 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
             <div className="text-2xl font-bold text-blue-600">
               ${regulatoryMetrics ? (regulatoryMetrics.totalExposure / 1000000000).toFixed(1) : '0'}B
             </div>
-            <div className="text-sm text-gray-600">Total Exposure</div>
+            <div className="text-sm text-black">Total Exposure</div>
           </div>
           
           <div className="text-center">
             <div className="text-2xl font-bold text-red-600">
               {regulatoryMetrics ? (regulatoryMetrics.ccarStress * 100).toFixed(2) : '0.00'}%
             </div>
-            <div className="text-sm text-gray-600">CCAR Stress Rate</div>
+            <div className="text-sm text-black">CCAR Stress Rate</div>
           </div>
           
           <div className="text-center">
             <div className="text-2xl font-bold text-green-600">
               {regulatoryMetrics ? (regulatoryMetrics.stressedCapitalRatio * 100).toFixed(1) : '0.0'}%
             </div>
-            <div className="text-sm text-gray-600">Stressed Tier 1 Ratio</div>
+            <div className="text-sm text-black">Stressed Tier 1 Ratio</div>
           </div>
           
           <div className="text-center">
@@ -220,7 +220,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
             }`}>
               {regulatoryMetrics && regulatoryMetrics.stressedCapitalRatio > 0.045 ? 'PASS' : 'FAIL'}
             </div>
-            <div className="text-sm text-gray-600">Stress Test Result</div>
+            <div className="text-sm text-black">Stress Test Result</div>
           </div>
         </div>
       </div>
@@ -254,7 +254,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
             <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded">
               <div className="flex-1">
                 <div className="font-medium">{item.metric}</div>
-                <div className="text-sm text-gray-600">
+                <div className="text-sm text-black">
                   Requirement: {item.requirement}% | Buffer: {item.buffer}%
                 </div>
               </div>
@@ -336,8 +336,8 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
         <h4 className="font-medium mb-3">Regulatory Compliance Status</h4>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <h5 className="font-medium text-gray-800 mb-2">Current Status:</h5>
-            <ul className="space-y-1 text-gray-600">
+            <h5 className="font-medium text-black mb-2">Current Status:</h5>
+            <ul className="space-y-1 text-black">
               <li className="flex items-center">
                 <span className="w-3 h-3 bg-green-500 rounded-full mr-2"></span>
                 Basel III Capital Requirements: Compliant
@@ -359,8 +359,8 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
             </ul>
           </div>
           <div>
-            <h5 className="font-medium text-gray-800 mb-2">Next Steps:</h5>
-            <ul className="space-y-1 text-gray-600">
+            <h5 className="font-medium text-black mb-2">Next Steps:</h5>
+            <ul className="space-y-1 text-black">
               <li>• Submit CCAR stress testing results by March 31</li>
               <li>• Enhance climate risk modeling capabilities</li>
               <li>• Review capital buffer adequacy quarterly</li>
