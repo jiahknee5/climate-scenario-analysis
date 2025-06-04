@@ -14,13 +14,13 @@ export default function Home() {
   const [selectedScenarios, setSelectedScenarios] = useState<ClimateScenario[]>([])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <h1 className="text-3xl font-bold text-gray-900">
+    <div className="min-h-screen bg-slate-50">
+      <header className="bg-white shadow-lg border-b border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <h1 className="text-3xl font-bold text-slate-800">
             Climate Scenario Analysis Platform
           </h1>
-          <p className="text-gray-600 mt-1">
+          <p className="text-slate-600 mt-2 text-lg">
             Assess climate risk impacts on RRE and CRE loan portfolios
           </p>
         </div>
@@ -67,9 +67,9 @@ export default function Home() {
         </Tabs>
       </main>
 
-      <footer className="bg-white border-t mt-16">
+      <footer className="bg-slate-800 border-t mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center text-gray-500 text-sm">
+          <div className="text-center text-slate-300 text-sm">
             <p>Climate Scenario Analysis Platform for Banking Risk Management</p>
             <p className="mt-2">
               Built for regulatory compliance and strategic planning

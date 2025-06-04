@@ -3,6 +3,137 @@
 import { useState } from 'react'
 import { LoanPortfolio } from '@/types'
 
+// Realistic US metropolitan areas with climate risk profiles
+const METRO_AREAS = [
+  // High Climate Risk Areas
+  { state: 'FL', county: 'Miami-Dade', zip_code: '33101', city: 'Miami', risk_profile: 'high' },
+  { state: 'FL', county: 'Broward', zip_code: '33301', city: 'Fort Lauderdale', risk_profile: 'high' },
+  { state: 'FL', county: 'Orange', zip_code: '32801', city: 'Orlando', risk_profile: 'medium' },
+  { state: 'LA', county: 'Orleans', zip_code: '70112', city: 'New Orleans', risk_profile: 'high' },
+  { state: 'TX', county: 'Harris', zip_code: '77001', city: 'Houston', risk_profile: 'high' },
+  { state: 'TX', county: 'Galveston', zip_code: '77550', city: 'Galveston', risk_profile: 'high' },
+  { state: 'CA', county: 'Los Angeles', zip_code: '90210', city: 'Beverly Hills', risk_profile: 'medium' },
+  { state: 'CA', county: 'San Diego', zip_code: '92101', city: 'San Diego', risk_profile: 'medium' },
+  { state: 'CA', county: 'Alameda', zip_code: '94501', city: 'Alameda', risk_profile: 'medium' },
+  { state: 'NC', county: 'New Hanover', zip_code: '28401', city: 'Wilmington', risk_profile: 'high' },
+  { state: 'SC', county: 'Charleston', zip_code: '29401', city: 'Charleston', risk_profile: 'high' },
+  { state: 'NJ', county: 'Atlantic', zip_code: '08401', city: 'Atlantic City', risk_profile: 'high' },
+  { state: 'NY', county: 'Nassau', zip_code: '11501', city: 'Mineola', risk_profile: 'medium' },
+  
+  // Medium Climate Risk Areas  
+  { state: 'TX', county: 'Dallas', zip_code: '75201', city: 'Dallas', risk_profile: 'medium' },
+  { state: 'TX', county: 'Travis', zip_code: '78701', city: 'Austin', risk_profile: 'medium' },
+  { state: 'AZ', county: 'Maricopa', zip_code: '85001', city: 'Phoenix', risk_profile: 'medium' },
+  { state: 'GA', county: 'Fulton', zip_code: '30301', city: 'Atlanta', risk_profile: 'medium' },
+  { state: 'TN', county: 'Davidson', zip_code: '37201', city: 'Nashville', risk_profile: 'low' },
+  { state: 'WA', county: 'King', zip_code: '98101', city: 'Seattle', risk_profile: 'medium' },
+  { state: 'OR', county: 'Multnomah', zip_code: '97201', city: 'Portland', risk_profile: 'medium' },
+  { state: 'CO', county: 'Denver', zip_code: '80201', city: 'Denver', risk_profile: 'medium' },
+  
+  // Lower Climate Risk Areas
+  { state: 'IL', county: 'Cook', zip_code: '60601', city: 'Chicago', risk_profile: 'low' },
+  { state: 'OH', county: 'Hamilton', zip_code: '45201', city: 'Cincinnati', risk_profile: 'low' },
+  { state: 'MI', county: 'Wayne', zip_code: '48201', city: 'Detroit', risk_profile: 'low' },
+  { state: 'PA', county: 'Philadelphia', zip_code: '19101', city: 'Philadelphia', risk_profile: 'low' },
+  { state: 'MA', county: 'Suffolk', zip_code: '02101', city: 'Boston', risk_profile: 'low' },
+  { state: 'MD', county: 'Baltimore', zip_code: '21201', city: 'Baltimore', risk_profile: 'low' },
+  { state: 'VA', county: 'Arlington', zip_code: '22201', city: 'Arlington', risk_profile: 'low' },
+  { state: 'MN', county: 'Hennepin', zip_code: '55401', city: 'Minneapolis', risk_profile: 'low' },
+  { state: 'WI', county: 'Milwaukee', zip_code: '53201', city: 'Milwaukee', risk_profile: 'low' },
+  { state: 'IN', county: 'Marion', zip_code: '46201', city: 'Indianapolis', risk_profile: 'low' },
+]
+
+const RRE_PROPERTY_TYPES = ['single_family', 'multifamily']
+const CRE_PROPERTY_TYPES = ['office', 'retail', 'industrial', 'warehouse', 'hotel']
+const RISK_RATINGS = ['AAA', 'AA', 'A', 'BBB', 'BB', 'B', 'CCC']
+
+function generateRealisticPortfolio(size: number): LoanPortfolio[] {
+  const loans: LoanPortfolio[] = []
+  
+  for (let i = 0; i < size; i++) {
+    const isRRE = Math.random() > 0.3 // 70% RRE, 30% CRE
+    const metro = METRO_AREAS[Math.floor(Math.random() * METRO_AREAS.length)]
+    const propertyType = isRRE 
+      ? RRE_PROPERTY_TYPES[Math.floor(Math.random() * RRE_PROPERTY_TYPES.length)]
+      : CRE_PROPERTY_TYPES[Math.floor(Math.random() * CRE_PROPERTY_TYPES.length)]
+    
+    // Realistic property values based on type and location
+    let basePropertyValue: number
+    if (isRRE) {
+      // RRE values: $200K - $2M depending on location
+      const locationMultiplier = metro.risk_profile === 'high' ? 1.5 : metro.risk_profile === 'medium' ? 1.2 : 1.0
+      basePropertyValue = (200000 + Math.random() * 800000) * locationMultiplier
+      if (propertyType === 'multifamily') {
+        basePropertyValue *= (2 + Math.random() * 3) // 2-5x for multifamily
+      }
+    } else {
+      // CRE values: $500K - $20M depending on type and location
+      const typeMultipliers = {
+        office: 3,
+        retail: 2,
+        industrial: 2.5,
+        warehouse: 1.5,
+        hotel: 4
+      }
+      const locationMultiplier = metro.risk_profile === 'high' ? 1.3 : metro.risk_profile === 'medium' ? 1.1 : 1.0
+      basePropertyValue = (500000 + Math.random() * 2000000) * 
+        typeMultipliers[propertyType as keyof typeof typeMultipliers] * 
+        locationMultiplier
+    }
+    
+    const propertyValue = Math.round(basePropertyValue)
+    
+    // LTV ratios: more conservative for higher risk areas
+    const riskAdjustment = metro.risk_profile === 'high' ? -0.05 : metro.risk_profile === 'medium' ? 0 : 0.05
+    const baseLTV = isRRE ? 0.8 : 0.75
+    const ltvRatio = Math.max(0.6, Math.min(0.9, baseLTV + riskAdjustment + (Math.random() - 0.5) * 0.2))
+    
+    const outstandingBalance = Math.round(propertyValue * ltvRatio)
+    
+    // Interest rates: higher for riskier locations and properties
+    const baseRate = isRRE ? 3.5 : 4.0
+    const riskPremium = metro.risk_profile === 'high' ? 0.5 : metro.risk_profile === 'medium' ? 0.25 : 0
+    const interestRate = baseRate + riskPremium + (Math.random() - 0.5) * 1.0
+    
+    // Risk ratings: worse for higher risk areas
+    const riskRatingIndex = metro.risk_profile === 'high' 
+      ? Math.floor(Math.random() * 4) + 3 // BB to CCC
+      : metro.risk_profile === 'medium'
+      ? Math.floor(Math.random() * 4) + 2 // A to BB  
+      : Math.floor(Math.random() * 4) // AAA to BBB
+    
+    // Origination and maturity dates
+    const originationYear = 2018 + Math.floor(Math.random() * 6) // 2018-2023
+    const originationMonth = 1 + Math.floor(Math.random() * 12)
+    const originationDay = 1 + Math.floor(Math.random() * 28)
+    const originationDate = `${originationYear}-${originationMonth.toString().padStart(2, '0')}-${originationDay.toString().padStart(2, '0')}`
+    
+    const termYears = isRRE ? 30 : (5 + Math.floor(Math.random() * 15)) // RRE: 30yr, CRE: 5-20yr
+    const maturityYear = originationYear + termYears
+    const maturityDate = `${maturityYear}-${originationMonth.toString().padStart(2, '0')}-${originationDay.toString().padStart(2, '0')}`
+    
+    loans.push({
+      id: `loan_${String(i + 1).padStart(4, '0')}`,
+      type: isRRE ? 'RRE' : 'CRE',
+      property_type: propertyType,
+      outstanding_balance: outstandingBalance,
+      ltv_ratio: Math.round(ltvRatio * 1000) / 1000,
+      location: {
+        state: metro.state,
+        county: metro.county,
+        zip_code: metro.zip_code,
+      },
+      property_value: propertyValue,
+      origination_date: originationDate,
+      maturity_date: maturityDate,
+      interest_rate: Math.round(interestRate * 100) / 100,
+      risk_rating: RISK_RATINGS[riskRatingIndex],
+    })
+  }
+  
+  return loans
+}
+
 interface PortfolioInputProps {
   onPortfolioUpdate: (portfolio: LoanPortfolio[]) => void
 }
@@ -62,47 +193,7 @@ export default function PortfolioInput({ onPortfolioUpdate }: PortfolioInputProp
   }
 
   const loadSamplePortfolio = () => {
-    const sampleLoans: LoanPortfolio[] = [
-      {
-        id: 'loan_001',
-        type: 'RRE',
-        property_type: 'single_family',
-        outstanding_balance: 500000,
-        ltv_ratio: 0.8,
-        location: { state: 'FL', county: 'Miami-Dade', zip_code: '33101' },
-        property_value: 625000,
-        origination_date: '2020-01-15',
-        maturity_date: '2050-01-15',
-        interest_rate: 3.5,
-        risk_rating: 'A',
-      },
-      {
-        id: 'loan_002',
-        type: 'CRE',
-        property_type: 'office',
-        outstanding_balance: 2000000,
-        ltv_ratio: 0.75,
-        location: { state: 'CA', county: 'Los Angeles', zip_code: '90210' },
-        property_value: 2666667,
-        origination_date: '2019-06-01',
-        maturity_date: '2029-06-01',
-        interest_rate: 4.0,
-        risk_rating: 'BBB',
-      },
-      {
-        id: 'loan_003',
-        type: 'CRE',
-        property_type: 'industrial',
-        outstanding_balance: 1500000,
-        ltv_ratio: 0.7,
-        location: { state: 'TX', county: 'Harris', zip_code: '77001' },
-        property_value: 2142857,
-        origination_date: '2021-03-10',
-        maturity_date: '2031-03-10',
-        interest_rate: 4.5,
-        risk_rating: 'BB',
-      },
-    ]
+    const sampleLoans: LoanPortfolio[] = generateRealisticPortfolio(500)
     
     setLoans(sampleLoans)
     onPortfolioUpdate(sampleLoans)
@@ -114,9 +205,9 @@ export default function PortfolioInput({ onPortfolioUpdate }: PortfolioInputProp
         <h2 className="text-2xl font-bold">Portfolio Input</h2>
         <button
           onClick={loadSamplePortfolio}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium shadow-sm"
         >
-          Load Sample Portfolio
+          Load 500-Property Sample Portfolio
         </button>
       </div>
 
@@ -244,34 +335,89 @@ export default function PortfolioInput({ onPortfolioUpdate }: PortfolioInputProp
 
       {loans.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold mb-4">Current Portfolio ({loans.length} loans)</h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-lg font-semibold">Current Portfolio ({loans.length} loans)</h3>
+            <div className="text-sm text-slate-600">
+              Total Exposure: ${loans.reduce((sum, loan) => sum + loan.outstanding_balance, 0).toLocaleString()}
+            </div>
+          </div>
+          
+          {/* Portfolio Summary Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <div className="text-sm text-blue-600 font-medium">RRE Loans</div>
+              <div className="text-2xl font-bold text-blue-800">
+                {loans.filter(l => l.type === 'RRE').length}
+              </div>
+            </div>
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+              <div className="text-sm text-green-600 font-medium">CRE Loans</div>
+              <div className="text-2xl font-bold text-green-800">
+                {loans.filter(l => l.type === 'CRE').length}
+              </div>
+            </div>
+            <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+              <div className="text-sm text-yellow-600 font-medium">Avg LTV</div>
+              <div className="text-2xl font-bold text-yellow-800">
+                {(loans.reduce((sum, l) => sum + l.ltv_ratio, 0) / loans.length * 100).toFixed(1)}%
+              </div>
+            </div>
+            <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
+              <div className="text-sm text-purple-600 font-medium">States</div>
+              <div className="text-2xl font-bold text-purple-800">
+                {new Set(loans.map(l => l.location.state)).size}
+              </div>
+            </div>
+          </div>
+          
           <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border">
+            <table className="min-w-full bg-white border border-slate-200 rounded-lg">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="px-4 py-2 border text-left">ID</th>
-                  <th className="px-4 py-2 border text-left">Type</th>
-                  <th className="px-4 py-2 border text-left">Property Type</th>
-                  <th className="px-4 py-2 border text-left">Balance</th>
-                  <th className="px-4 py-2 border text-left">LTV</th>
-                  <th className="px-4 py-2 border text-left">State</th>
-                  <th className="px-4 py-2 border text-left">Risk Rating</th>
+                <tr className="bg-slate-100">
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">ID</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Type</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Property Type</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Location</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Balance</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">LTV</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Rate</th>
+                  <th className="px-4 py-3 border-b text-left text-sm font-semibold text-slate-700">Risk Rating</th>
                 </tr>
               </thead>
               <tbody>
-                {loans.map((loan) => (
-                  <tr key={loan.id}>
-                    <td className="px-4 py-2 border">{loan.id}</td>
-                    <td className="px-4 py-2 border">{loan.type}</td>
-                    <td className="px-4 py-2 border">{loan.property_type}</td>
-                    <td className="px-4 py-2 border">${loan.outstanding_balance.toLocaleString()}</td>
-                    <td className="px-4 py-2 border">{(loan.ltv_ratio * 100).toFixed(1)}%</td>
-                    <td className="px-4 py-2 border">{loan.location.state}</td>
-                    <td className="px-4 py-2 border">{loan.risk_rating}</td>
+                {loans.slice(0, 50).map((loan, index) => (
+                  <tr key={loan.id} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                    <td className="px-4 py-2 border-b text-sm text-slate-600">{loan.id}</td>
+                    <td className="px-4 py-2 border-b text-sm">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        loan.type === 'RRE' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+                      }`}>
+                        {loan.type}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 border-b text-sm text-slate-700 capitalize">{loan.property_type.replace('_', ' ')}</td>
+                    <td className="px-4 py-2 border-b text-sm text-slate-600">{loan.location.state}, {loan.location.county}</td>
+                    <td className="px-4 py-2 border-b text-sm font-medium text-slate-800">${loan.outstanding_balance.toLocaleString()}</td>
+                    <td className="px-4 py-2 border-b text-sm text-slate-600">{(loan.ltv_ratio * 100).toFixed(1)}%</td>
+                    <td className="px-4 py-2 border-b text-sm text-slate-600">{loan.interest_rate.toFixed(2)}%</td>
+                    <td className="px-4 py-2 border-b text-sm">
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        ['AAA', 'AA', 'A'].includes(loan.risk_rating) ? 'bg-green-100 text-green-800' :
+                        loan.risk_rating === 'BBB' ? 'bg-yellow-100 text-yellow-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {loan.risk_rating}
+                      </span>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            {loans.length > 50 && (
+              <div className="mt-4 text-center text-sm text-slate-500 bg-slate-50 py-3 rounded-b-lg">
+                Showing first 50 loans. Total portfolio: {loans.length} loans
+              </div>
+            )}
           </div>
         </div>
       )}
