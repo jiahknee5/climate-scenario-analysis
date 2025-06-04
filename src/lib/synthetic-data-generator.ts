@@ -132,7 +132,7 @@ export class SyntheticDataGenerator {
     }));
   }
 
-  private static generateHazardData(loan: LoanType): HazardData[] {
+  private static generateHazardData(loan: LoanData): HazardData[] {
     const hazards: HazardData[] = [];
     const state = loan.address.state;
     const propertyValue = loan.property_value;
