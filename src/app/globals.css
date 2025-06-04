@@ -1,50 +1,424 @@
 @import "tailwindcss";
 
+/* McKinsey-Style Design System */
 :root {
+  /* Core Brand Colors */
+  --primary-navy: #001f3f;
+  --primary-blue: #0d47a1;
+  --accent-teal: #00695c;
+  --accent-orange: #ff6f00;
+  
+  /* Neutral Palette */
   --background: #ffffff;
-  --foreground: #111827;
-  --muted: #f8fafc;
-  --muted-foreground: #1f2937;
-  --border: #d1d5db;
-  --ring: #2563eb;
-  --primary: #1d4ed8;
-  --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #111827;
-  --accent: #3b82f6;
-  --accent-foreground: #ffffff;
+  --foreground: #1a1a1a;
+  --surface: #fafafa;
+  --surface-elevated: #ffffff;
+  
+  /* Text Hierarchy */
+  --text-primary: #1a1a1a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #737373;
+  --text-disabled: #a3a3a3;
+  
+  /* Semantic Colors */
+  --success: #2e7d32;
+  --warning: #f57c00;
+  --error: #d32f2f;
+  --info: #1976d2;
+  
+  /* Borders and Dividers */
+  --border-light: #e0e0e0;
+  --border-medium: #bdbdbd;
+  --border-heavy: #757575;
+  
+  /* Shadows */
+  --shadow-light: 0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-heavy: 0 8px 15px rgba(0, 0, 0, 0.15);
+  
+  /* Typography Scale */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  
+  /* Spacing Scale */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-border: var(--border);
-  --color-ring: var(--ring);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--primary-blue);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: var(--surface);
+  --color-secondary-foreground: var(--text-primary);
+  --color-accent: var(--accent-teal);
+  --color-accent-foreground: #ffffff;
+  --color-muted: var(--surface);
+  --color-muted-foreground: var(--text-muted);
+  --color-border: var(--border-light);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --muted: #1e293b;
-    --muted-foreground: #94a3b8;
-    --border: #334155;
-    --ring: #ededed;
+/* Base Typography */
+body {
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Executive Typography Hierarchy */
+.executive-title {
+  font-size: var(--font-size-4xl);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--primary-navy);
+  margin-bottom: var(--space-lg);
+}
+
+.section-title {
+  font-size: var(--font-size-2xl);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.subsection-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+.body-text {
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.caption-text {
+  font-size: var(--font-size-sm);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* Executive Cards and Containers */
+.executive-card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  box-shadow: var(--shadow-light);
+  padding: var(--space-xl);
+  margin-bottom: var(--space-lg);
+  transition: box-shadow 0.2s ease;
+}
+
+.executive-card:hover {
+  box-shadow: var(--shadow-medium);
+}
+
+.metric-card {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: var(--space-lg);
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-medium);
+}
+
+.metric-value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: var(--space-xs);
+}
+
+.metric-label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Business Objective Callouts */
+.objective-callout {
+  border-left: 4px solid var(--primary-blue);
+  background: linear-gradient(135deg, #f8faff 0%, #f1f5ff 100%);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  border-radius: 0 8px 8px 0;
+}
+
+.objective-title {
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: var(--primary-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-xs);
+}
+
+.objective-content {
+  font-size: var(--font-size-base);
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* Insight Callouts */
+.insight-callout {
+  border-left: 4px solid var(--accent-orange);
+  background: linear-gradient(135deg, #fff8f1 0%, #ffecda 100%);
+  padding: var(--space-md);
+  border-radius: 0 6px 6px 0;
+}
+
+.insight-title {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  color: var(--accent-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-xs);
+}
+
+.insight-content {
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+/* Alert Callouts */
+.alert-critical {
+  border-left: 4px solid var(--error);
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  padding: var(--space-md);
+  border-radius: 0 6px 6px 0;
+}
+
+.alert-warning {
+  border-left: 4px solid var(--warning);
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  padding: var(--space-md);
+  border-radius: 0 6px 6px 0;
+}
+
+.alert-success {
+  border-left: 4px solid var(--success);
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  padding: var(--space-md);
+  border-radius: 0 6px 6px 0;
+}
+
+/* Executive Action Items */
+.action-item {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-light);
+  border-radius: 8px;
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  position: relative;
+  overflow: hidden;
+}
+
+.action-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary-blue);
+}
+
+.action-priority-1::before {
+  background: var(--error);
+}
+
+.action-priority-2::before {
+  background: var(--warning);
+}
+
+.action-priority-3::before {
+  background: var(--info);
+}
+
+.action-title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.action-timeline {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--accent-orange);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* Data Visualization Containers */
+.chart-container {
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-light);
+  border-radius: 12px;
+  padding: var(--space-xl);
+  margin-bottom: var(--space-lg);
+}
+
+.chart-header {
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.chart-title {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+}
+
+/* Professional Tables */
+.executive-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface-elevated);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-light);
+}
+
+.executive-table th {
+  background: var(--surface);
+  padding: var(--space-md);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.executive-table td {
+  padding: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.executive-table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Status Indicators */
+.status-pass {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.status-warning {
+  color: var(--warning);
+  font-weight: 600;
+}
+
+.status-critical {
+  color: var(--error);
+  font-weight: 600;
+}
+
+/* Professional Buttons */
+.btn-primary {
+  background: var(--primary-blue);
+  color: white;
+  padding: var(--space-md) var(--space-xl);
+  border-radius: 6px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: var(--font-size-sm);
+}
+
+.btn-primary:hover {
+  background: var(--primary-navy);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-medium);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text-primary);
+  padding: var(--space-md) var(--space-xl);
+  border: 1px solid var(--border-medium);
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: var(--font-size-sm);
+}
+
+.btn-secondary:hover {
+  background: var(--border-light);
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .executive-title {
+    font-size: var(--font-size-3xl);
+  }
+  
+  .section-title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .executive-card {
+    padding: var(--space-lg);
+  }
+  
+  .chart-container {
+    padding: var(--space-lg);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Print Styles for Executive Reports */
+@media print {
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .executive-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid var(--border-medium);
+  }
+  
+  .chart-container {
+    break-inside: avoid;
+    box-shadow: none;
+  }
 }

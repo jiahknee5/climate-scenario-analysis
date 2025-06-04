@@ -150,27 +150,27 @@ export default function RiskManagementDashboard({ portfolio, scenarios }: RiskMa
 
   return (
     <div className="space-y-8">
-      <div className="bg-gradient-to-r from-red-600 to-red-800 text-white p-6 rounded-lg">
-        <h2 className="text-2xl font-bold mb-2">Executive Risk Management Dashboard</h2>
-        <p className="text-red-100 text-lg mb-4">
+      <div className="executive-card" style={{background: 'linear-gradient(135deg, var(--error) 0%, #b91c1c 100%)', color: 'white'}}>
+        <h2 className="section-title mb-4" style={{color: 'white'}}>Executive Risk Management Dashboard</h2>
+        <div className="body-text mb-6" style={{color: 'rgba(255,255,255,0.9)', fontSize: 'var(--font-size-lg)'}}>
           Advanced analytics for C-suite decision making and regulatory oversight
-        </p>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-sm">
-          <div className="bg-red-700 bg-opacity-50 p-3 rounded text-center">
-            <div className="font-bold">VaR Analysis</div>
-            <div className="text-red-200">Tail Risk Quantification</div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="p-4 rounded-lg text-center" style={{background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'}}>
+            <div className="font-bold mb-1" style={{color: 'white'}}>VaR Analysis</div>
+            <div className="text-sm" style={{color: 'rgba(255,255,255,0.8)'}}>Tail Risk Quantification</div>
           </div>
-          <div className="bg-red-700 bg-opacity-50 p-3 rounded text-center">
-            <div className="font-bold">Concentration Risk</div>
-            <div className="text-red-200">Geographic Limits</div>
+          <div className="p-4 rounded-lg text-center" style={{background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'}}>
+            <div className="font-bold mb-1" style={{color: 'white'}}>Concentration Risk</div>
+            <div className="text-sm" style={{color: 'rgba(255,255,255,0.8)'}}>Geographic Limits</div>
           </div>
-          <div className="bg-red-700 bg-opacity-50 p-3 rounded text-center">
-            <div className="font-bold">Capital Adequacy</div>
-            <div className="text-red-200">Stress Testing</div>
+          <div className="p-4 rounded-lg text-center" style={{background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'}}>
+            <div className="font-bold mb-1" style={{color: 'white'}}>Capital Adequacy</div>
+            <div className="text-sm" style={{color: 'rgba(255,255,255,0.8)'}}>Stress Testing</div>
           </div>
-          <div className="bg-red-700 bg-opacity-50 p-3 rounded text-center">
-            <div className="font-bold">Loss Distribution</div>
-            <div className="text-red-200">Portfolio Optimization</div>
+          <div className="p-4 rounded-lg text-center" style={{background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'}}>
+            <div className="font-bold mb-1" style={{color: 'white'}}>Loss Distribution</div>
+            <div className="text-sm" style={{color: 'rgba(255,255,255,0.8)'}}>Portfolio Optimization</div>
           </div>
         </div>
       </div>

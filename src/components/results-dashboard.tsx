@@ -90,23 +90,23 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
 
   return (
     <div className="space-y-8">
-      <div className="bg-gradient-to-r from-green-600 to-green-800 text-white p-6 rounded-lg">
-        <h2 className="text-2xl font-bold mb-2">Executive Climate Risk Assessment</h2>
-        <p className="text-green-100 text-lg">
+      <div className="executive-card" style={{background: 'linear-gradient(135deg, var(--primary-blue) 0%, var(--primary-navy) 100%)', color: 'white'}}>
+        <h2 className="section-title mb-4" style={{color: 'white'}}>Executive Climate Risk Assessment</h2>
+        <div className="body-text mb-6" style={{color: 'rgba(255,255,255,0.9)', fontSize: 'var(--font-size-lg)'}}>
           Strategic risk analysis for C-suite decision making and regulatory compliance
-        </p>
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-          <div className="bg-green-700 bg-opacity-50 p-3 rounded">
-            <div className="font-semibold">Regulatory Impact</div>
-            <div>CCAR Capital Planning</div>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="p-4 rounded-lg" style={{background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'}}>
+            <div className="font-semibold mb-1" style={{color: 'white'}}>Regulatory Impact</div>
+            <div className="text-sm" style={{color: 'rgba(255,255,255,0.8)'}}>CCAR Capital Planning</div>
           </div>
-          <div className="bg-green-700 bg-opacity-50 p-3 rounded">
-            <div className="font-semibold">Strategic Planning</div>
-            <div>Portfolio Optimization</div>
+          <div className="p-4 rounded-lg" style={{background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'}}>
+            <div className="font-semibold mb-1" style={{color: 'white'}}>Strategic Planning</div>
+            <div className="text-sm" style={{color: 'rgba(255,255,255,0.8)'}}>Portfolio Optimization</div>
           </div>
-          <div className="bg-green-700 bg-opacity-50 p-3 rounded">
-            <div className="font-semibold">Risk Management</div>
-            <div>Loss Mitigation</div>
+          <div className="p-4 rounded-lg" style={{background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)'}}>
+            <div className="font-semibold mb-1" style={{color: 'white'}}>Risk Management</div>
+            <div className="text-sm" style={{color: 'rgba(255,255,255,0.8)'}}>Loss Mitigation</div>
           </div>
         </div>
       </div>
@@ -141,16 +141,16 @@ export default function ResultsDashboard({ portfolio, scenarios }: ResultsDashbo
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="bg-white border rounded-lg p-6">
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold text-slate-800">Portfolio Loss Exposure Analysis</h3>
-            <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-3">
-              <div className="text-sm font-semibold text-blue-800 mb-1">EXECUTIVE OBJECTIVE</div>
-              <div className="text-blue-700">Quantify maximum potential losses to inform capital allocation decisions and regulatory capital planning under Federal Reserve climate stress scenarios</div>
+        <div className="chart-container">
+          <div className="chart-header">
+            <h3 className="chart-title">Portfolio Loss Exposure Analysis</h3>
+            <div className="objective-callout">
+              <div className="objective-title">EXECUTIVE OBJECTIVE</div>
+              <div className="objective-content">Quantify maximum potential losses to inform capital allocation decisions and regulatory capital planning under Federal Reserve climate stress scenarios</div>
             </div>
-            <div className="bg-amber-50 border-l-4 border-amber-500 p-3">
-              <div className="text-xs font-semibold text-amber-800 mb-1">KEY BUSINESS INSIGHT</div>
-              <div className="text-amber-700 text-sm">Loss escalation of {((Math.max(...chartData.map(d => d.expectedLoss)) / Math.min(...chartData.map(d => d.expectedLoss)) - 1) * 100).toFixed(0)}% from baseline to severe scenarios requires immediate capital buffer assessment</div>
+            <div className="insight-callout">
+              <div className="insight-title">KEY BUSINESS INSIGHT</div>
+              <div className="insight-content">Loss escalation of {((Math.max(...chartData.map(d => d.expectedLoss)) / Math.min(...chartData.map(d => d.expectedLoss)) - 1) * 100).toFixed(0)}% from baseline to severe scenarios requires immediate capital buffer assessment</div>
             </div>
           </div>
           <ResponsiveContainer width="100%" height={300}>
