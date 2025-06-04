@@ -185,25 +185,25 @@ body {
 .body-large {
   font-size: var(--text-lg);
   line-height: var(--leading-relaxed);
-  color: var(--neutral-700);
+  color: var(--neutral-900);
 }
 
 .body-base {
   font-size: var(--text-base);
   line-height: var(--leading-normal);
-  color: var(--neutral-700);
+  color: var(--neutral-900);
 }
 
 .body-small {
   font-size: var(--text-sm);
   line-height: var(--leading-normal);
-  color: var(--neutral-600);
+  color: var(--neutral-900);
 }
 
 .caption {
   font-size: var(--text-xs);
   line-height: var(--leading-normal);
-  color: var(--neutral-500);
+  color: var(--neutral-900);
   text-transform: uppercase;
   font-weight: 500;
   letter-spacing: 0.05em;
@@ -300,7 +300,7 @@ body {
 .metric-label {
   font-size: var(--text-sm);
   font-weight: 500;
-  color: var(--neutral-600);
+  color: var(--neutral-900);
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -399,7 +399,7 @@ body {
 
 .btn-secondary {
   background: var(--surface-primary);
-  color: var(--neutral-700);
+  color: var(--neutral-900);
   border-color: var(--neutral-300);
 }
 
@@ -411,7 +411,7 @@ body {
 
 .btn-ghost {
   background: transparent;
-  color: var(--neutral-700);
+  color: var(--neutral-900);
 }
 
 .btn-ghost:hover {
@@ -443,7 +443,7 @@ body {
   border-radius: var(--radius-base);
   font-weight: 500;
   font-size: var(--text-sm);
-  color: var(--neutral-600);
+  color: var(--neutral-900);
   text-decoration: none;
   transition: all var(--transition-fast);
   position: relative;
@@ -485,7 +485,7 @@ body {
 
 .chart-subtitle {
   font-size: var(--text-sm);
-  color: var(--neutral-600);
+  color: var(--neutral-900);
   line-height: var(--leading-relaxed);
 }
 
@@ -509,14 +509,14 @@ body {
   text-align: left;
   font-weight: 600;
   font-size: var(--text-sm);
-  color: var(--neutral-700);
+  color: var(--neutral-900);
   border-bottom: 1px solid var(--neutral-200);
 }
 
 .table td {
   padding: var(--space-4);
   font-size: var(--text-sm);
-  color: var(--neutral-700);
+  color: var(--neutral-900);
   border-bottom: 1px solid var(--neutral-100);
 }
 
