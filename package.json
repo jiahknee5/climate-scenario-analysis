@@ -1,0 +1,11 @@
+{
+  "name": "climate-scenario-analysis-static",
+  "version": "1.0.0",
+  "description": "Business-focused climate risk analysis platform for banking executives",
+  "scripts": {
+    "build": "echo 'Static site - no build needed'",
+    "start": "echo 'Static site served directly'"
+  },
+  "devDependencies": {},
+  "homepage": "https://climate.johnnycchung.com"
+}
