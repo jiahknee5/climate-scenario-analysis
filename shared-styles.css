@@ -1,0 +1,387 @@
+/* Shared Styles for Climate Risk Analysis Platform */
+:root {
+    /* Framework Colors */
+    --climada-primary: #2196F3;
+    --climada-secondary: #1976D2;
+    --climate-os-primary: #A23B72;
+    --climate-os-secondary: #8B2559;
+    --cbottle-primary: #4285F4;
+    --cbottle-secondary: #3367D6;
+    
+    /* Common Colors */
+    --primary: #00d4ff;
+    --secondary: #88C0D0;
+    --success: #A3BE8C;
+    --warning: #EBCB8B;
+    --danger: #BF616A;
+    --background: #0a0a0a;
+    --surface: rgba(46, 52, 64, 0.95);
+    --surface-light: rgba(59, 66, 82, 0.8);
+    --text: #E5E9F0;
+    --text-muted: #8FBCBB;
+    --border: rgba(136, 192, 208, 0.3);
+    --glow: rgba(0, 212, 255, 0.4);
+}
+
+* { 
+    box-sizing: border-box; 
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', Arial, sans-serif;
+    background: radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(163, 190, 140, 0.08) 0%, transparent 50%),
+                linear-gradient(180deg, #0a0a0a 0%, #0f0f0f 100%);
+    color: var(--text);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Standardized Header */
+.app-header {
+    height: 80px;
+    background: linear-gradient(180deg, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.85) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    border-bottom: 2px solid var(--border);
+    backdrop-filter: blur(25px);
+    position: relative;
+    z-index: 1000;
+}
+
+.app-header::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.framework-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.framework-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 14px;
+    color: white;
+}
+
+.framework-icon.climada {
+    background: linear-gradient(135deg, var(--climada-primary), var(--climada-secondary));
+}
+
+.framework-icon.climate-os {
+    background: linear-gradient(135deg, var(--climate-os-primary), var(--climate-os-secondary));
+}
+
+.framework-icon.cbottle {
+    background: linear-gradient(135deg, var(--cbottle-primary), var(--cbottle-secondary));
+}
+
+.app-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 300;
+    letter-spacing: -0.5px;
+}
+
+.app-title.climada {
+    background: linear-gradient(135deg, var(--climada-primary), #66B2FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.app-title.climate-os {
+    background: linear-gradient(135deg, var(--climate-os-primary), #D75A8C);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.app-title.cbottle {
+    background: linear-gradient(135deg, var(--cbottle-primary), #7DABF8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.app-subtitle {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 300;
+}
+
+.header-nav {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-link {
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.nav-link.primary {
+    background: linear-gradient(135deg, var(--primary), #0099cc);
+    color: #000;
+}
+
+.nav-link.primary:hover {
+    background: linear-gradient(135deg, #33ddff, #00b3e6);
+    transform: translateY(-1px);
+}
+
+.nav-link.secondary {
+    color: var(--text-muted);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.secondary:hover {
+    color: var(--primary);
+    background: rgba(0, 212, 255, 0.1);
+    border-color: var(--primary);
+}
+
+.nav-link.framework {
+    color: var(--text-muted);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-link.framework.climada:hover {
+    color: var(--climada-primary);
+    background: rgba(33, 150, 243, 0.1);
+    border-color: var(--climada-primary);
+}
+
+.nav-link.framework.climate-os:hover {
+    color: var(--climate-os-primary);
+    background: rgba(162, 59, 114, 0.1);
+    border-color: var(--climate-os-primary);
+}
+
+.nav-link.framework.cbottle:hover {
+    color: var(--cbottle-primary);
+    background: rgba(66, 133, 244, 0.1);
+    border-color: var(--cbottle-primary);
+}
+
+/* App Content Area */
+.app-content {
+    height: calc(100vh - 80px);
+    position: relative;
+}
+
+/* Standardized Control Panels */
+.control-panel {
+    position: absolute;
+    background: var(--surface);
+    color: var(--text);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    z-index: 100;
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+}
+
+.control-panel h3 {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.control-panel label {
+    display: block;
+    margin: 12px 0 5px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.control-panel select {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.control-panel select:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--primary);
+}
+
+.control-panel select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.3);
+}
+
+.control-panel option {
+    background: #222;
+    color: var(--text);
+}
+
+/* Standardized Stats Panels */
+.stats-panel {
+    position: absolute;
+    background: var(--surface);
+    color: var(--text);
+    padding: 15px 20px;
+    border-radius: 12px;
+    font-size: 13px;
+    z-index: 100;
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    min-width: 200px;
+}
+
+.stats-panel .stats-title {
+    display: block;
+    margin-bottom: 12px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary);
+    text-align: center;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 8px 0;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-row:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.stat-value {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 12px;
+}
+
+/* Standardized Legend */
+.legend {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    background: var(--surface);
+    color: var(--text);
+    padding: 20px;
+    border-radius: 12px;
+    z-index: 100;
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.legend h4 {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    font-size: 12px;
+    color: var(--text);
+}
+
+.legend-line {
+    width: 30px;
+    height: 3px;
+    margin-right: 12px;
+    border-radius: 2px;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .app-header {
+        height: 70px;
+        padding: 0 20px;
+    }
+    
+    .app-title {
+        font-size: 18px;
+    }
+    
+    .header-nav {
+        gap: 10px;
+    }
+    
+    .nav-link {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+    
+    .control-panel {
+        width: 200px;
+        padding: 15px;
+    }
+    
+    .framework-logo {
+        gap: 8px;
+    }
+    
+    .framework-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+    }
+}

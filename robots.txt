@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Climate Risk Analysis Platform for Banking & Finance
+# Optimized for executive decision-making
+
+Sitemap: https://climate.johnnycchung.com/sitemap.xml
+
+# Block test pages from search engines
+Disallow: /test-*.html
+Disallow: /deployment-status.html
