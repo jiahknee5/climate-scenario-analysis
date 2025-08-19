@@ -1,42 +1,15 @@
 {
   "version": 2,
-  "cleanUrls": false,
-  "trailingSlash": false,
-  "rewrites": [
+  "builds": [
     {
-      "source": "/basic-mapbox-test",
-      "destination": "/basic-mapbox-test.html"
-    },
-    {
-      "source": "/deployment-check", 
-      "destination": "/deployment-check.html"
-    },
-    {
-      "source": "/mapbox-container-debug",
-      "destination": "/mapbox-container-debug.html"
-    },
-    {
-      "source": "/climada-hurricane-analysis",
-      "destination": "/climada-hurricane-analysis.html"
-    },
-    {
-      "source": "/test",
-      "destination": "/test.html"
+      "src": "**",
+      "use": "@vercel/static"
     }
   ],
-  "headers": [
+  "routes": [
     {
-      "source": "/(.*\\.html)$",
-      "headers": [
-        {
-          "key": "Content-Type",
-          "value": "text/html; charset=utf-8"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
