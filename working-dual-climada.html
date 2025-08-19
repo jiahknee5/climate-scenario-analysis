@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working CLIMADA Dual-Map</title>
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared-styles.css">
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <style>
+        .app-content {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            height: calc(100vh - 80px);
+            box-sizing: border-box;
+        }
+        
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .app-content {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                height: auto;
+                min-height: calc(100vh - 80px);
+            }
+            
+            .controls-panel {
+                margin-bottom: 1rem;
+            }
+            
+            .map-container {
+                height: 300px;
+                margin-bottom: 1rem;
+            }
+        }
+        
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .app-content {
+                grid-template-columns: 250px 1fr 250px 1fr;
+            }
+        }
+        
+        .controls-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        
+        .map-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-sizing: border-box;
+        }
+        
+        .map-header {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .map-header h4 {
+            color: var(--climada-primary);
+            font-size: 1rem;
+            margin: 0;
+        }
+        
+        .climada-map {
+            width: 100%;
+            height: calc(100% - 50px);
+            box-sizing: border-box;
+        }
+        
+        .controls-panel h3 {
+            color: var(--climada-primary);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .control-group {
+            margin-bottom: 1rem;
+        }
+        
+        .control-group label {
+            display: block;
+            color: var(--text);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .control-group select {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--surface);
+            color: var(--climada-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <!-- Standardized Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="framework-logo">
+                <div class="framework-icon climada">CL</div>
+                <div>
+                    <h1 class="app-title climada">CLIMADA Framework</h1>
+                    <div class="app-subtitle">Working Dual-Map Comparison</div>
+                </div>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="climate-os-statistical.html" class="nav-link framework climate-os">Climate-OS</a>
+            <a href="cbottle-risk-assessment.html" class="nav-link framework cbottle">C-bottle</a>
+            <a href="index.html" class="nav-link primary">Overview</a>
+        </nav>
+    </header>
+
+    <main class="app-content">
+        <!-- Left Controls Panel -->
+        <div class="controls-panel">
+            <h3>🔬 Map 1 Controls</h3>
+            <div class="control-group">
+                <label for="scenario1">Climate Scenario:</label>
+                <select id="scenario1">
+                    <option value="baseline">Current Baseline</option>
+                    <option value="rcp26">RCP 2.6 (+2°C)</option>
+                    <option value="rcp45">RCP 4.5 (+3°C)</option>
+                    <option value="rcp85">RCP 8.5 (+4°C)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="decade1">Time Period:</label>
+                <select id="decade1">
+                    <option value="2020s">2020s</option>
+                    <option value="2030s">2030s</option>
+                    <option value="2050s">2050s</option>
+                    <option value="2070s">2070s</option>
+                    <option value="2090s">2090s</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Left Map -->
+        <div class="map-container">
+            <div class="map-header">
+                <h4>Map 1 - <span id="map1-title">Current Baseline | 2020s</span></h4>
+            </div>
+            <div id="climada-map1" class="climada-map"></div>
+            <div id="loading1" class="loading">Loading Map 1...</div>
+        </div>
+
+        <!-- Right Controls Panel -->
+        <div class="controls-panel">
+            <h3>🔬 Map 2 Controls</h3>
+            <div class="control-group">
+                <label for="scenario2">Climate Scenario:</label>
+                <select id="scenario2">
+                    <option value="baseline">Current Baseline</option>
+                    <option value="rcp26">RCP 2.6 (+2°C)</option>
+                    <option value="rcp45">RCP 4.5 (+3°C)</option>
+                    <option value="rcp85" selected>RCP 8.5 (+4°C)</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="decade2">Time Period:</label>
+                <select id="decade2">
+                    <option value="2020s">2020s</option>
+                    <option value="2030s">2030s</option>
+                    <option value="2050s">2050s</option>
+                    <option value="2070s">2070s</option>
+                    <option value="2090s" selected>2090s</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Right Map -->
+        <div class="map-container">
+            <div class="map-header">
+                <h4>Map 2 - <span id="map2-title">RCP 8.5 (+4°C) | 2090s</span></h4>
+            </div>
+            <div id="climada-map2" class="climada-map"></div>
+            <div id="loading2" class="loading">Loading Map 2...</div>
+        </div>
+    </main>
+
+    <script>
+        // Mapbox access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+
+        console.log('Starting working CLIMADA dual-map...');
+
+        let map1, map2;
+
+        // Initialize maps
+        function initMaps() {
+            console.log('Initializing maps...');
+            
+            try {
+                // Create map 1
+                map1 = new mapboxgl.Map({
+                    container: 'climada-map1',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                // Create map 2
+                map2 = new mapboxgl.Map({
+                    container: 'climada-map2',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                console.log('Maps created successfully');
+
+                // Map 1 loaded
+                map1.on('load', () => {
+                    console.log('Map 1 loaded');
+                    document.getElementById('loading1').style.display = 'none';
+                    
+                    // Add sample hurricane data for map 1
+                    addHurricaneData(map1, 'baseline');
+                });
+                
+                // Map 2 loaded
+                map2.on('load', () => {
+                    console.log('Map 2 loaded');
+                    document.getElementById('loading2').style.display = 'none';
+                    
+                    // Add sample hurricane data for map 2
+                    addHurricaneData(map2, 'rcp85');
+                });
+
+                // Error handling
+                map1.on('error', (e) => {
+                    console.error('Map 1 error:', e);
+                });
+                
+                map2.on('error', (e) => {
+                    console.error('Map 2 error:', e);
+                });
+
+                // Setup controls
+                setupControls();
+
+            } catch (error) {
+                console.error('Error initializing maps:', error);
+            }
+        }
+
+        // Add hurricane data to maps
+        function addHurricaneData(map, scenario) {
+            // Generate sample hurricane data based on scenario
+            const hurricanes = generateHurricaneData(scenario);
+            
+            map.addSource('hurricanes', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: hurricanes
+                }
+            });
+
+            // Add hurricane points
+            map.addLayer({
+                id: 'hurricane-points',
+                type: 'circle',
+                source: 'hurricanes',
+                paint: {
+                    'circle-radius': ['*', ['get', 'intensity'], 2],
+                    'circle-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'intensity'],
+                        1, '#FFF59D',
+                        2, '#FFB74D',
+                        3, '#FF8A65',
+                        4, '#F44336',
+                        5, '#9C27B0'
+                    ],
+                    'circle-opacity': 0.8,
+                    'circle-stroke-width': 1,
+                    'circle-stroke-color': '#fff'
+                }
+            });
+        }
+
+        // Generate sample hurricane data
+        function generateHurricaneData(scenario) {
+            const multiplier = scenario === 'baseline' ? 1 : scenario === 'rcp85' ? 1.5 : 1.2;
+            const hurricanes = [];
+            
+            for (let i = 0; i < 20 * multiplier; i++) {
+                hurricanes.push({
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [
+                            -95 + Math.random() * 40, // Longitude
+                            15 + Math.random() * 25   // Latitude
+                        ]
+                    },
+                    properties: {
+                        intensity: Math.floor(Math.random() * 5) + 1,
+                        year: 2020 + Math.floor(Math.random() * 10)
+                    }
+                });
+            }
+            
+            return hurricanes;
+        }
+
+        // Setup control event listeners
+        function setupControls() {
+            // Map 1 controls
+            document.getElementById('scenario1').addEventListener('change', (e) => {
+                updateMapTitle(1);
+                updateMapData(map1, e.target.value);
+            });
+            
+            document.getElementById('decade1').addEventListener('change', () => {
+                updateMapTitle(1);
+            });
+
+            // Map 2 controls
+            document.getElementById('scenario2').addEventListener('change', (e) => {
+                updateMapTitle(2);
+                updateMapData(map2, e.target.value);
+            });
+            
+            document.getElementById('decade2').addEventListener('change', () => {
+                updateMapTitle(2);
+            });
+        }
+
+        // Update map titles
+        function updateMapTitle(mapNum) {
+            const scenario = document.getElementById(`scenario${mapNum}`).value;
+            const decade = document.getElementById(`decade${mapNum}`).value;
+            
+            const scenarioNames = {
+                'baseline': 'Current Baseline',
+                'rcp26': 'RCP 2.6 (+2°C)',
+                'rcp45': 'RCP 4.5 (+3°C)',
+                'rcp85': 'RCP 8.5 (+4°C)'
+            };
+            
+            document.getElementById(`map${mapNum}-title`).textContent = 
+                `${scenarioNames[scenario]} | ${decade}`;
+        }
+
+        // Update map data based on scenario
+        function updateMapData(map, scenario) {
+            if (map.getSource('hurricanes')) {
+                const newData = generateHurricaneData(scenario);
+                map.getSource('hurricanes').setData({
+                    type: 'FeatureCollection',
+                    features: newData
+                });
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, checking prerequisites...');
+            
+            if (typeof mapboxgl === 'undefined') {
+                console.error('ERROR: Mapbox GL JS not loaded');
+                return;
+            }
+            
+            console.log('Mapbox GL JS available, version:', mapboxgl.version);
+            
+            const map1Container = document.getElementById('climada-map1');
+            const map2Container = document.getElementById('climada-map2');
+            
+            if (!map1Container || !map2Container) {
+                console.error('ERROR: Map containers not found');
+                return;
+            }
+            
+            console.log('All prerequisites met, initializing maps...');
+            initMaps();
+        });
+    </script>
+</body>
+</html>

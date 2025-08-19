@@ -1,17 +1,22 @@
 {
-  "trailingSlash": false,
-  "cleanUrls": true,
-  "public": true,
-  "rewrites": [
+  "version": 2,
+  "name": "climate-business-platform",
+  "builds": [
     {
-      "source": "/",
-      "destination": "/index.html"
+      "src": "**/*",
+      "use": "@vercel/static"
     }
   ],
+  "cleanUrls": false,
+  "trailingSlash": false,
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400"
+        },
         {
           "key": "X-Frame-Options",
           "value": "SAMEORIGIN"
@@ -25,10 +30,51 @@
           "value": "1; mode=block"
         },
         {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=31536000; includeSubDomains"
+        },
+        {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://api.mapbox.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://api.mapbox.com; img-src 'self' data: https:; connect-src 'self' https://api.mapbox.com https://*.mapbox.com; font-src 'self' data:; object-src 'none'; base-uri 'self'; form-action 'self';"
         }
       ]
+    },
+    {
+      "source": "/(.*\\.html)$",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/html; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.css)$", 
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/css; charset=utf-8"
+        }
+      ]
+    },
+    {
+      "source": "/(.*\\.js)$",
+      "headers": [
+        {
+          "key": "Content-Type", 
+          "value": "application/javascript; charset=utf-8"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/index.html"
     }
   ]
 }
