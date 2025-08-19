@@ -1,4 +1,4 @@
-Deployment Trigger: 2025-08-19-01:15:00
-Build ID: force-rebuild-maps-fix
-Changes: CLIMADA hurricane analysis maps fix
-Status: Force deployment to clear cache
+Deployment Trigger: 2025-08-19-01:25:00
+Build ID: basic-mapbox-test-deployment
+Changes: Basic Mapbox test to verify deployment pipeline
+Status: Testing fundamental Mapbox integration
