@@ -1,4 +1,4 @@
-Deployment Trigger: 2025-08-19-01:25:00
-Build ID: basic-mapbox-test-deployment
-Changes: Basic Mapbox test to verify deployment pipeline
-Status: Testing fundamental Mapbox integration
+Deployment Trigger: 2025-08-19-01:40:00
+Build ID: comprehensive-vercel-fix
+Changes: Fixed Vercel URL redirection with explicit rewrites
+Status: CRITICAL - Resolving persistent 404 errors
