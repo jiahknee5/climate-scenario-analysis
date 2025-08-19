@@ -1,12 +1,7 @@
-# Vercel ignore file
-# Ignore test files and temporary files
-test-*
-*-test.js
-*-fixed.html
-debug-*
-minimal-*
-quick-*
-comprehensive-*
-final-validation-*
-validate-*
-SUPER_PROMPT_*
+# Vercel ignore file  
+# Only ignore actual temp/backup files, not test pages
+node_modules/
+.git/
+*.log
+.DS_Store
+.env.local
