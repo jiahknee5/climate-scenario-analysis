@@ -56,6 +56,8 @@
         .climada-map {
             width: 100%;
             height: calc(100% - 80px);
+            min-height: 400px;
+            position: relative;
         }
         
         .controls-panel h3 {
@@ -539,6 +541,15 @@
         // Initialize maps
         function initMaps() {
             try {
+                console.log('Creating maps with container check...');
+                
+                // Check container dimensions first
+                const container1 = document.getElementById('climada-map1');
+                const container2 = document.getElementById('climada-map2');
+                
+                console.log('Container 1 dimensions:', container1.offsetWidth, 'x', container1.offsetHeight);
+                console.log('Container 2 dimensions:', container2.offsetWidth, 'x', container2.offsetHeight);
+                
                 // Initialize map 1 (left - historical)
                 map1 = new mapboxgl.Map({
                     container: 'climada-map1',
@@ -548,7 +559,7 @@
                     pitch: 0
                 });
                 
-                // Initialize map 2 (right - projections)
+                // Initialize map 2 (right - projections)  
                 map2 = new mapboxgl.Map({
                     container: 'climada-map2',
                     style: 'mapbox://styles/mapbox/dark-v11',
@@ -558,6 +569,13 @@
                 });
                 
                 console.log('Maps created successfully');
+                
+                // Force resize after short delay
+                setTimeout(() => {
+                    if (map1) map1.resize();
+                    if (map2) map2.resize();
+                    console.log('Maps resized');
+                }, 1000);
                 
                 // Setup map 1 events
                 map1.on('load', () => {
