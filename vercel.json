@@ -1,14 +1,18 @@
 {
   "version": 2,
-  "cleanUrls": false,
-  "rewrites": [
+  "builds": [
     {
-      "source": "/basic-mapbox-test",
-      "destination": "/basic-mapbox-test.html"
-    },
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "."
+      }
+    }
+  ],
+  "routes": [
     {
-      "source": "/test",
-      "destination": "/test.html"
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ]
 }
