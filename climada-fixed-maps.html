@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIMADA Hurricane Analysis - FIXED MAPS</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #1a1a1a;
+            color: white;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        .header {
+            background: #2d3748;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .main-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            height: calc(100vh - 80px);
+            min-height: 600px;
+        }
+        
+        .controls-panel {
+            background: #2d3748;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        .map-container {
+            background: #2d3748;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            min-height: 400px;
+        }
+        
+        .map-header {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 0.5rem;
+            text-align: center;
+            color: #2196f3;
+            font-weight: bold;
+        }
+        
+        .map {
+            width: 100%;
+            height: calc(100% - 40px);
+            min-height: 350px;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #2196f3;
+            z-index: 1000;
+        }
+        
+        .debug-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0,0,0,0.8);
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 1001;
+            max-width: 200px;
+        }
+        
+        .error { color: #ff4444; }
+        .success { color: #44ff44; }
+        .info { color: #4488ff; }
+        
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                height: auto;
+            }
+            
+            .map-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>CLIMADA Hurricane Analysis - FIXED MAPS</h1>
+        <p>Debugging dual-map container and sizing issues</p>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Controls -->
+        <div class="controls-panel">
+            <h3>Left Map Controls</h3>
+            <p>Historical Data (2010-2019)</p>
+            <p>Category: All Hurricanes</p>
+            <p>Region: Atlantic Basin</p>
+        </div>
+
+        <!-- Left Map -->
+        <div class="map-container">
+            <div class="map-header">CLIMADA Historical Analysis</div>
+            <div id="map1" class="map"></div>
+            <div id="loading1" class="loading">Loading Map 1...</div>
+            <div id="debug1" class="debug-info">
+                <div>Map 1 Debug:</div>
+                <div id="status1">Initializing...</div>
+            </div>
+        </div>
+
+        <!-- Right Controls -->
+        <div class="controls-panel">
+            <h3>Right Map Controls</h3>
+            <p>Climate Projections (+4°C)</p>
+            <p>Decade: 2090s</p>
+            <p>Scenario: High Emissions</p>
+        </div>
+
+        <!-- Right Map -->
+        <div class="map-container">
+            <div class="map-header">CLIMADA Climate Projections</div>
+            <div id="map2" class="map"></div>
+            <div id="loading2" class="loading">Loading Map 2...</div>
+            <div id="debug2" class="debug-info">
+                <div>Map 2 Debug:</div>
+                <div id="status2">Initializing...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Debug logging
+        function log(message, mapId = null) {
+            console.log(`[${new Date().toISOString().substr(11,8)}] ${message}`);
+            if (mapId) {
+                const statusEl = document.getElementById(`status${mapId}`);
+                if (statusEl) {
+                    statusEl.innerHTML += `<div>${message}</div>`;
+                }
+            }
+        }
+
+        // Mapbox token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+        
+        log('🚀 Initializing CLIMADA Fixed Maps...');
+        log('Mapbox GL version: ' + mapboxgl.version);
+
+        let map1, map2;
+
+        function checkContainer(containerId) {
+            const container = document.getElementById(containerId);
+            const rect = container.getBoundingClientRect();
+            const computed = window.getComputedStyle(container);
+            
+            log(`📐 Container ${containerId}:`, containerId.slice(-1));
+            log(`  Dimensions: ${rect.width}x${rect.height}`, containerId.slice(-1));
+            log(`  Computed: ${computed.width} x ${computed.height}`, containerId.slice(-1));
+            log(`  Display: ${computed.display}`, containerId.slice(-1));
+            
+            if (rect.width === 0 || rect.height === 0) {
+                log(`❌ ERROR: Zero dimensions!`, containerId.slice(-1));
+                return false;
+            }
+            return true;
+        }
+
+        function createMap(containerId, mapTitle) {
+            const mapNum = containerId.slice(-1);
+            
+            log(`🗺️ Creating ${mapTitle}...`, mapNum);
+            
+            if (!checkContainer(containerId)) {
+                log(`❌ Container check failed for ${containerId}`, mapNum);
+                return null;
+            }
+
+            try {
+                const map = new mapboxgl.Map({
+                    container: containerId,
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 35],
+                    zoom: 4,
+                    attributionControl: false
+                });
+
+                log(`✅ Map object created for ${containerId}`, mapNum);
+
+                map.on('load', () => {
+                    log(`🎉 ${mapTitle} loaded successfully!`, mapNum);
+                    document.getElementById(`loading${mapNum}`).style.display = 'none';
+                    
+                    // Add test data
+                    addTestHurricaneData(map, mapNum);
+                });
+
+                map.on('error', (e) => {
+                    log(`❌ ${mapTitle} error: ${e.error?.message || 'Unknown'}`, mapNum);
+                });
+
+                map.on('resize', () => {
+                    log(`🔄 ${mapTitle} resized`, mapNum);
+                });
+
+                // Force resize after creation
+                setTimeout(() => {
+                    map.resize();
+                    log(`🔄 Forced resize for ${mapTitle}`, mapNum);
+                }, 1000);
+
+                return map;
+
+            } catch (error) {
+                log(`💥 Exception creating ${mapTitle}: ${error.message}`, mapNum);
+                return null;
+            }
+        }
+
+        function addTestHurricaneData(map, mapNum) {
+            const hurricanes = [];
+            const count = mapNum === '1' ? 8 : 12; // More storms in projection
+            
+            for (let i = 0; i < count; i++) {
+                const startLng = -85 + Math.random() * 15;
+                const startLat = 20 + Math.random() * 15;
+                const track = [];
+                
+                // Generate hurricane track
+                for (let j = 0; j < 6; j++) {
+                    track.push([
+                        startLng + j * 1.2 + (Math.random() - 0.5) * 0.8,
+                        startLat + j * 0.4 + (Math.random() - 0.5) * 0.8
+                    ]);
+                }
+                
+                hurricanes.push({
+                    type: 'Feature',
+                    properties: {
+                        name: `Hurricane ${String.fromCharCode(65 + i)}`,
+                        category: Math.floor(Math.random() * 5) + 1,
+                        year: 2020 + Math.floor(Math.random() * 5)
+                    },
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: track
+                    }
+                });
+            }
+
+            const data = {
+                type: 'FeatureCollection',
+                features: hurricanes
+            };
+
+            map.addSource('hurricanes', {
+                type: 'geojson',
+                data: data
+            });
+
+            // Hurricane tracks
+            map.addLayer({
+                id: 'hurricane-tracks',
+                type: 'line',
+                source: 'hurricanes',
+                paint: {
+                    'line-color': [
+                        'case',
+                        ['>=', ['get', 'category'], 4], '#DC143C',
+                        ['>=', ['get', 'category'], 3], '#FF4500',
+                        ['>=', ['get', 'category'], 2], '#FF8C00',
+                        '#FFC800'
+                    ],
+                    'line-width': [
+                        'case',
+                        ['>=', ['get', 'category'], 4], 4,
+                        ['>=', ['get', 'category'], 3], 3.5,
+                        3
+                    ],
+                    'line-opacity': 0.8
+                }
+            });
+
+            // Hurricane points
+            map.addLayer({
+                id: 'hurricane-points',
+                type: 'circle',
+                source: 'hurricanes',
+                paint: {
+                    'circle-radius': 6,
+                    'circle-color': '#2196F3',
+                    'circle-stroke-color': '#ffffff',
+                    'circle-stroke-width': 2,
+                    'circle-opacity': 0.9
+                }
+            });
+
+            log(`📍 Added ${count} hurricane tracks to map ${mapNum}`, mapNum);
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            log('📄 DOM loaded, starting initialization...');
+            
+            // Check containers exist
+            if (!document.getElementById('map1') || !document.getElementById('map2')) {
+                log('❌ Map containers not found!');
+                return;
+            }
+            
+            // Create maps with delay to ensure containers are rendered
+            setTimeout(() => {
+                map1 = createMap('map1', 'Historical Analysis');
+            }, 500);
+            
+            setTimeout(() => {
+                map2 = createMap('map2', 'Climate Projections');
+            }, 1000);
+            
+            // Final check after everything loads
+            setTimeout(() => {
+                log('🏁 Initialization complete. Checking final status...');
+                if (map1 && map1.loaded()) {
+                    log('✅ Map 1 fully loaded', '1');
+                } else {
+                    log('❌ Map 1 failed to load', '1');
+                }
+                
+                if (map2 && map2.loaded()) {
+                    log('✅ Map 2 fully loaded', '2');
+                } else {
+                    log('❌ Map 2 failed to load', '2');
+                }
+            }, 5000);
+        });
+
+        // Global error handler
+        window.addEventListener('error', (e) => {
+            log(`🚨 Global error: ${e.message} at ${e.filename}:${e.lineno}`);
+        });
+    </script>
+</body>
+</html>
