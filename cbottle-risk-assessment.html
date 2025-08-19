@@ -3,602 +3,596 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>C-bottle Risk Assessment - Synthetic Hurricane Modeling</title>
-    <meta name="description" content="C-bottle framework for rapid synthetic hurricane modeling and property-level risk assessment">
-    
-    <!-- Shared Styles -->
-    <link rel="stylesheet" href="shared-styles.css">
+    <title>C-bottle Risk Assessment - Working Maps</title>
+    <meta name="description" content="C-bottle framework for property-level hurricane risk assessment">
     
     <!-- Mapbox GL JS -->
-    <script src="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js"></script>
-    <link href="https://api.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css" rel="stylesheet" />
-    <script src="https://unpkg.com/deck.gl@8.8.0/dist.min.js"></script>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
     
     <style>
-        /* C-bottle specific styles */
-        .app-content {
-            display: flex;
-            height: calc(100vh - 80px);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
-        .map-container {
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 1rem 2rem;
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            color: #4fbcff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+        
+        /* Main Layout - Simple side-by-side */
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 100px);
+            padding: 1rem;
+            gap: 1rem;
+        }
+        
+        /* Each map section takes half the width */
+        .map-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        /* Map header */
+        .map-header {
+            background: #0d1117;
+            padding: 1rem;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .map-header h3 {
+            color: #4fbcff;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .map-header p {
+            color: #8b949e;
+            font-size: 0.85rem;
+        }
+        
+        /* Map container - CRITICAL: Fixed dimensions */
+        .map-wrapper {
             flex: 1;
             position: relative;
+            min-height: 400px;
+        }
+        
+        .map {
+            width: 100%;
             height: 100%;
-        }
-        
-        .map-container:first-child {
-            border-right: 2px solid var(--border);
-        }
-        
-        .mapboxgl-canvas {
             position: absolute;
             top: 0;
             left: 0;
         }
         
-        .controls-left {
-            top: 20px;
-            left: 20px;
-            width: 220px;
+        /* Controls */
+        .controls {
+            background: #0d1117;
+            padding: 1rem;
+            border-top: 1px solid #30363d;
         }
         
-        .controls-right {
-            top: 20px;
-            right: 20px;
-            width: 220px;
+        .control-group {
+            margin-bottom: 0.75rem;
         }
         
+        .control-group label {
+            display: block;
+            color: #f0f6fc;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .control-group select, .control-group input {
+            width: 100%;
+            padding: 0.5rem;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            font-size: 0.85rem;
+        }
+        
+        /* Property panel */
+        .property-panel {
+            background: rgba(79, 188, 255, 0.1);
+            border: 1px solid #4fbcff;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .property-panel h4 {
+            color: #4fbcff;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .property-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+        }
+        
+        .property-value {
+            color: #4fbcff;
+            font-weight: bold;
+        }
+        
+        .risk-high { color: #ff6b6b; }
+        .risk-medium { color: #ffd93d; }
+        .risk-low { color: #6bcf7f; }
+        
+        /* Loading indicator */
         .loading {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            color: var(--text-muted);
-            font-size: 16px;
-            z-index: 10;
+            background: #161b22;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            z-index: 100;
         }
         
-        .stats-left {
-            bottom: 20px;
-            left: 260px;
+        /* Debug info */
+        .debug-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(22, 27, 34, 0.9);
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            font-size: 0.75rem;
+            z-index: 101;
+            max-width: 200px;
         }
         
-        .stats-right {
-            bottom: 20px;
-            right: 260px;
+        .debug-panel div {
+            margin: 0.25rem 0;
         }
         
-        .scenario-badge {
-            background: rgba(66, 133, 244, 0.2);
-            color: var(--cbottle-primary);
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 10px;
-        }
+        .success { color: #3fb950; }
+        .error { color: #f85149; }
+        .info { color: #4fbcff; }
         
-        .comparison-mode {
-            text-align: center;
-            padding: 15px;
-            background: rgba(66, 133, 244, 0.1);
-            border: 1px solid var(--cbottle-primary);
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .comparison-mode h4 {
-            color: var(--cbottle-primary);
-            margin: 0 0 5px 0;
-            font-size: 12px;
-        }
-        
-        .comparison-mode p {
-            margin: 0;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-        
-        @media (max-width: 1024px) {
-            .app-content {
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .main-layout {
                 flex-direction: column;
+                height: auto;
             }
             
-            .map-container:first-child {
-                border-right: none;
-                border-bottom: 2px solid var(--border);
-            }
-            
-            .controls-left, .controls-right {
-                position: relative;
-                top: auto;
-                left: auto;
-                right: auto;
-                width: 100%;
-                margin: 10px;
-            }
-            
-            .stats-left, .stats-right {
-                position: relative;
-                bottom: auto;
-                left: auto;
-                right: auto;
-                margin: 10px;
+            .map-section {
+                height: 500px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Standardized Header -->
-    <header class="app-header">
-        <div class="header-left">
-            <div class="framework-logo">
-                <div class="framework-icon cbottle">CB</div>
-                <div>
-                    <h1 class="app-title cbottle">C-bottle Framework</h1>
-                    <div class="app-subtitle">Synthetic Hurricane Risk Modeling</div>
-                </div>
-            </div>
-        </div>
-        <nav class="header-nav">
-            <a href="climada-hurricane-analysis.html" class="nav-link framework climada">CLIMADA</a>
-            <a href="climate-os-statistical.html" class="nav-link framework climate-os">Climate-OS</a>
-            <a href="framework-comparison.html" class="nav-link secondary">Compare</a>
-            <a href="index.html" class="nav-link primary">Overview</a>
-        </nav>
-    </header>
+    <!-- Header -->
+    <div class="header">
+        <h1>C-bottle Risk Assessment</h1>
+        <p>Property-level hurricane risk analysis with Google Earth integration</p>
+    </div>
 
-    <main class="app-content">
-        <!-- Left Map Container -->
-        <div class="map-container" id="map1">
-            <div class="loading">Loading map...</div>
-            
-            <!-- Left Controls Panel -->
-            <div class="control-panel controls-left">
-                <h3>Left Panel</h3>
-                
-                <div class="comparison-mode">
-                    <h4>Dual-Map Comparison</h4>
-                    <p>Compare different scenarios side-by-side</p>
-                </div>
-                
-                <label>Scenario</label>
-                <select id="scenario1">
-                    <option value="baseline">Baseline</option>
-                    <option value="warming_mid">+2°C Warming</option>
-                    <option value="warming_high">+4°C Warming</option>
-                </select>
-                
-                <label>Decade</label>
-                <select id="decade1">
-                    <option value="2030s">2030s</option>
-                    <option value="2040s">2040s</option>
-                    <option value="2050s">2050s</option>
-                    <option value="2060s">2060s</option>
-                    <option value="2070s">2070s</option>
-                    <option value="2080s">2080s</option>
-                    <option value="2090s">2090s</option>
-                </select>
-                
-                <div class="scenario-badge">Google Earth2Studio</div>
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left Map: Current Risk -->
+        <div class="map-section">
+            <div class="map-header">
+                <h3>Current Property Risk</h3>
+                <p>Real-time assessment based on location and structure</p>
             </div>
             
-            <!-- Left Stats Panel -->
-            <div class="stats-panel stats-left">
-                <div class="stats-title">Left Panel Stats</div>
-                <div id="stats1">
-                    <div class="stat-row">
-                        <span class="stat-label">Total Storms</span>
-                        <span class="stat-value">127</span>
+            <div class="map-wrapper">
+                <div id="map1" class="map"></div>
+                <div id="loading1" class="loading">Loading property data...</div>
+                <div id="debug1" class="debug-panel">
+                    <div class="info">Map 1 Status:</div>
+                    <div id="status1">Initializing...</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Property Address</label>
+                    <input type="text" id="address1" placeholder="123 Main St, Miami, FL" value="Miami Beach, FL">
+                </div>
+                
+                <div class="control-group">
+                    <label>Building Type</label>
+                    <select id="building1">
+                        <option value="residential">Residential</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="industrial">Industrial</option>
+                    </select>
+                </div>
+                
+                <div class="property-panel">
+                    <h4>Risk Assessment</h4>
+                    <div class="property-item">
+                        <span>Hurricane Risk:</span>
+                        <span class="property-value risk-high">HIGH</span>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Annual Average</span>
-                        <span class="stat-value">12.7</span>
+                    <div class="property-item">
+                        <span>Flood Zone:</span>
+                        <span class="property-value">AE</span>
                     </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Major Hurricanes</span>
-                        <span class="stat-value">38</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Major Hurricane %</span>
-                        <span class="stat-value">29.9%</span>
+                    <div class="property-item">
+                        <span>Wind Speed:</span>
+                        <span class="property-value">140 mph</span>
                     </div>
                 </div>
             </div>
         </div>
-        
-        <!-- Right Map Container -->
-        <div class="map-container" id="map2">
-            <div class="loading">Loading map...</div>
-            
-            <!-- Right Controls Panel -->
-            <div class="control-panel controls-right">
-                <h3>Right Panel</h3>
-                
-                <div class="comparison-mode">
-                    <h4>Scenario Analysis</h4>
-                    <p>Future climate projections</p>
-                </div>
-                
-                <label>Scenario</label>
-                <select id="scenario2">
-                    <option value="baseline">Baseline</option>
-                    <option value="warming_mid">+2°C Warming</option>
-                    <option value="warming_high" selected>+4°C Warming</option>
-                </select>
-                
-                <label>Decade</label>
-                <select id="decade2">
-                    <option value="2030s">2030s</option>
-                    <option value="2040s">2040s</option>
-                    <option value="2050s">2050s</option>
-                    <option value="2060s">2060s</option>
-                    <option value="2070s">2070s</option>
-                    <option value="2080s">2080s</option>
-                    <option value="2090s" selected>2090s</option>
-                </select>
-                
-                <div class="scenario-badge">Synthetic Generation</div>
-            </div>
-            
-            <!-- Right Stats Panel -->
-            <div class="stats-panel stats-right">
-                <div class="stats-title">Right Panel Stats</div>
-                <div id="stats2">
-                    <div class="stat-row">
-                        <span class="stat-label">Total Storms</span>
-                        <span class="stat-value">189</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Annual Average</span>
-                        <span class="stat-value">18.9</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Major Hurricanes</span>
-                        <span class="stat-value">76</span>
-                    </div>
-                    <div class="stat-row">
-                        <span class="stat-label">Major Hurricane %</span>
-                        <span class="stat-value">40.2%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </main>
 
-    <!-- Legend -->
-    <div class="legend">
-        <h4>Hurricane Categories</h4>
-        <div class="legend-item">
-            <div class="legend-line" style="background: rgb(100,100,100);"></div>
-            <span>Tropical Storm</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-line" style="background: rgb(255,255,0);"></div>
-            <span>Category 1</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-line" style="background: rgb(255,200,0);"></div>
-            <span>Category 2</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-line" style="background: rgb(255,140,0);"></div>
-            <span>Category 3</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-line" style="background: rgb(255,69,0);"></div>
-            <span>Category 4</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-line" style="background: rgb(139,0,0);"></div>
-            <span>Category 5</span>
+        <!-- Right Map: Future Risk -->
+        <div class="map-section">
+            <div class="map-header">
+                <h3>Future Risk Projection</h3>
+                <p>Climate-adjusted risk assessment for 2050</p>
+            </div>
+            
+            <div class="map-wrapper">
+                <div id="map2" class="map"></div>
+                <div id="loading2" class="loading">Loading projections...</div>
+                <div id="debug2" class="debug-panel">
+                    <div class="info">Map 2 Status:</div>
+                    <div id="status2">Initializing...</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Projection Year</label>
+                    <select id="year2">
+                        <option value="2030">2030</option>
+                        <option value="2050" selected>2050</option>
+                        <option value="2070">2070</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label>Adaptation Measures</label>
+                    <select id="adaptation2">
+                        <option value="none">No Adaptation</option>
+                        <option value="basic">Basic Hardening</option>
+                        <option value="full">Full Resilience</option>
+                    </select>
+                </div>
+                
+                <div class="property-panel">
+                    <h4>Future Risk Assessment</h4>
+                    <div class="property-item">
+                        <span>Hurricane Risk:</span>
+                        <span class="property-value risk-high">EXTREME</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Risk Change:</span>
+                        <span class="property-value risk-high">+45%</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Insurance Cost:</span>
+                        <span class="property-value">$12,500/yr</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Properties data
-        const properties = [
-            {"property_id":"PROP001","name":"Miami Beach Resort","latitude":25.7907,"longitude":-80.13,"value_usd":85000000,"building_type":"hotel","construction_year":2005,"stories":15,"occupancy":"commercial"},
-            {"property_id":"PROP002","name":"Houston Office Tower","latitude":29.7604,"longitude":-95.3698,"value_usd":120000000,"building_type":"office","construction_year":2010,"stories":25,"occupancy":"commercial"},
-            {"property_id":"PROP003","name":"New Orleans Historic Building","latitude":29.9511,"longitude":-90.0715,"value_usd":45000000,"building_type":"mixed_use","construction_year":1920,"stories":4,"occupancy":"mixed"},
-            {"property_id":"PROP004","name":"Tampa Bay Marina Complex","latitude":27.9506,"longitude":-82.4572,"value_usd":65000000,"building_type":"marina","construction_year":2015,"stories":3,"occupancy":"commercial"},
-            {"property_id":"PROP005","name":"Jacksonville Distribution Center","latitude":30.3322,"longitude":-81.6557,"value_usd":55000000,"building_type":"warehouse","construction_year":2018,"stories":1,"occupancy":"industrial"}
-        ];
-        
         // Set Mapbox token
         mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
         
-        let map1, map2, deckOverlay1, deckOverlay2;
-        let simulationData = null;
+        console.log('🚀 Starting C-bottle Risk Assessment...');
+        console.log('Mapbox GL version:', mapboxgl.version);
         
-        // Initialize maps using Mapbox GL JS directly
-        function initializeMaps() {
-            console.log('Initializing maps...');
+        let map1, map2;
+        let mapsInitialized = false;
+        
+        // Update debug status
+        function updateStatus(mapId, message, type = 'info') {
+            const statusEl = document.getElementById(`status${mapId}`);
+            if (statusEl) {
+                statusEl.innerHTML = `<span class="${type}">${message}</span>`;
+            }
+            console.log(`[Map ${mapId}] ${message}`);
+        }
+        
+        // Check container dimensions
+        function checkContainer(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) {
+                console.error(`Container ${containerId} not found!`);
+                return false;
+            }
+            
+            const rect = container.getBoundingClientRect();
+            console.log(`Container ${containerId} dimensions:`, rect.width, 'x', rect.height);
+            
+            if (rect.width === 0 || rect.height === 0) {
+                console.error(`Container ${containerId} has zero dimensions!`);
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Create a single map
+        function createMap(containerId, mapNum) {
+            updateStatus(mapNum, 'Creating map...', 'info');
+            
+            if (!checkContainer(containerId)) {
+                updateStatus(mapNum, 'Container error!', 'error');
+                return null;
+            }
             
             try {
-                // Create first map
-                map1 = new mapboxgl.Map({
-                    container: 'map1',
-                    style: 'mapbox://styles/mapbox/dark-v11',
-                    center: [-88, 27],
-                    zoom: 5,
-                    pitch: 0
+                const map = new mapboxgl.Map({
+                    container: containerId,
+                    style: 'mapbox://styles/mapbox/satellite-streets-v12',
+                    center: [-80.13, 25.79], // Miami Beach
+                    zoom: mapNum === '1' ? 15 : 14, // Closer zoom for property view
+                    attributionControl: false
                 });
                 
-                // Create second map
-                map2 = new mapboxgl.Map({
-                    container: 'map2',
-                    style: 'mapbox://styles/mapbox/dark-v11',
-                    center: [-88, 27],
-                    zoom: 5,
-                    pitch: 0
-                });
+                updateStatus(mapNum, 'Map created, loading...', 'info');
                 
-                // Create deck.gl overlays
-                map1.on('load', () => {
-                    console.log('Map 1 loaded');
-                    document.querySelector('#map1 .loading').style.display = 'none';
+                // Handle load event
+                map.on('load', () => {
+                    updateStatus(mapNum, 'Map loaded!', 'success');
+                    document.getElementById(`loading${mapNum}`).style.display = 'none';
                     
-                    deckOverlay1 = new deck.MapboxOverlay({
-                        layers: []
-                    });
-                    map1.addControl(deckOverlay1);
+                    // Add property and risk data
+                    addPropertyData(map, mapNum);
                     
-                    // Add sample properties
-                    addProperties(map1);
+                    // Hide debug panel after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById(`debug${mapNum}`).style.display = 'none';
+                    }, 3000);
                 });
                 
-                map2.on('load', () => {
-                    console.log('Map 2 loaded');
-                    document.querySelector('#map2 .loading').style.display = 'none';
-                    
-                    deckOverlay2 = new deck.MapboxOverlay({
-                        layers: []
-                    });
-                    map2.addControl(deckOverlay2);
-                    
-                    // Add sample properties
-                    addProperties(map2);
+                // Handle error event
+                map.on('error', (e) => {
+                    console.error('Map error:', e);
+                    updateStatus(mapNum, 'Map error: ' + (e.error?.message || 'Unknown'), 'error');
                 });
                 
-                // Sync maps
-                map1.on('move', () => {
-                    map2.jumpTo({
-                        center: map1.getCenter(),
-                        zoom: map1.getZoom(),
-                        bearing: map1.getBearing(),
-                        pitch: map1.getPitch()
-                    });
-                });
-                
-                map2.on('move', () => {
-                    map1.jumpTo({
-                        center: map2.getCenter(),
-                        zoom: map2.getZoom(),
-                        bearing: map2.getBearing(),
-                        pitch: map2.getPitch()
-                    });
-                });
-                
-                console.log('Maps initialized successfully');
+                return map;
                 
             } catch (error) {
-                console.error('Error initializing maps:', error);
-                showError('Failed to initialize maps: ' + error.message);
+                console.error('Exception creating map:', error);
+                updateStatus(mapNum, 'Exception: ' + error.message, 'error');
+                return null;
             }
         }
         
-        function addProperties(map) {
-            // Add properties as points
-            map.addSource('properties', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'FeatureCollection',
-                    'features': properties.map(prop => ({
-                        'type': 'Feature',
-                        'geometry': {
-                            'type': 'Point',
-                            'coordinates': [prop.longitude, prop.latitude]
-                        },
-                        'properties': prop
-                    }))
-                }
+        // Add property and risk data to map
+        function addPropertyData(map, mapNum) {
+            const properties = generatePropertyData(mapNum);
+            
+            // Add risk zones
+            map.addSource('risk-zones', {
+                type: 'geojson',
+                data: generateRiskZones(mapNum)
             });
             
             map.addLayer({
-                'id': 'properties',
-                'type': 'circle',
-                'source': 'properties',
-                'paint': {
-                    'circle-radius': 8,
-                    'circle-color': '#4285F4',
+                id: 'risk-zones-fill',
+                type: 'fill',
+                source: 'risk-zones',
+                paint: {
+                    'fill-color': [
+                        'case',
+                        ['>=', ['get', 'risk'], 0.8], 'rgba(255, 107, 107, 0.4)',
+                        ['>=', ['get', 'risk'], 0.5], 'rgba(255, 217, 61, 0.4)',
+                        'rgba(107, 207, 127, 0.4)'
+                    ],
+                    'fill-opacity': 0.6
+                }
+            });
+            
+            // Add properties
+            map.addSource('properties', {
+                type: 'geojson',
+                data: properties
+            });
+            
+            map.addLayer({
+                id: 'properties',
+                type: 'circle',
+                source: 'properties',
+                paint: {
+                    'circle-radius': [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        12, 6,
+                        16, 20
+                    ],
+                    'circle-color': [
+                        'case',
+                        ['>=', ['get', 'risk'], 0.8], '#ff6b6b',
+                        ['>=', ['get', 'risk'], 0.5], '#ffd93d',
+                        '#6bcf7f'
+                    ],
                     'circle-stroke-color': '#ffffff',
                     'circle-stroke-width': 2,
-                    'circle-opacity': 0.8
+                    'circle-opacity': 0.9
                 }
             });
             
-            // Add synthetic hurricane tracks
-            addSyntheticHurricanes(map);
-        }
-        
-        function addSyntheticHurricanes(map) {
-            // Generate synthetic hurricane data
-            const hurricanes = generateSyntheticHurricanes();
-            
-            map.addSource('hurricanes', {
-                'type': 'geojson',
-                'data': {
-                    'type': 'FeatureCollection',
-                    'features': hurricanes
-                }
-            });
-            
+            // Add property labels at high zoom
             map.addLayer({
-                'id': 'hurricane-tracks',
-                'type': 'line',
-                'source': 'hurricanes',
-                'layout': {
-                    'line-join': 'round',
-                    'line-cap': 'round'
+                id: 'property-labels',
+                type: 'symbol',
+                source: 'properties',
+                minzoom: 14,
+                layout: {
+                    'text-field': ['get', 'address'],
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-size': 12,
+                    'text-offset': [0, 1.5],
+                    'text-anchor': 'top'
                 },
-                'paint': {
-                    'line-color': [
-                        'case',
-                        ['>=', ['get', 'category'], 4], '#8B0000',
-                        ['>=', ['get', 'category'], 3], '#FF4500',
-                        ['>=', ['get', 'category'], 2], '#FF8C00',
-                        ['>=', ['get', 'category'], 1], '#FFC800',
-                        '#646464'
-                    ],
-                    'line-width': [
-                        'case',
-                        ['>=', ['get', 'category'], 4], 5,
-                        ['>=', ['get', 'category'], 3], 4,
-                        ['>=', ['get', 'category'], 2], 3,
-                        2
-                    ],
-                    'line-opacity': 0.8
+                paint: {
+                    'text-color': '#ffffff',
+                    'text-halo-color': '#000000',
+                    'text-halo-width': 1
                 }
             });
+            
+            console.log(`Added ${properties.features.length} properties to map ${mapNum}`);
         }
         
-        function generateSyntheticHurricanes() {
-            const hurricanes = [];
-            const numHurricanes = Math.floor(Math.random() * 8) + 3; // 3-10 hurricanes
+        // Generate property data
+        function generatePropertyData(mapNum) {
+            const features = [];
+            const baseRisk = mapNum === '1' ? 0.6 : 0.85; // Higher risk in future
             
-            for (let i = 0; i < numHurricanes; i++) {
-                const startLon = -95 + Math.random() * 15; // Start somewhere in Gulf/Atlantic
-                const startLat = 15 + Math.random() * 10;
-                const category = Math.floor(Math.random() * 5) + 1;
+            // Generate properties around Miami Beach
+            for (let i = 0; i < 20; i++) {
+                const lng = -80.13 + (Math.random() - 0.5) * 0.02;
+                const lat = 25.79 + (Math.random() - 0.5) * 0.02;
+                const risk = baseRisk + (Math.random() - 0.5) * 0.3;
                 
-                // Generate track points
-                const coordinates = [];
-                let lon = startLon;
-                let lat = startLat;
-                
-                for (let j = 0; j < 10; j++) {
-                    coordinates.push([lon, lat]);
-                    lon += Math.random() * 2 - 1; // Random movement
-                    lat += Math.random() * 2 - 0.5; // Generally northward
-                }
-                
-                hurricanes.push({
-                    'type': 'Feature',
-                    'properties': {
-                        'name': `Hurricane ${String.fromCharCode(65 + i)}`,
-                        'category': category,
-                        'year': 2024,
-                        'synthetic': true
+                features.push({
+                    type: 'Feature',
+                    properties: {
+                        address: `${Math.floor(Math.random() * 999) + 1} Ocean Dr`,
+                        risk: Math.max(0, Math.min(1, risk)),
+                        value: Math.floor(Math.random() * 5000000) + 500000,
+                        type: ['residential', 'commercial', 'condo'][Math.floor(Math.random() * 3)]
                     },
-                    'geometry': {
-                        'type': 'LineString',
-                        'coordinates': coordinates
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [lng, lat]
                     }
                 });
             }
             
-            return hurricanes;
+            return {
+                type: 'FeatureCollection',
+                features: features
+            };
         }
         
-        function showError(message) {
-            console.error(message);
-            // Could add visual error notification here
-        }
-        
-        function updateMap(mapNumber) {
-            const scenario = document.getElementById(`scenario${mapNumber}`).value;
-            const decade = document.getElementById(`decade${mapNumber}`).value;
+        // Generate risk zones
+        function generateRiskZones(mapNum) {
+            const features = [];
+            const baseRisk = mapNum === '1' ? 0.5 : 0.7;
             
-            // Update stats based on selections
-            updateStats(mapNumber, scenario, decade);
-            
-            // Regenerate hurricanes for this scenario
-            const map = mapNumber === 1 ? map1 : map2;
-            if (map && map.getSource('hurricanes')) {
-                const hurricanes = generateSyntheticHurricanes();
-                map.getSource('hurricanes').setData({
-                    'type': 'FeatureCollection',
-                    'features': hurricanes
+            // Create risk zones as polygons
+            for (let i = 0; i < 5; i++) {
+                const centerLng = -80.13 + (Math.random() - 0.5) * 0.03;
+                const centerLat = 25.79 + (Math.random() - 0.5) * 0.03;
+                const size = 0.005 + Math.random() * 0.01;
+                const risk = baseRisk + (Math.random() - 0.5) * 0.4;
+                
+                const coordinates = [[]];
+                for (let j = 0; j < 8; j++) {
+                    const angle = (j / 8) * Math.PI * 2;
+                    coordinates[0].push([
+                        centerLng + Math.cos(angle) * size,
+                        centerLat + Math.sin(angle) * size * 0.8
+                    ]);
+                }
+                coordinates[0].push(coordinates[0][0]); // Close polygon
+                
+                features.push({
+                    type: 'Feature',
+                    properties: {
+                        risk: Math.max(0, Math.min(1, risk)),
+                        zone: ['AE', 'VE', 'X'][Math.floor(Math.random() * 3)]
+                    },
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: coordinates
+                    }
                 });
             }
+            
+            return {
+                type: 'FeatureCollection',
+                features: features
+            };
         }
         
-        function updateStats(mapNumber, scenario, decade) {
-            const scenarioMultipliers = {
-                'baseline': 1.0,
-                'warming_mid': 1.3,
-                'warming_high': 1.7
-            };
+        // Initialize maps when DOM is ready
+        function initializeMaps() {
+            if (mapsInitialized) return;
+            mapsInitialized = true;
             
-            const decadeMultipliers = {
-                '2030s': 1.1,
-                '2040s': 1.2,
-                '2050s': 1.35,
-                '2060s': 1.5,
-                '2070s': 1.65,
-                '2080s': 1.8,
-                '2090s': 2.0
-            };
+            console.log('Initializing C-bottle maps...');
             
-            const baseStorms = 127;
-            const multiplier = scenarioMultipliers[scenario] * decadeMultipliers[decade];
-            const totalStorms = Math.floor(baseStorms * multiplier);
-            const annualAverage = (totalStorms / 10).toFixed(1);
-            const majorHurricanes = Math.floor(totalStorms * 0.3);
-            const majorPct = ((majorHurricanes / totalStorms) * 100).toFixed(1);
+            // Create map 1
+            map1 = createMap('map1', '1');
             
-            const scenarioNames = {
-                'baseline': 'Baseline',
-                'warming_mid': '+2°C Warming',
-                'warming_high': '+4°C Warming'
-            };
-            
-            const statsHtml = `
-                <div class="stats-title">${decade} - ${scenarioNames[scenario]}</div>
-                <div class="stat-row">
-                    <span class="stat-label">Total Storms</span>
-                    <span class="stat-value">${totalStorms}</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Annual Average</span>
-                    <span class="stat-value">${annualAverage}</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Major Hurricanes</span>
-                    <span class="stat-value">${majorHurricanes}</span>
-                </div>
-                <div class="stat-row">
-                    <span class="stat-label">Major Hurricane %</span>
-                    <span class="stat-value">${majorPct}%</span>
-                </div>
-            `;
-            document.getElementById(`stats${mapNumber}`).innerHTML = statsHtml;
-        }
-        
-        // Initialize on load
-        window.addEventListener('load', () => {
-            initializeMaps();
-            
-            // Set up event listeners
-            document.getElementById('scenario1').addEventListener('change', () => updateMap(1));
-            document.getElementById('decade1').addEventListener('change', () => updateMap(1));
-            document.getElementById('scenario2').addEventListener('change', () => updateMap(2));
-            document.getElementById('decade2').addEventListener('change', () => updateMap(2));
-            
-            // Initialize stats
+            // Create map 2 with slight delay
             setTimeout(() => {
-                updateMap(1);
-                updateMap(2);
-            }, 1000);
-        });
+                map2 = createMap('map2', '2');
+            }, 500);
+            
+            // Force resize after creation
+            setTimeout(() => {
+                if (map1) {
+                    map1.resize();
+                    console.log('Map 1 resized');
+                }
+                if (map2) {
+                    map2.resize();
+                    console.log('Map 2 resized');
+                }
+            }, 2000);
+        }
         
-        // Error handling
-        window.addEventListener('error', (e) => {
-            console.error('Global error:', e);
-            showError('JavaScript error: ' + e.message);
+        // Wait for DOM to be fully loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeMaps);
+        } else {
+            // DOM already loaded
+            setTimeout(initializeMaps, 100);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (map1) map1.resize();
+            if (map2) map2.resize();
         });
     </script>
 </body>
