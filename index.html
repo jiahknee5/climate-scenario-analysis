@@ -258,6 +258,8 @@
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1000;
         }
         
         .btn {
@@ -271,6 +273,11 @@
             cursor: pointer;
             text-align: center;
             min-width: 120px;
+            display: inline-block;
+            position: relative;
+            z-index: 10000;
+            pointer-events: auto;
+            user-select: none;
         }
         
         .btn-primary {
@@ -457,8 +464,8 @@
                     </div>
                     
                     <div class="framework-actions">
-                        <a href="climada-hurricane-analysis.html" class="btn btn-primary" target="_blank">Launch CLIMADA</a>
-                        <a href="#climada-details" class="btn btn-secondary">Learn More</a>
+                        <a href="climada-hurricane-analysis" class="btn btn-primary">Launch CLIMADA</a>
+                        <a href="working-dual-climada" class="btn btn-secondary">Dual-Map Comparison</a>
                     </div>
                 </div>
                 
@@ -501,8 +508,8 @@
                     </div>
                     
                     <div class="framework-actions">
-                        <a href="climate-os-statistical.html" class="btn btn-primary" target="_blank">Launch Climate-OS</a>
-                        <a href="#climate-os-details" class="btn btn-secondary">Learn More</a>
+                        <a href="climate-os-statistical" class="btn btn-primary">Launch Climate-OS</a>
+                        <a href="working-dual-climate-os" class="btn btn-secondary">Dual-Map Comparison</a>
                     </div>
                 </div>
                 
@@ -545,8 +552,8 @@
                     </div>
                     
                     <div class="framework-actions">
-                        <a href="cbottle-risk-assessment.html" class="btn btn-primary" target="_blank">Launch C-bottle</a>
-                        <a href="#cbottle-details" class="btn btn-secondary">Learn More</a>
+                        <a href="cbottle-risk-assessment" class="btn btn-primary">Launch C-bottle</a>
+                        <a href="cbottle-scenario-analysis" class="btn btn-secondary">Dual-Map Comparison</a>
                     </div>
                 </div>
             </div>
@@ -584,7 +591,7 @@
                 </div>
                 
                 <div class="framework-actions">
-                    <a href="framework-comparison.html" class="btn btn-primary" target="_blank">Launch Comparison</a>
+                    <a href="framework-comparison" class="btn btn-primary">Launch Comparison</a>
                     <a href="#comparison-details" class="btn btn-secondary">View Documentation</a>
                 </div>
             </div>
@@ -599,5 +606,52 @@
             <a href="/portfolio/" target="_blank">Portfolio</a>
         </p>
     </div>
+
+    <script>
+    // Ensure buttons are clickable - debug function
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Page loaded - setting up button debugging');
+        
+        // Find all launch buttons
+        const buttons = document.querySelectorAll('.btn-primary');
+        console.log('Found buttons:', buttons.length);
+        
+        buttons.forEach(function(button, index) {
+            console.log('Button ' + index + ':', button.href, button.textContent);
+            
+            // Force button to be interactive
+            button.style.pointerEvents = 'auto';
+            button.style.position = 'relative';
+            button.style.zIndex = '99999';
+            button.style.cursor = 'pointer';
+            
+            // Add multiple event listeners to ensure clicking works
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Button clicked:', this.href);
+                
+                // Force navigation
+                if (this.href) {
+                    console.log('Navigating to:', this.href);
+                    window.location.href = this.href;
+                }
+            });
+            
+            // Also add mousedown for backup
+            button.addEventListener('mousedown', function(e) {
+                console.log('Button mousedown:', this.href);
+            });
+            
+            // Test if button is visible and clickable
+            const rect = button.getBoundingClientRect();
+            console.log('Button ' + index + ' position:', rect);
+            
+            // Check if anything is covering the button
+            const elementAtPoint = document.elementFromPoint(rect.left + rect.width/2, rect.top + rect.height/2);
+            console.log('Element at button center:', elementAtPoint);
+        });
+    });
+    </script>
 </body>
-</html><!-- Deployment trigger Sun Aug 17 10:46:16 EDT 2025 -->
+</html><!-- Cache buster: 1755472717 -->

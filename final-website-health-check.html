@@ -439,22 +439,22 @@
         <div class="checklist-card">
             <h3>🌐 Framework Quick Access</h3>
             <div class="framework-grid">
-                <a href="https://climate.johnnycchung.com/working-dual-climada.html" target="_blank" class="framework-btn climada">
+                <a href="https://climate.johnnycchung.com/working-dual-climada" target="_blank" class="framework-btn climada">
                     CLIMADA Dual-Map
                 </a>
-                <a href="https://climate.johnnycchung.com/working-dual-climate-os.html" target="_blank" class="framework-btn climate-os">
+                <a href="https://climate.johnnycchung.com/working-dual-climate-os" target="_blank" class="framework-btn climate-os">
                     Climate-OS Dual-Map
                 </a>
-                <a href="https://climate.johnnycchung.com/cbottle-scenario-analysis.html" target="_blank" class="framework-btn cbottle">
+                <a href="https://climate.johnnycchung.com/cbottle-scenario-analysis" target="_blank" class="framework-btn cbottle">
                     C-bottle Scenario Analysis
                 </a>
-                <a href="https://climate.johnnycchung.com/climada-hurricane-analysis.html" target="_blank" class="framework-btn climada">
+                <a href="https://climate.johnnycchung.com/climada-hurricane-analysis" target="_blank" class="framework-btn climada">
                     CLIMADA Hurricane Analysis
                 </a>
-                <a href="https://climate.johnnycchung.com/climate-os-statistical.html" target="_blank" class="framework-btn climate-os">
+                <a href="https://climate.johnnycchung.com/climate-os-statistical" target="_blank" class="framework-btn climate-os">
                     Climate-OS Statistical
                 </a>
-                <a href="https://climate.johnnycchung.com/cbottle-risk-assessment.html" target="_blank" class="framework-btn cbottle">
+                <a href="https://climate.johnnycchung.com/cbottle-risk-assessment" target="_blank" class="framework-btn cbottle">
                     C-bottle Risk Assessment
                 </a>
             </div>
@@ -571,12 +571,12 @@
                 this.log('🔗 Testing all website links...', 'info');
                 
                 const frameworkLinks = [
-                    '/working-dual-climada.html',
-                    '/working-dual-climate-os.html',
-                    '/cbottle-scenario-analysis.html',
-                    '/climada-hurricane-analysis.html',
-                    '/climate-os-statistical.html',
-                    '/cbottle-risk-assessment.html'
+                    '/working-dual-climada',
+                    '/working-dual-climate-os', 
+                    '/cbottle-scenario-analysis',
+                    '/climada-hurricane-analysis',
+                    '/climate-os-statistical',
+                    '/cbottle-risk-assessment'
                 ];
                 
                 let workingLinks = 0;
@@ -585,7 +585,7 @@
                     this.updateChecklistItem('links-checklist', i, 'testing');
                     
                     const response = await this.makeRequest(`${this.baseUrl}${frameworkLinks[i]}`);
-                    const linkName = frameworkLinks[i].replace('.html', '').replace('/', '');
+                    const linkName = frameworkLinks[i].replace('/', '');
                     
                     if (response.ok) {
                         this.log(`✅ Link working: ${linkName}`, 'success');
@@ -618,9 +618,9 @@
                 this.log('🗺️ Testing framework functionality...', 'info');
                 
                 const frameworks = [
-                    { name: 'CLIMADA', url: '/working-dual-climada.html', indicators: ['climada', 'hurricane', 'mapbox'] },
-                    { name: 'Climate-OS', url: '/working-dual-climate-os.html', indicators: ['climate-os', 'statistical', 'mapbox'] },
-                    { name: 'C-bottle', url: '/cbottle-scenario-analysis.html', indicators: ['cbottle', 'scenario', 'mapbox'] }
+                    { name: 'CLIMADA', url: '/working-dual-climada', indicators: ['climada', 'hurricane', 'mapbox'] },
+                    { name: 'Climate-OS', url: '/working-dual-climate-os', indicators: ['climate-os', 'statistical', 'mapbox'] },
+                    { name: 'C-bottle', url: '/cbottle-scenario-analysis', indicators: ['cbottle', 'scenario', 'mapbox'] }
                 ];
                 
                 let activeFrameworks = 0;
@@ -711,8 +711,8 @@
                 
                 const testUrls = [
                     '',
-                    '/working-dual-climada.html',
-                    '/working-dual-climate-os.html'
+                    '/working-dual-climada',
+                    '/working-dual-climate-os'
                 ];
                 
                 let totalTime = 0;
