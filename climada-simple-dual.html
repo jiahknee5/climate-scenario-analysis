@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple CLIMADA Dual-Map</title>
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared-styles.css">
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <style>
+        .app-content {
+            display: grid;
+            grid-template-columns: 320px 1fr 320px 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            height: calc(100vh - 120px);
+            min-height: 600px;
+        }
+        
+        .controls-panel {
+            grid-row: 1 / 3;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .map-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            min-height: 400px;
+        }
+        
+        .map-header {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .map-header h4 {
+            color: var(--climada-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .climada-map {
+            width: 100%;
+            height: calc(100% - 80px);
+            min-height: 320px;
+            position: relative;
+        }
+
+        .controls-panel h3 {
+            color: var(--climada-primary);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--surface);
+            color: var(--climada-primary);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <!-- Standardized Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="framework-logo">
+                <div class="framework-icon climada">CL</div>
+                <div>
+                    <h1 class="app-title climada">CLIMADA Framework</h1>
+                    <div class="app-subtitle">Simple Dual-Map Test</div>
+                </div>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="climate-os-statistical.html" class="nav-link framework climate-os">Climate-OS</a>
+            <a href="cbottle-risk-assessment.html" class="nav-link framework cbottle">C-bottle</a>
+            <a href="index.html" class="nav-link primary">Overview</a>
+        </nav>
+    </header>
+
+    <main class="app-content">
+        <!-- Left Controls Panel -->
+        <div class="controls-panel">
+            <h3>🔬 Left Panel - Simple Test</h3>
+            <p>Testing basic map functionality without complex data handling.</p>
+        </div>
+
+        <!-- Left Map -->
+        <div class="map-container">
+            <div class="map-header">
+                <h4>Map 1 - CLIMADA Test</h4>
+            </div>
+            <div id="climada-map1" class="climada-map"></div>
+            <div id="loading1" class="loading">Loading Map 1...</div>
+        </div>
+
+        <!-- Right Controls Panel -->
+        <div class="controls-panel">
+            <h3>🔬 Right Panel - Simple Test</h3>
+            <p>Second map for comparison testing.</p>
+        </div>
+
+        <!-- Right Map -->
+        <div class="map-container">
+            <div class="map-header">
+                <h4>Map 2 - CLIMADA Test</h4>
+            </div>
+            <div id="climada-map2" class="climada-map"></div>
+            <div id="loading2" class="loading">Loading Map 2...</div>
+        </div>
+    </main>
+
+    <script>
+        // Mapbox access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+
+        console.log('Starting simple CLIMADA dual-map test...');
+
+        let map1, map2;
+
+        // Initialize maps with minimal configuration
+        function initMaps() {
+            console.log('Initializing maps...');
+            
+            try {
+                console.log('Creating map 1...');
+                map1 = new mapboxgl.Map({
+                    container: 'climada-map1',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                console.log('Creating map 2...');
+                map2 = new mapboxgl.Map({
+                    container: 'climada-map2',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                console.log('Maps created successfully');
+
+                map1.on('load', () => {
+                    console.log('Map 1 loaded');
+                    document.getElementById('loading1').style.display = 'none';
+                    
+                    // Add a simple test marker
+                    new mapboxgl.Marker({ color: 'red' })
+                        .setLngLat([-75, 25])
+                        .addTo(map1);
+                });
+                
+                map2.on('load', () => {
+                    console.log('Map 2 loaded');
+                    document.getElementById('loading2').style.display = 'none';
+                    
+                    // Add a simple test marker
+                    new mapboxgl.Marker({ color: 'blue' })
+                        .setLngLat([-75, 25])
+                        .addTo(map2);
+                });
+
+                map1.on('error', (e) => {
+                    console.error('Map 1 error:', e);
+                });
+                
+                map2.on('error', (e) => {
+                    console.error('Map 2 error:', e);
+                });
+
+            } catch (error) {
+                console.error('Error initializing maps:', error);
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, checking prerequisites...');
+            
+            // Check if Mapbox is available
+            if (typeof mapboxgl === 'undefined') {
+                console.error('ERROR: Mapbox GL JS not loaded');
+                return;
+            }
+            
+            console.log('Mapbox GL JS available, version:', mapboxgl.version);
+            
+            // Check if required elements exist
+            const map1Container = document.getElementById('climada-map1');
+            const map2Container = document.getElementById('climada-map2');
+            
+            if (!map1Container || !map2Container) {
+                console.error('ERROR: Map containers not found');
+                return;
+            }
+            
+            console.log('All prerequisites met, initializing maps...');
+            initMaps();
+        });
+    </script>
+</body>
+</html>

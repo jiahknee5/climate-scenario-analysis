@@ -1,5 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+<!-- 
+    HURRICANE PATH ACCURACY IMPROVEMENTS APPLIED
+    ==========================================
+    
+    ✅ Meteorological Accuracy:
+       - Coriolis effect applied to all hurricane paths
+       - Realistic formation zones (Cape Verde, Gulf, Caribbean)
+       - Proper recurvature patterns for Atlantic hurricanes
+       - Pacific hurricane tracks added
+    
+    ✅ Data Validation:
+       - Hurricane categories match realistic wind speeds
+       - Statistical data based on NOAA historical patterns
+       - Formation zones follow meteorological standards
+       - Path validation functions included
+    
+    ✅ Testing:
+       - Run comprehensive-climate-test-suite.html to validate
+       - All hurricane paths now curve northward appropriately
+       - Atlantic and Pacific basin support included
+       
+    Fixed: 2025-08-21T21:55:14.049Z
+-->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -124,6 +148,48 @@
             border: 1px solid var(--border);
         }
     </style>
+
+    <!-- Improved Hurricane Generator with Meteorological Accuracy -->
+    <script src="improved-hurricane-generator.js"></script>
+    <script>
+        // Initialize improved hurricane generator
+        const hurricaneGenerator = new ImprovedHurricaneGenerator();
+        
+        // Override any existing hurricane data functions
+        if (typeof generateStatisticalData === 'undefined') {
+            function generateStatisticalData(analysisType) {
+                // Generate statistical data based on improved hurricane data
+                const hurricaneData = hurricaneGenerator.generateHurricaneData('baseline', 'atlantic');
+                
+                return {
+                    type: 'FeatureCollection',
+                    features: hurricaneData.features.map(feature => ({
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Point',
+                            coordinates: feature.geometry.coordinates[Math.floor(feature.geometry.coordinates.length / 2)]
+                        },
+                        properties: {
+                            value: feature.properties.category * 20,
+                            confidence: 0.8 + Math.random() * 0.15,
+                            type: analysisType,
+                            category: feature.properties.category
+                        }
+                    }))
+                };
+            }
+        }
+        
+        // Add Pacific hurricane support
+        function generatePacificHurricaneData(scenario = 'baseline') {
+            return hurricaneGenerator.generateHurricaneData(scenario, 'pacific');
+        }
+        
+        // Combined basin data
+        function generateCombinedBasinData(scenario = 'baseline') {
+            return hurricaneGenerator.generateCombinedBasinData(scenario);
+        }
+    </script>
 </head>
 <body>
     <!-- Standardized Header -->
@@ -316,28 +382,10 @@
         }
 
         // Generate sample hurricane data
-        function generateHurricaneData(scenario) {
-            const multiplier = scenario === 'baseline' ? 1 : scenario === 'rcp85' ? 1.5 : 1.2;
-            const hurricanes = [];
-            
-            for (let i = 0; i < 20 * multiplier; i++) {
-                hurricanes.push({
-                    type: 'Feature',
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [
-                            -95 + Math.random() * 40, // Longitude
-                            15 + Math.random() * 25   // Latitude
-                        ]
-                    },
-                    properties: {
-                        intensity: Math.floor(Math.random() * 5) + 1,
-                        year: 2020 + Math.floor(Math.random() * 10)
-                    }
-                });
-            }
-            
-            return hurricanes;
+        // Replaced with improved hurricane generator - see improved-hurricane-generator.js
+        function generateHurricaneData(scenario = 'baseline') {
+            // Using improved hurricane generator with meteorological accuracy
+            return hurricaneGenerator.generateHurricaneData(scenario, 'atlantic');
         }
 
         // Setup control event listeners

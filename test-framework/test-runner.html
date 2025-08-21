@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual-Map Testing Framework</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            margin: 10px 0 0 0;
+            font-size: 1.1em;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 25px;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            background: #fafbfc;
+        }
+        
+        .test-section h2 {
+            color: #34495e;
+            margin: 0 0 20px 0;
+            font-size: 1.8em;
+            font-weight: 400;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .test-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .test-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .test-card h3 {
+            color: #2980b9;
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .test-card p {
+            color: #666;
+            margin: 0 0 15px 0;
+            line-height: 1.5;
+        }
+        
+        .test-button {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .test-button:hover {
+            background: linear-gradient(45deg, #2980b9, #3498db);
+            transform: scale(1.02);
+        }
+        
+        .test-button.run-all {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            font-size: 16px;
+            padding: 15px 30px;
+            margin: 20px 0;
+        }
+        
+        .test-button.run-all:hover {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+        
+        .results-container {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .results-container h3 {
+            color: #2c3e50;
+            margin: 0 0 15px 0;
+        }
+        
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        
+        .test-result.pass {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .test-result.fail {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .test-result.info {
+            background: #cce7ff;
+            color: #004085;
+            border-left: 4px solid #007bff;
+        }
+        
+        .test-result.warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .stat {
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <h1>🧪 Dual-Map Testing Framework</h1>
+            <p>Comprehensive testing suite for CLIMADA and Climate-OS dual-map implementations</p>
+        </div>
+        
+        <!-- Test Statistics -->
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number" id="total-tests">0</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="passed-tests">0</div>
+                <div class="stat-label">Passed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="failed-tests">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="success-rate">0%</div>
+                <div class="stat-label">Success Rate</div>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        
+        <!-- Run All Tests Button -->
+        <button class="test-button run-all" onclick="runAllTests()">
+            🚀 Run All Tests
+        </button>
+        
+        <!-- Unit Tests -->
+        <div class="test-section">
+            <h2>🔬 Unit Tests</h2>
+            <div class="test-grid">
+                <div class="test-card" onclick="runUnitTests()">
+                    <h3>JavaScript Functions</h3>
+                    <p>Test individual JavaScript functions for data generation, map initialization, and control handling.</p>
+                    <button class="test-button">Run Unit Tests</button>
+                </div>
+                
+                <div class="test-card" onclick="runDataValidationTests()">
+                    <h3>Data Validation</h3>
+                    <p>Validate generated hurricane and statistical data formats, ranges, and consistency.</p>
+                    <button class="test-button">Run Data Tests</button>
+                </div>
+                
+                <div class="test-card" onclick="runUtilityTests()">
+                    <h3>Utility Functions</h3>
+                    <p>Test helper functions for coordinate generation, scenario mapping, and title updates.</p>
+                    <button class="test-button">Run Utility Tests</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Integration Tests -->
+        <div class="test-section">
+            <h2>🔗 Integration Tests</h2>
+            <div class="test-grid">
+                <div class="test-card" onclick="runMapInitTests()">
+                    <h3>Map Initialization</h3>
+                    <p>Test Mapbox GL JS integration, container detection, and map creation for both frameworks.</p>
+                    <button class="test-button">Run Map Tests</button>
+                </div>
+                
+                <div class="test-card" onclick="runControlIntegrationTests()">
+                    <h3>Control Integration</h3>
+                    <p>Test interaction between control panels and map updates, event handling, and state management.</p>
+                    <button class="test-button">Run Control Tests</button>
+                </div>
+                
+                <div class="test-card" onclick="runDataIntegrationTests()">
+                    <h3>Data Integration</h3>
+                    <p>Test data loading, source updates, and layer rendering for different scenarios and timeframes.</p>
+                    <button class="test-button">Run Data Integration</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Visual/Layout Tests -->
+        <div class="test-section">
+            <h2>👁️ Visual & Layout Tests</h2>
+            <div class="test-grid">
+                <div class="test-card" onclick="runLayoutTests()">
+                    <h3>Layout Consistency</h3>
+                    <p>Test CSS grid layout, responsive behavior, and frame sizing across different screen sizes.</p>
+                    <button class="test-button">Run Layout Tests</button>
+                </div>
+                
+                <div class="test-card" onclick="runStyleTests()">
+                    <h3>Style Validation</h3>
+                    <p>Validate CSS properties, color schemes, and visual consistency between frameworks.</p>
+                    <button class="test-button">Run Style Tests</button>
+                </div>
+                
+                <div class="test-card" onclick="runAccessibilityTests()">
+                    <h3>Accessibility</h3>
+                    <p>Test keyboard navigation, screen reader compatibility, and WCAG compliance.</p>
+                    <button class="test-button">Run A11y Tests</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Performance Tests -->
+        <div class="test-section">
+            <h2>⚡ Performance Tests</h2>
+            <div class="test-grid">
+                <div class="test-card" onclick="runLoadTimeTests()">
+                    <h3>Load Time Analysis</h3>
+                    <p>Measure page load times, map initialization speed, and resource loading performance.</p>
+                    <button class="test-button">Run Load Tests</button>
+                </div>
+                
+                <div class="test-card" onclick="runMemoryTests()">
+                    <h3>Memory Usage</h3>
+                    <p>Monitor memory consumption during map operations, data updates, and prolonged usage.</p>
+                    <button class="test-button">Run Memory Tests</button>
+                </div>
+                
+                <div class="test-card" onclick="runRenderingTests()">
+                    <h3>Rendering Performance</h3>
+                    <p>Test map rendering speed, layer updates, and animation performance.</p>
+                    <button class="test-button">Run Rendering Tests</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Error Handling Tests -->
+        <div class="test-section">
+            <h2>🛡️ Error Handling & Edge Cases</h2>
+            <div class="test-grid">
+                <div class="test-card" onclick="runErrorHandlingTests()">
+                    <h3>Error Scenarios</h3>
+                    <p>Test error handling for network failures, invalid API keys, and missing containers.</p>
+                    <button class="test-button">Run Error Tests</button>
+                </div>
+                
+                <div class="test-card" onclick="runEdgeCaseTests()">
+                    <h3>Edge Cases</h3>
+                    <p>Test extreme values, rapid control changes, and unusual user interactions.</p>
+                    <button class="test-button">Run Edge Cases</button>
+                </div>
+                
+                <div class="test-card" onclick="runBrowserCompatTests()">
+                    <h3>Browser Compatibility</h3>
+                    <p>Test functionality across different browsers, versions, and device types.</p>
+                    <button class="test-button">Run Compatibility</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Test Results -->
+        <div class="results-container">
+            <h3>📊 Test Results</h3>
+            <div id="test-results"></div>
+        </div>
+    </div>
+    
+    <script src="test-framework.js"></script>
+</body>
+</html>

@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIMADA Dual-Map Hurricane Analysis - Fixed</title>
+    <meta name="description" content="CLIMADA framework for scientific hurricane risk modeling with peer-reviewed methods and uncertainty quantification">
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared-styles.css">
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <style>
+        /* CLIMADA Dual-Map Comparison styles */
+        .app-content {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px 1fr;
+            grid-template-rows: auto 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            height: calc(100vh - 120px);
+        }
+        
+        .controls-panel {
+            grid-row: 1 / 3;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-y: auto;
+        }
+        
+        .map-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .map-header {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .map-header h4 {
+            color: var(--climada-primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .climada-map {
+            width: 100%;
+            height: calc(100% - 80px);
+        }
+
+        .controls-panel h3 {
+            color: var(--climada-primary);
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .data-toggle {
+            display: flex;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .toggle-btn {
+            flex: 1;
+            padding: 10px;
+            text-align: center;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .toggle-btn.active {
+            background: var(--climada-primary);
+            color: white;
+            box-shadow: 0 2px 8px rgba(33, 150, 243, 0.4);
+        }
+        
+        .toggle-btn:hover:not(.active) {
+            background: rgba(33, 150, 243, 0.2);
+        }
+        
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .control-group label {
+            display: block;
+            color: var(--climada-primary);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .control-group select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .control-group select:focus {
+            outline: none;
+            border-color: var(--climada-primary);
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--surface);
+            color: var(--climada-primary);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+        
+        .metrics-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .metrics-panel h4 {
+            color: var(--climada-primary);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .metric-box {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid var(--climada-primary);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        .metric-label {
+            color: var(--climada-primary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-value {
+            color: var(--text);
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+        
+        .metric-unit {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        .metric-change {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+        
+        .metric-change.positive {
+            color: #BF616A;
+        }
+        
+        .metric-change.negative {
+            color: #A3BE8C;
+        }
+        
+        .scenario-info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid var(--climada-primary);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .scenario-info h5 {
+            color: var(--climada-primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .scenario-info p {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .debug-panel {
+            position: fixed;
+            top: 100px;
+            right: 10px;
+            width: 300px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        @media (max-width: 1200px) {
+            .app-content {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto auto;
+                height: auto;
+            }
+            
+            .controls-panel {
+                grid-row: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Standardized Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="framework-logo">
+                <div class="framework-icon climada">CL</div>
+                <div>
+                    <h1 class="app-title climada">CLIMADA Framework</h1>
+                    <div class="app-subtitle">Dual-Map Hurricane Risk Comparison - Fixed</div>
+                </div>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="climate-os-statistical.html" class="nav-link framework climate-os">Climate-OS</a>
+            <a href="cbottle-risk-assessment.html" class="nav-link framework cbottle">C-bottle</a>
+            <a href="framework-comparison.html" class="nav-link secondary">Compare</a>
+            <a href="index.html" class="nav-link primary">Overview</a>
+        </nav>
+    </header>
+
+    <!-- Debug Panel -->
+    <div id="debug-panel" class="debug-panel">
+        <h4>Debug Log</h4>
+        <div id="debug-log"></div>
+        <button onclick="clearDebug()" style="margin-top: 10px; padding: 5px;">Clear Log</button>
+    </div>
+
+    <main class="app-content">
+        <!-- Left Controls Panel -->
+        <div class="controls-panel">
+            <h3>🔬 Left Panel - CLIMADA Analysis</h3>
+            
+            <div class="data-toggle">
+                <div class="toggle-btn active" onclick="setDataType(1, 'historical')">Historical Data</div>
+                <div class="toggle-btn" onclick="setDataType(1, 'projected')">Climate Projections</div>
+            </div>
+            
+            <div id="historical-controls-1">
+                <div class="control-group">
+                    <label>📅 Historical Period</label>
+                    <select id="period1">
+                        <option value="2020-2024">Recent (2020-2024)</option>
+                        <option value="2010-2019" selected>Previous Decade (2010-2019)</option>
+                        <option value="2000-2009">2000s</option>
+                        <option value="1990-1999">1990s</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="projected-controls-1" style="display: none;">
+                <div class="control-group">
+                    <label>🌡️ Climate Scenario</label>
+                    <select id="scenario1">
+                        <option value="baseline">Baseline (Current Trends)</option>
+                        <option value="warming_mid">+2°C Warming (Paris Agreement)</option>
+                        <option value="warming_high">+4°C Warming (High Emissions)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>📆 Future Decade</label>
+                    <select id="decade1">
+                        <option value="2030s">2030s (2030-2039)</option>
+                        <option value="2050s">2050s (2050-2059)</option>
+                        <option value="2070s">2070s (2070-2079)</option>
+                        <option value="2090s">2090s (2090-2099)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="scenario-info" id="scenario-info-1">
+                <h5>CLIMADA Historical Analysis</h5>
+                <p>Peer-reviewed probabilistic hurricane models with uncertainty quantification and validated damage functions from ETH Zurich.</p>
+            </div>
+        </div>
+
+        <!-- Left Map -->
+        <div class="map-container">
+            <div class="map-header">
+                <h4 id="map-title-1">CLIMADA Historical Analysis - 2010-2019</h4>
+            </div>
+            <div id="climada-map1" class="climada-map"></div>
+            <div id="loading1" class="loading">Loading CLIMADA analysis...</div>
+        </div>
+
+        <!-- Right Controls Panel -->
+        <div class="controls-panel">
+            <h3>🔬 Right Panel - CLIMADA Comparison</h3>
+            
+            <div class="data-toggle">
+                <div class="toggle-btn" onclick="setDataType(2, 'historical')">Historical Data</div>
+                <div class="toggle-btn active" onclick="setDataType(2, 'projected')">Climate Projections</div>
+            </div>
+            
+            <div id="historical-controls-2" style="display: none;">
+                <div class="control-group">
+                    <label>📅 Historical Period</label>
+                    <select id="period2">
+                        <option value="2020-2024">Recent (2020-2024)</option>
+                        <option value="2010-2019">Previous Decade (2010-2019)</option>
+                        <option value="2000-2009">2000s</option>
+                        <option value="1990-1999">1990s</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="projected-controls-2">
+                <div class="control-group">
+                    <label>🌡️ Climate Scenario</label>
+                    <select id="scenario2">
+                        <option value="baseline">Baseline (Current Trends)</option>
+                        <option value="warming_mid">+2°C Warming (Paris Agreement)</option>
+                        <option value="warming_high" selected>+4°C Warming (High Emissions)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>📆 Future Decade</label>
+                    <select id="decade2">
+                        <option value="2030s">2030s (2030-2039)</option>
+                        <option value="2050s">2050s (2050-2059)</option>
+                        <option value="2070s">2070s (2070-2079)</option>
+                        <option value="2090s" selected>2090s (2090-2099)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="scenario-info" id="scenario-info-2">
+                <h5>CLIMADA +4°C Projection - 2090s</h5>
+                <p>High-emissions pathway showing dramatic intensification of hurricane activity with scientifically-validated risk modeling.</p>
+            </div>
+        </div>
+
+        <!-- Right Map -->
+        <div class="map-container">
+            <div class="map-header">
+                <h4 id="map-title-2">CLIMADA Climate Projection - +4°C Warming (2090s)</h4>
+            </div>
+            <div id="climada-map2" class="climada-map"></div>
+            <div id="loading2" class="loading">Loading climate projections...</div>
+        </div>
+    </main>
+
+    <!-- Metrics Panels (positioned absolutely to overlay on maps) -->
+    <div class="metrics-panel" style="position: absolute; top: 140px; left: 320px; width: 200px; z-index: 100;">
+        <h4>📊 CLIMADA Metrics</h4>
+        <div id="metrics-content-1">
+            <div class="metric-box">
+                <div class="metric-label">Storms Analyzed</div>
+                <div class="metric-value">156</div>
+                <div class="metric-unit">total storms</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Major Hurricanes</div>
+                <div class="metric-value">47</div>
+                <div class="metric-unit">Cat 3-5</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Model Confidence</div>
+                <div class="metric-value">87%</div>
+                <div class="metric-unit">validated</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="metrics-panel" style="position: absolute; top: 140px; right: 20px; width: 200px; z-index: 100;">
+        <h4>📊 Climate Projections</h4>
+        <div id="metrics-content-2">
+            <div class="metric-box">
+                <div class="metric-label">Projected Storms</div>
+                <div class="metric-value">320</div>
+                <div class="metric-unit">per decade</div>
+                <div class="metric-change positive">+129% vs baseline</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Major Hurricanes</div>
+                <div class="metric-value">220</div>
+                <div class="metric-unit">Cat 3-5</div>
+                <div class="metric-change positive">+367% vs baseline</div>
+            </div>
+            <div class="metric-box">
+                <div class="metric-label">Damage Increase</div>
+                <div class="metric-value">5.8x</div>
+                <div class="metric-unit">economic impact</div>
+                <div class="metric-change positive">+480% economic loss</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Debug logging function
+        function debugLog(message) {
+            console.log(message);
+            const debugDiv = document.getElementById('debug-log');
+            if (debugDiv) {
+                const time = new Date().toLocaleTimeString();
+                debugDiv.innerHTML += `<div>${time}: ${message}</div>`;
+                debugDiv.scrollTop = debugDiv.scrollHeight;
+            }
+        }
+
+        function clearDebug() {
+            document.getElementById('debug-log').innerHTML = '';
+        }
+
+        // Mapbox access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+
+        // Initialize maps
+        let map1, map2;
+        let dataType1 = 'historical';
+        let dataType2 = 'projected';
+
+        debugLog('Script started');
+
+        // Simple test data
+        const testHurricane = {
+            name: "Test Hurricane",
+            year: 2022,
+            peak_category: 3,
+            track: [
+                {lat: 25.4, lon: -75.9, wind_mph: 105, category: 2},
+                {lat: 28.2, lon: -76.1, wind_mph: 115, category: 3},
+                {lat: 32.8, lon: -75.4, wind_mph: 90, category: 1}
+            ]
+        };
+
+        // Initialize maps
+        function initMaps() {
+            debugLog('Initializing maps...');
+            
+            try {
+                map1 = new mapboxgl.Map({
+                    container: 'climada-map1',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                map2 = new mapboxgl.Map({
+                    container: 'climada-map2',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                debugLog('Maps created successfully');
+
+                map1.on('load', () => {
+                    debugLog('Map 1 loaded');
+                    document.getElementById('loading1').style.display = 'none';
+                    addTestTrack(map1, 'map1');
+                });
+                
+                map2.on('load', () => {
+                    debugLog('Map 2 loaded');
+                    document.getElementById('loading2').style.display = 'none';
+                    addTestTrack(map2, 'map2');
+                });
+
+                map1.on('error', (e) => {
+                    debugLog('Map 1 error: ' + JSON.stringify(e));
+                });
+                
+                map2.on('error', (e) => {
+                    debugLog('Map 2 error: ' + JSON.stringify(e));
+                });
+
+            } catch (error) {
+                debugLog('Error initializing maps: ' + error.message);
+            }
+        }
+
+        function addTestTrack(map, mapId) {
+            debugLog(`Adding test track to ${mapId}`);
+            
+            try {
+                const sourceId = `test-track-${mapId}`;
+                const layerId = `test-layer-${mapId}`;
+                
+                map.addSource(sourceId, {
+                    type: 'geojson',
+                    data: {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'LineString',
+                            coordinates: testHurricane.track.map(point => [point.lon, point.lat])
+                        },
+                        properties: {
+                            name: testHurricane.name
+                        }
+                    }
+                });
+
+                map.addLayer({
+                    id: layerId,
+                    type: 'line',
+                    source: sourceId,
+                    paint: {
+                        'line-color': mapId === 'map1' ? '#ff0000' : '#0000ff',
+                        'line-width': 3
+                    }
+                });
+
+                debugLog(`Test track added to ${mapId} successfully`);
+                
+            } catch (error) {
+                debugLog(`Error adding test track to ${mapId}: ${error.message}`);
+            }
+        }
+
+        // Set data type for a map
+        function setDataType(mapNum, type) {
+            debugLog(`Setting data type for map ${mapNum} to ${type}`);
+            
+            try {
+                if (mapNum === 1) {
+                    dataType1 = type;
+                    document.querySelectorAll('.controls-panel:first-child .toggle-btn').forEach(btn => btn.classList.remove('active'));
+                    event.target.classList.add('active');
+                    
+                    document.getElementById('historical-controls-1').style.display = type === 'historical' ? 'block' : 'none';
+                    document.getElementById('projected-controls-1').style.display = type === 'projected' ? 'block' : 'none';
+                } else {
+                    dataType2 = type;
+                    document.querySelectorAll('.controls-panel:last-of-type .toggle-btn').forEach(btn => btn.classList.remove('active'));
+                    event.target.classList.add('active');
+                    
+                    document.getElementById('historical-controls-2').style.display = type === 'historical' ? 'block' : 'none';
+                    document.getElementById('projected-controls-2').style.display = type === 'projected' ? 'block' : 'none';
+                }
+                
+                debugLog(`Data type set successfully for map ${mapNum}`);
+                
+            } catch (error) {
+                debugLog(`Error setting data type: ${error.message}`);
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            debugLog('DOM Content Loaded');
+            
+            // Check if Mapbox is available
+            if (typeof mapboxgl === 'undefined') {
+                debugLog('ERROR: Mapbox GL JS not loaded');
+                return;
+            }
+            
+            debugLog('Mapbox GL JS available, version: ' + mapboxgl.version);
+            
+            // Check if required elements exist
+            const map1Container = document.getElementById('climada-map1');
+            const map2Container = document.getElementById('climada-map2');
+            
+            if (!map1Container || !map2Container) {
+                debugLog('ERROR: Map containers not found');
+                return;
+            }
+            
+            debugLog('Map containers found, initializing maps...');
+            
+            setTimeout(() => {
+                initMaps();
+            }, 100);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,314 @@
+{
+  "timestamp": "2025-08-19T00:50:12.686Z",
+  "target": "https://climate.johnnycchung.com",
+  "statistics": {
+    "totalTests": 59,
+    "passed": 12,
+    "failed": 14,
+    "warnings": 17,
+    "criticalErrors": 0,
+    "startTime": 1755564609375
+  },
+  "results": [
+    {
+      "timestamp": "2025-08-19T00:50:09.377Z",
+      "type": "info",
+      "message": "🔧 PHASE 1: Infrastructure & Domain Validation"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.012Z",
+      "type": "success",
+      "message": "✅ Domain resolves correctly (634ms)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.067Z",
+      "type": "success",
+      "message": "✅ HTTPS/SSL properly configured"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.111Z",
+      "type": "success",
+      "message": "✅ Vercel deployment detected"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.112Z",
+      "type": "warning",
+      "message": "⚠️ Security headers: 1/4 present"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.113Z",
+      "type": "info",
+      "message": "🔐 PHASE 2: Authentication & Login Testing"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.152Z",
+      "type": "success",
+      "message": "✅ Public access: /"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.197Z",
+      "type": "warning",
+      "message": "⚠️ Unexpected status 308: /working-dual-climada.html"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.228Z",
+      "type": "warning",
+      "message": "⚠️ Unexpected status 308: /working-dual-climate-os.html"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.263Z",
+      "type": "warning",
+      "message": "⚠️ Unexpected status 308: /cbottle-scenario-analysis.html"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.302Z",
+      "type": "warning",
+      "message": "⚠️ Unexpected status 308: /index.html"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.343Z",
+      "type": "info",
+      "message": "ℹ️ No explicit login forms detected (may use external auth)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.398Z",
+      "type": "info",
+      "message": "ℹ️ No session cookies detected (may use different session management)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.398Z",
+      "type": "info",
+      "message": "💾 PHASE 3: Database Connection Testing"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.441Z",
+      "type": "info",
+      "message": "ℹ️ API endpoint not found: /api/data"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.476Z",
+      "type": "info",
+      "message": "ℹ️ API endpoint not found: /api/climate"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.512Z",
+      "type": "info",
+      "message": "ℹ️ API endpoint not found: /api/scenarios"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.557Z",
+      "type": "info",
+      "message": "ℹ️ API endpoint not found: /api/health"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.600Z",
+      "type": "info",
+      "message": "ℹ️ API endpoint not found: /api/status"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.642Z",
+      "type": "info",
+      "message": "ℹ️ API endpoint not found: /api/auth"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.700Z",
+      "type": "info",
+      "message": "ℹ️ Static content detected (may be pre-rendered)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.739Z",
+      "type": "success",
+      "message": "✅ Fast data loading: 39ms"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.739Z",
+      "type": "info",
+      "message": "🔗 PHASE 4: Comprehensive Link Testing"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.780Z",
+      "type": "warning",
+      "message": "⚠️ Framework link issue: /working-dual-climada.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.832Z",
+      "type": "warning",
+      "message": "⚠️ Framework link issue: /working-dual-climate-os.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.881Z",
+      "type": "warning",
+      "message": "⚠️ Framework link issue: /cbottle-scenario-analysis.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.915Z",
+      "type": "warning",
+      "message": "⚠️ Framework link issue: /climada-hurricane-analysis.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.950Z",
+      "type": "warning",
+      "message": "⚠️ Framework link issue: /climate-os-statistical.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:10.991Z",
+      "type": "warning",
+      "message": "⚠️ Framework link issue: /cbottle-risk-assessment.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:11.127Z",
+      "type": "warning",
+      "message": "⚠️ External dependency issue: api.mapbox.com (404)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:11.321Z",
+      "type": "success",
+      "message": "✅ External dependency: cdn.jsdelivr.net"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:11.355Z",
+      "type": "success",
+      "message": "✅ External dependency: api.mapbox.com"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:11.403Z",
+      "type": "info",
+      "message": "Found 8 internal links to validate"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:11.452Z",
+      "type": "error",
+      "message": "❌ Broken internal link: climada-hurricane-analysis.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:11.593Z",
+      "type": "error",
+      "message": "❌ Broken internal link: climada-dual-map-analysis.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:11.716Z",
+      "type": "error",
+      "message": "❌ Broken internal link: climate-os-statistical.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:11.831Z",
+      "type": "error",
+      "message": "❌ Broken internal link: climate-os-dual-statistical.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:11.953Z",
+      "type": "error",
+      "message": "❌ Broken internal link: cbottle-risk-assessment.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.082Z",
+      "type": "error",
+      "message": "❌ Broken internal link: cbottle-scenario-analysis.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.207Z",
+      "type": "error",
+      "message": "❌ Broken internal link: framework-comparison.html (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.325Z",
+      "type": "error",
+      "message": "❌ Broken internal link: /portfolio/ (308)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.326Z",
+      "type": "info",
+      "message": "🗺️ PHASE 5: Framework Integration Testing"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.445Z",
+      "type": "error",
+      "message": "❌ CLIMADA framework not accessible: 308"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.482Z",
+      "type": "error",
+      "message": "❌ Climate-OS framework not accessible: 308"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.516Z",
+      "type": "error",
+      "message": "❌ C-bottle framework not accessible: 308"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.516Z",
+      "type": "info",
+      "message": "⚡ PHASE 6: Performance & Optimization Testing"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.558Z",
+      "type": "success",
+      "message": "✅ Homepage load time: 42ms (excellent)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.558Z",
+      "type": "warning",
+      "message": "⚠️ Homepage: No compression detected"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.558Z",
+      "type": "success",
+      "message": "✅ Homepage: 23KB (optimized size)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.558Z",
+      "type": "warning",
+      "message": "⚠️ Homepage: Partial mobile optimization (2/4)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.592Z",
+      "type": "success",
+      "message": "✅ CLIMADA load time: 34ms (excellent)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.592Z",
+      "type": "warning",
+      "message": "⚠️ CLIMADA: No compression detected"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.592Z",
+      "type": "error",
+      "message": "❌ CLIMADA: Poor mobile optimization (0/4)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.645Z",
+      "type": "success",
+      "message": "✅ Climate-OS load time: 53ms (excellent)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.645Z",
+      "type": "warning",
+      "message": "⚠️ Climate-OS: No compression detected"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.645Z",
+      "type": "error",
+      "message": "❌ Climate-OS: Poor mobile optimization (0/4)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.685Z",
+      "type": "success",
+      "message": "✅ C-bottle load time: 40ms (excellent)"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.685Z",
+      "type": "warning",
+      "message": "⚠️ C-bottle: No compression detected"
+    },
+    {
+      "timestamp": "2025-08-19T00:50:12.685Z",
+      "type": "error",
+      "message": "❌ C-bottle: Poor mobile optimization (0/4)"
+    }
+  ],
+  "summary": {
+    "successRate": 20,
+    "executionTime": 3311,
+    "status": "POOR"
+  }
+}

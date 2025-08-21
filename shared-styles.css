@@ -264,6 +264,126 @@ body {
     color: var(--text);
 }
 
+/* Standardized Metric Cards */
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.metric-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+.metric-value {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.metric-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+
+.metric-trend {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.trend-positive {
+    background: rgba(163, 190, 140, 0.2);
+    color: var(--success);
+}
+
+.trend-negative {
+    background: rgba(191, 97, 106, 0.2);
+    color: var(--danger);
+}
+
+.trend-neutral {
+    background: rgba(136, 192, 208, 0.2);
+    color: var(--secondary);
+}
+
+/* Framework-specific metric card colors */
+.metric-card.climada .metric-value {
+    color: var(--climada-primary);
+}
+
+.metric-card.climada {
+    border-color: rgba(33, 150, 243, 0.3);
+    background: rgba(33, 150, 243, 0.05);
+}
+
+.metric-card.climate-os .metric-value {
+    color: var(--climate-os-primary);
+}
+
+.metric-card.climate-os {
+    border-color: rgba(162, 59, 114, 0.3);
+    background: rgba(162, 59, 114, 0.05);
+}
+
+.metric-card.cbottle .metric-value {
+    color: var(--cbottle-primary);
+}
+
+.metric-card.cbottle {
+    border-color: rgba(66, 133, 244, 0.3);
+    background: rgba(66, 133, 244, 0.05);
+}
+
+/* Standardized Chart Containers */
+.chart-container {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.chart-placeholder {
+    height: 200px;
+    background: linear-gradient(45deg, var(--surface), rgba(0, 212, 255, 0.05));
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    font-size: 14px;
+    border: 1px dashed var(--border);
+}
+
+.chart-placeholder div:first-child {
+    font-size: 16px;
+    margin-bottom: 8px;
+}
+
+.chart-placeholder div:last-child {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
 /* Standardized Stats Panels */
 .stats-panel {
     position: absolute;
