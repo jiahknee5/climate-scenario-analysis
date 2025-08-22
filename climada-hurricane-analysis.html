@@ -483,6 +483,70 @@
             if (map1) map1.resize();
             if (map2) map2.resize();
         });
+        
+        // Add dropdown event listeners
+        function setupDropdownListeners() {
+            // Category dropdown for map 1
+            const categorySelect = document.getElementById('category1');
+            if (categorySelect) {
+                categorySelect.addEventListener('change', (e) => {
+                    const category = e.target.value;
+                    console.log('Category changed to:', category);
+                    updateHurricaneFilter(map1, category, 'category');
+                });
+            }
+            
+            // Climate scenario dropdown for map 2
+            const scenarioSelect = document.getElementById('scenario2');
+            if (scenarioSelect) {
+                scenarioSelect.addEventListener('change', (e) => {
+                    const scenario = e.target.value;
+                    console.log('Scenario changed to:', scenario);
+                    updateClimateScenario(map2, scenario);
+                });
+            }
+        }
+        
+        // Filter hurricanes by category
+        function updateHurricaneFilter(map, filterValue, filterType) {
+            if (!map || !map.getSource('hurricanes')) return;
+            
+            if (filterValue === 'all') {
+                // Show all hurricanes
+                map.setFilter('hurricane-tracks', null);
+                map.setFilter('hurricane-points', null);
+            } else if (filterValue === 'major') {
+                // Show only major hurricanes (Cat 3-5)
+                map.setFilter('hurricane-tracks', ['>=', ['get', 'category'], 3]);
+                map.setFilter('hurricane-points', ['>=', ['get', 'category'], 3]);
+            } else if (filterValue === 'cat5') {
+                // Show only Category 5
+                map.setFilter('hurricane-tracks', ['==', ['get', 'category'], 5]);
+                map.setFilter('hurricane-points', ['==', ['get', 'category'], 5]);
+            }
+        }
+        
+        // Update climate scenario data
+        function updateClimateScenario(map, scenario) {
+            if (!map || !map.getSource('hurricanes')) return;
+            
+            // Generate new data based on scenario
+            let newData;
+            if (scenario === 'baseline') {
+                newData = hurricaneGenerator.generateHurricaneData('baseline', 'atlantic', 15);
+            } else if (scenario === '2c') {
+                newData = hurricaneGenerator.generateHurricaneData('rcp26', 'atlantic', 18);
+            } else if (scenario === '4c') {
+                newData = hurricaneGenerator.generateHurricaneData('rcp85', 'atlantic', 24);
+            }
+            
+            // Update the source data
+            map.getSource('hurricanes').setData(newData);
+            console.log(`Updated to ${scenario} scenario with ${newData.features.length} hurricanes`);
+        }
+        
+        // Setup listeners after maps are loaded
+        setTimeout(setupDropdownListeners, 3000);
     </script>
 </body>
 </html>

@@ -523,6 +523,128 @@
             if (map1) map1.resize();
             if (map2) map2.resize();
         });
+        
+        // Add dropdown event listeners
+        function setupDropdownListeners() {
+            // Time period dropdown for map 1
+            const periodSelect = document.getElementById('period1');
+            if (periodSelect) {
+                periodSelect.addEventListener('change', (e) => {
+                    const period = e.target.value;
+                    console.log('Time period changed to:', period);
+                    updateTimePeriod(map1, period);
+                });
+            }
+            
+            // Metric dropdown for map 2
+            const metricSelect = document.getElementById('metric2');
+            if (metricSelect) {
+                metricSelect.addEventListener('change', (e) => {
+                    const metric = e.target.value;
+                    console.log('Metric changed to:', metric);
+                    updateStatisticalMetric(map2, metric);
+                });
+            }
+        }
+        
+        // Update data based on time period
+        function updateTimePeriod(map, period) {
+            if (!map || !map.getSource('hurricanes')) return;
+            
+            // Adjust data density based on period
+            let count;
+            switch(period) {
+                case '1980-1990': count = 6; break;
+                case '1990-2000': count = 8; break;
+                case '2000-2010': count = 10; break;
+                case '2010-2020': count = 12; break;
+                default: count = 8;
+            }
+            
+            // Generate new statistical data for the period
+            const newData = generateStatisticalData('1');
+            map.getSource('hurricanes').setData(newData);
+            
+            // Update statistics display
+            updateStatisticsPanel(period);
+        }
+        
+        // Update visualization based on metric
+        function updateStatisticalMetric(map, metric) {
+            if (!map || !map.getLayer('hurricane-tracks')) return;
+            
+            // Update color scheme based on metric
+            if (metric === 'wind') {
+                map.setPaintProperty('hurricane-tracks', 'line-color', [
+                    'case',
+                    ['>=', ['get', 'intensity'], 0.8], '#ff00ff',
+                    ['>=', ['get', 'intensity'], 0.6], '#9c5cdb',
+                    ['>=', ['get', 'intensity'], 0.4], '#7b3ff2',
+                    ['>=', ['get', 'intensity'], 0.2], '#5f27cd',
+                    '#341f97'
+                ]);
+            } else if (metric === 'pressure') {
+                map.setPaintProperty('hurricane-tracks', 'line-color', [
+                    'case',
+                    ['>=', ['get', 'intensity'], 0.8], '#00bfff',
+                    ['>=', ['get', 'intensity'], 0.6], '#1e90ff',
+                    ['>=', ['get', 'intensity'], 0.4], '#4169e1',
+                    ['>=', ['get', 'intensity'], 0.2], '#0000cd',
+                    '#000080'
+                ]);
+            } else if (metric === 'ace') {
+                map.setPaintProperty('hurricane-tracks', 'line-color', [
+                    'case',
+                    ['>=', ['get', 'intensity'], 0.8], '#ff6347',
+                    ['>=', ['get', 'intensity'], 0.6], '#ff4500',
+                    ['>=', ['get', 'intensity'], 0.4], '#dc143c',
+                    ['>=', ['get', 'intensity'], 0.2], '#b22222',
+                    '#8b0000'
+                ]);
+            }
+            
+            // Update statistics for the metric
+            updateIntensityStatistics(metric);
+        }
+        
+        // Update statistics panel
+        function updateStatisticsPanel(period) {
+            const stats = {
+                '1980-1990': { avg: '10.2', trend: '+1.8% /year', confidence: '92%' },
+                '1990-2000': { avg: '11.5', trend: '+2.1% /year', confidence: '94%' },
+                '2000-2010': { avg: '13.1', trend: '+2.4% /year', confidence: '95%' },
+                '2010-2020': { avg: '14.8', trend: '+2.3% /year', confidence: '95%' }
+            };
+            
+            const periodStats = stats[period] || stats['2010-2020'];
+            
+            // Update DOM elements if they exist
+            const avgElement = document.querySelector('.stats-panel .stat-value');
+            if (avgElement) avgElement.textContent = periodStats.avg;
+        }
+        
+        // Update intensity statistics
+        function updateIntensityStatistics(metric) {
+            const stats = {
+                'wind': { mean: 'Cat 2.8', major: '38%', pvalue: '0.003' },
+                'pressure': { mean: '965 mb', major: '42%', pvalue: '0.002' },
+                'ace': { mean: '124 x10⁴', major: '45%', pvalue: '0.001' }
+            };
+            
+            const metricStats = stats[metric] || stats['wind'];
+            
+            // Update intensity statistics in DOM
+            const statElements = document.querySelectorAll('#map2').length > 0 ? 
+                document.querySelectorAll('.map-section:nth-child(2) .stat-value') : [];
+            if (statElements.length >= 3) {
+                statElements[0].textContent = metricStats.mean;
+                statElements[1].textContent = metricStats.major;
+                statElements[2].textContent = metricStats.pvalue;
+            }
+        }
+        
+        // Setup listeners after maps are loaded
+        setTimeout(setupDropdownListeners, 3000);
     </script>
 </body>
 </html>

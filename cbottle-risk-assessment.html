@@ -594,6 +594,192 @@
             if (map1) map1.resize();
             if (map2) map2.resize();
         });
+        
+        // Add dropdown event listeners
+        function setupDropdownListeners() {
+            // Building type dropdown for map 1
+            const buildingSelect = document.getElementById('building1');
+            if (buildingSelect) {
+                buildingSelect.addEventListener('change', (e) => {
+                    const buildingType = e.target.value;
+                    console.log('Building type changed to:', buildingType);
+                    updateBuildingRisk(map1, buildingType);
+                });
+            }
+            
+            // Projection year dropdown for map 2
+            const yearSelect = document.getElementById('year2');
+            if (yearSelect) {
+                yearSelect.addEventListener('change', (e) => {
+                    const year = e.target.value;
+                    console.log('Projection year changed to:', year);
+                    updateProjectionYear(map2, year);
+                });
+            }
+            
+            // Adaptation measures dropdown for map 2
+            const adaptationSelect = document.getElementById('adaptation2');
+            if (adaptationSelect) {
+                adaptationSelect.addEventListener('change', (e) => {
+                    const adaptation = e.target.value;
+                    console.log('Adaptation changed to:', adaptation);
+                    updateAdaptationMeasures(map2, adaptation);
+                });
+            }
+            
+            // Address input for map 1
+            const addressInput = document.getElementById('address1');
+            if (addressInput) {
+                addressInput.addEventListener('change', (e) => {
+                    const address = e.target.value;
+                    console.log('Address changed to:', address);
+                    geocodeAndUpdateMap(map1, address);
+                });
+            }
+        }
+        
+        // Update risk based on building type
+        function updateBuildingRisk(map, buildingType) {
+            if (!map || !map.getSource('properties')) return;
+            
+            // Adjust risk colors based on building type
+            const riskMultipliers = {
+                'residential': 1.0,
+                'commercial': 0.8,
+                'industrial': 0.6
+            };
+            
+            const multiplier = riskMultipliers[buildingType] || 1.0;
+            
+            // Update property circles color based on adjusted risk
+            map.setPaintProperty('properties', 'circle-color', [
+                'case',
+                ['>=', ['*', ['get', 'risk'], multiplier], 0.8], '#ff6b6b',
+                ['>=', ['*', ['get', 'risk'], multiplier], 0.5], '#ffd93d',
+                '#6bcf7f'
+            ]);
+            
+            // Update risk assessment panel
+            updateRiskAssessment(buildingType);
+        }
+        
+        // Update projection based on year
+        function updateProjectionYear(map, year) {
+            if (!map || !map.getSource('risk-zones')) return;
+            
+            // Adjust risk zones based on projection year
+            const yearMultipliers = {
+                '2030': 1.2,
+                '2050': 1.45,
+                '2070': 1.8
+            };
+            
+            const multiplier = yearMultipliers[year] || 1.0;
+            
+            // Generate new risk zones for the year
+            const newZones = generateRiskZones('2');
+            newZones.features.forEach(feature => {
+                feature.properties.risk *= multiplier;
+            });
+            
+            map.getSource('risk-zones').setData(newZones);
+            
+            // Update future risk panel
+            updateFutureRiskPanel(year);
+        }
+        
+        // Update based on adaptation measures
+        function updateAdaptationMeasures(map, adaptation) {
+            if (!map || !map.getSource('properties')) return;
+            
+            // Risk reduction based on adaptation
+            const adaptationReductions = {
+                'none': 0,
+                'basic': 0.25,
+                'full': 0.5
+            };
+            
+            const reduction = adaptationReductions[adaptation] || 0;
+            
+            // Update visualization to show reduced risk
+            map.setPaintProperty('properties', 'circle-opacity', 0.9 - reduction * 0.3);
+            
+            // Update insurance cost estimate
+            updateInsuranceCost(adaptation);
+        }
+        
+        // Geocode address and center map
+        function geocodeAndUpdateMap(map, address) {
+            // Simple geocoding simulation (in real app, use Mapbox Geocoding API)
+            console.log('Geocoding address:', address);
+            
+            // For demo, just update the center slightly
+            if (address.toLowerCase().includes('miami')) {
+                map.flyTo({
+                    center: [-80.2, 25.76],
+                    zoom: 15
+                });
+            }
+        }
+        
+        // Update risk assessment display
+        function updateRiskAssessment(buildingType) {
+            const riskLevels = {
+                'residential': { risk: 'HIGH', zone: 'AE', speed: '140 mph' },
+                'commercial': { risk: 'MEDIUM', zone: 'AE', speed: '130 mph' },
+                'industrial': { risk: 'MEDIUM', zone: 'X', speed: '120 mph' }
+            };
+            
+            const assessment = riskLevels[buildingType] || riskLevels['residential'];
+            
+            // Update DOM elements
+            const riskElement = document.querySelector('.property-panel .risk-high');
+            if (riskElement) {
+                riskElement.textContent = assessment.risk;
+                riskElement.className = `property-value risk-${assessment.risk.toLowerCase()}`;
+            }
+        }
+        
+        // Update future risk panel
+        function updateFutureRiskPanel(year) {
+            const risks = {
+                '2030': { risk: 'HIGH', change: '+25%', insurance: '$8,500/yr' },
+                '2050': { risk: 'EXTREME', change: '+45%', insurance: '$12,500/yr' },
+                '2070': { risk: 'EXTREME', change: '+80%', insurance: '$18,000/yr' }
+            };
+            
+            const futureRisk = risks[year] || risks['2050'];
+            
+            // Update future risk display
+            const elements = document.querySelectorAll('.map-section:nth-child(2) .property-value');
+            if (elements.length >= 3) {
+                elements[0].textContent = futureRisk.risk;
+                elements[1].textContent = futureRisk.change;
+                elements[2].textContent = futureRisk.insurance;
+            }
+        }
+        
+        // Update insurance cost based on adaptation
+        function updateInsuranceCost(adaptation) {
+            const baseCost = 12500;
+            const reductions = {
+                'none': 0,
+                'basic': 0.2,
+                'full': 0.4
+            };
+            
+            const reduction = reductions[adaptation] || 0;
+            const newCost = baseCost * (1 - reduction);
+            
+            // Update insurance cost display
+            const costElement = document.querySelector('.map-section:nth-child(2) .property-value:last-child');
+            if (costElement) {
+                costElement.textContent = `$${newCost.toLocaleString()}/yr`;
+            }
+        }
+        
+        // Setup listeners after maps are loaded
+        setTimeout(setupDropdownListeners, 3000);
     </script>
 </body>
 </html>
