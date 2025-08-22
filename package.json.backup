@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "dev": "python3 -m http.server 8000",
+    "build": "echo 'No build required - static HTML site'",
+    "start": "python3 -m http.server 8000",
+    "lint": "echo 'No linting configured for static site'"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
