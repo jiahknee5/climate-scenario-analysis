@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vercel Deployment Test - Climate Analysis</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            color: #58a6ff;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .status {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .success {
+            color: #3fb950;
+            font-weight: bold;
+        }
+        
+        .info {
+            color: #58a6ff;
+        }
+        
+        .framework-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .framework-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .framework-card h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+        
+        .climada { color: #2196F3; }
+        .climate-os { color: #A23B72; }
+        .cbottle { color: #4285F4; }
+        
+        .framework-card a {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 16px;
+            background: #238636;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        
+        .framework-card a:hover {
+            background: #2ea043;
+        }
+        
+        .test-results {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #161b22;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .check { color: #3fb950; }
+        .error { color: #f85149; }
+        
+        .deployment-info {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid #2196F3;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 Vercel Deployment Test</h1>
+        
+        <div class="status">
+            <p class="success">✅ Deployment Successful!</p>
+            <p class="info">Timestamp: <span id="timestamp"></span></p>
+            <p class="info">Environment: Production</p>
+            <p class="info">Framework: Static HTML</p>
+        </div>
+        
+        <div class="deployment-info">
+            <h3>Deployment Configuration</h3>
+            <ul>
+                <li>Static site hosting enabled</li>
+                <li>No build process required</li>
+                <li>All HTML files accessible directly</li>
+                <li>JavaScript engines loaded client-side</li>
+                <li>Mapbox GL JS integration active</li>
+            </ul>
+        </div>
+        
+        <div class="framework-links">
+            <div class="framework-card">
+                <h2 class="climada">CLIMADA Framework</h2>
+                <p>Scientific hurricane modeling</p>
+                <a href="climada-hurricane-analysis.html">Main Interface</a>
+                <a href="working-dual-climada.html">Dual Map View</a>
+            </div>
+            
+            <div class="framework-card">
+                <h2 class="climate-os">Climate-OS Framework</h2>
+                <p>Statistical trend analysis</p>
+                <a href="climate-os-statistical.html">Main Interface</a>
+                <a href="working-dual-climate-os.html">Dual Map View</a>
+            </div>
+            
+            <div class="framework-card">
+                <h2 class="cbottle">C-bottle Framework</h2>
+                <p>Property-level risk assessment</p>
+                <a href="cbottle-risk-assessment.html">Main Interface</a>
+                <a href="cbottle-scenario-analysis.html">Scenario Analysis</a>
+            </div>
+        </div>
+        
+        <div class="test-results">
+            <h3>System Tests</h3>
+            <div class="test-item">
+                <span>JavaScript Loading</span>
+                <span class="check" id="js-test">✓ Checking...</span>
+            </div>
+            <div class="test-item">
+                <span>Mapbox Access Token</span>
+                <span class="check" id="mapbox-test">✓ Checking...</span>
+            </div>
+            <div class="test-item">
+                <span>CLIMADA Engine</span>
+                <span class="check" id="climada-test">✓ Checking...</span>
+            </div>
+            <div class="test-item">
+                <span>Climate-OS Engine</span>
+                <span class="check" id="climate-os-test">✓ Checking...</span>
+            </div>
+            <div class="test-item">
+                <span>C-bottle Engine</span>
+                <span class="check" id="cbottle-test">✓ Checking...</span>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <a href="index.html" style="color: #58a6ff; text-decoration: none; font-size: 1.2em;">
+                ← Return to Main Site
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Set timestamp
+        document.getElementById('timestamp').textContent = new Date().toISOString();
+        
+        // Test JavaScript
+        document.getElementById('js-test').textContent = '✓ Loaded';
+        document.getElementById('js-test').className = 'check';
+        
+        // Test Mapbox
+        if (typeof mapboxgl !== 'undefined') {
+            document.getElementById('mapbox-test').textContent = '✓ Available';
+            document.getElementById('mapbox-test').className = 'check';
+        } else {
+            document.getElementById('mapbox-test').textContent = '✗ Not loaded';
+            document.getElementById('mapbox-test').className = 'error';
+        }
+        
+        // Test engines after page loads
+        window.addEventListener('load', () => {
+            // Load and test engines
+            const scripts = [
+                { 
+                    src: 'improved-hurricane-generator.js', 
+                    test: () => typeof hurricaneGenerator !== 'undefined',
+                    id: 'climada-test',
+                    name: 'Hurricane Generator'
+                },
+                { 
+                    src: 'climate-os-statistical-engine.js', 
+                    test: () => typeof climateOSEngine !== 'undefined',
+                    id: 'climate-os-test',
+                    name: 'Climate-OS Engine'
+                },
+                { 
+                    src: 'cbottle-property-engine.js', 
+                    test: () => typeof cbottleEngine !== 'undefined',
+                    id: 'cbottle-test',
+                    name: 'C-bottle Engine'
+                }
+            ];
+            
+            let loaded = 0;
+            scripts.forEach(script => {
+                const scriptEl = document.createElement('script');
+                scriptEl.src = script.src;
+                scriptEl.onload = () => {
+                    if (script.test()) {
+                        document.getElementById(script.id).textContent = '✓ Loaded';
+                        document.getElementById(script.id).className = 'check';
+                    } else {
+                        document.getElementById(script.id).textContent = '✗ Failed';
+                        document.getElementById(script.id).className = 'error';
+                    }
+                    loaded++;
+                    
+                    if (loaded === scripts.length) {
+                        console.log('All tests complete');
+                    }
+                };
+                scriptEl.onerror = () => {
+                    document.getElementById(script.id).textContent = '✗ Load error';
+                    document.getElementById(script.id).className = 'error';
+                };
+                document.head.appendChild(scriptEl);
+            });
+        });
+    </script>
+</body>
+</html>

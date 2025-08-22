@@ -196,46 +196,17 @@
         }
     </style>
 
+    <!-- Hurricane Generator for working data -->
+    <script src="improved-hurricane-generator.js"></script>
+    
     <!-- CLIMADA API Client for real data -->
     <script src="climada-api-client.js"></script>
     <script>
         // Initialize CLIMADA API client
         const climadaClient = new ClimadaAPIClient();
         
-        // Override any existing hurricane data functions
-        if (typeof generateStatisticalData === 'undefined') {
-            function generateStatisticalData(analysisType) {
-                // Generate statistical data based on improved hurricane data
-                const hurricaneData = hurricaneGenerator.generateHurricaneData('baseline', 'atlantic');
-                
-                return {
-                    type: 'FeatureCollection',
-                    features: hurricaneData.features.map(feature => ({
-                        type: 'Feature',
-                        geometry: {
-                            type: 'Point',
-                            coordinates: feature.geometry.coordinates[Math.floor(feature.geometry.coordinates.length / 2)]
-                        },
-                        properties: {
-                            value: feature.properties.category * 20,
-                            confidence: 0.8 + Math.random() * 0.15,
-                            type: analysisType,
-                            category: feature.properties.category
-                        }
-                    }))
-                };
-            }
-        }
-        
-        // Add Pacific hurricane support
-        function generatePacificHurricaneData(scenario = 'baseline') {
-            return hurricaneGenerator.generateHurricaneData(scenario, 'pacific');
-        }
-        
-        // Combined basin data
-        function generateCombinedBasinData(scenario = 'baseline') {
-            return hurricaneGenerator.generateCombinedBasinData(scenario);
-        }
+        // Make sure we have the hurricane generator available
+        console.log('Hurricane generator loaded:', typeof hurricaneGenerator !== 'undefined');
     </script>
 </head>
 <body>
@@ -360,20 +331,26 @@
                 const map = new mapboxgl.Map({
                     container: containerId,
                     style: 'mapbox://styles/mapbox/dark-v11',
-                    center: [-75, 30],
-                    zoom: 4,
+                    center: [-60, 25],  // Better Atlantic basin view
+                    zoom: 3.5,          // Wider view to see hurricane paths
                     attributionControl: false
                 });
                 
                 updateStatus(mapNum, 'Map created, loading...', 'info');
                 
                 // Handle load event
-                map.on('load', () => {
+                map.on('load', async () => {
                     updateStatus(mapNum, 'Map loaded!', 'success');
                     document.getElementById(`loading${mapNum}`).style.display = 'none';
                     
                     // Add hurricane data
-                    addHurricaneData(map, mapNum);
+                    try {
+                        await addHurricaneData(map, mapNum);
+                        updateStatus(mapNum, 'Data loaded!', 'success');
+                    } catch (error) {
+                        console.error('Error adding hurricane data:', error);
+                        updateStatus(mapNum, 'Data error: ' + error.message, 'error');
+                    }
                     
                     // Hide debug panel after 3 seconds
                     setTimeout(() => {
@@ -396,28 +373,48 @@
             }
         }
         
-        // Add hurricane data to map using real CLIMADA data
+        // Add hurricane data to map
         async function addHurricaneData(map, mapNum) {
-            // Check if CLIMADA backend is available
-            const isBackendAvailable = await climadaClient.checkStatus();
-            
             let hurricanes;
-            if (isBackendAvailable) {
-                // Use real CLIMADA data
-                if (mapNum === '1') {
-                    // Historical data for left map
-                    hurricanes = await climadaClient.getHistoricalTracks('NA', 2010, 2019);
-                    console.log('Loaded historical CLIMADA data:', hurricanes);
-                } else {
-                    // Climate projection for right map (synthetic tracks)
-                    hurricanes = await climadaClient.getSyntheticTracks('rcp85', 100, 'NA');
-                    console.log('Loaded synthetic CLIMADA data:', hurricanes);
+            let useClimada = false;
+            
+            // Try CLIMADA backend first
+            try {
+                const isBackendAvailable = await climadaClient.checkStatus();
+                
+                if (isBackendAvailable) {
+                    console.log('CLIMADA backend available, attempting to load data...');
+                    
+                    if (mapNum === '1') {
+                        // Historical data for left map
+                        hurricanes = await climadaClient.getHistoricalTracks('NA', 2010, 2019);
+                        console.log('Loaded historical CLIMADA data:', hurricanes);
+                    } else {
+                        // Climate projection for right map (synthetic tracks)
+                        hurricanes = await climadaClient.getSyntheticTracks('rcp85', 100, 'NA');
+                        console.log('Loaded synthetic CLIMADA data:', hurricanes);
+                    }
+                    
+                    // Validate data
+                    if (hurricanes && hurricanes.features && hurricanes.features.length > 0) {
+                        useClimada = true;
+                        console.log(`Using CLIMADA data with ${hurricanes.features.length} tracks`);
+                    } else {
+                        console.warn('CLIMADA data is empty or invalid');
+                    }
                 }
-            } else {
-                // Fallback to synthetic data if backend not available
-                console.warn('CLIMADA backend not available, using fallback data');
-                hurricanes = generateHurricaneData(mapNum === '1' ? 10 : 15);
+            } catch (error) {
+                console.error('Error accessing CLIMADA backend:', error);
             }
+            
+            // Use fallback data if CLIMADA is not available or failed
+            if (!useClimada) {
+                console.log('Using fallback hurricane data');
+                hurricanes = generateFallbackHurricaneData(mapNum);
+                console.log('Fallback data generated:', hurricanes);
+            }
+            
+            console.log('Adding hurricane data to map:', hurricanes);
             
             map.addSource('hurricanes', {
                 type: 'geojson',
@@ -429,17 +426,27 @@
                 id: 'hurricane-tracks',
                 type: 'line',
                 source: 'hurricanes',
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
                 paint: {
                     'line-color': [
                         'case',
-                        ['>=', ['get', 'category'], 5], '#ff0000',
-                        ['>=', ['get', 'category'], 4], '#ff4500',
-                        ['>=', ['get', 'category'], 3], '#ff8c00',
-                        ['>=', ['get', 'category'], 2], '#ffd700',
-                        '#ffff00'
+                        ['>=', ['get', 'category'], 5], '#D63031',  // Dark red
+                        ['>=', ['get', 'category'], 4], '#FF6B6B',  // Red
+                        ['>=', ['get', 'category'], 3], '#FF8C42',  // Orange
+                        ['>=', ['get', 'category'], 2], '#FFD23F',  // Yellow
+                        '#74CCFF'  // Light blue
                     ],
-                    'line-width': 3,
-                    'line-opacity': 0.8
+                    'line-width': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'category'],
+                        1, 2,
+                        5, 5
+                    ],
+                    'line-opacity': 0.9
                 }
             });
             
@@ -459,11 +466,16 @@
             console.log(`Added ${hurricanes.features.length} hurricanes to map ${mapNum}`);
         }
         
-        // Generate hurricane data
-        // Replaced with improved hurricane generator - see improved-hurricane-generator.js
-        function generateHurricaneData(scenario = 'baseline') {
-            // Using improved hurricane generator with meteorological accuracy
-            return hurricaneGenerator.generateHurricaneData(scenario, 'atlantic');
+        // Use the improved hurricane generator for fallback data
+        function generateFallbackHurricaneData(mapNum) {
+            // Use different scenarios for different maps
+            if (mapNum === '1') {
+                // Historical data for left map
+                return hurricaneGenerator.generateHurricaneData('baseline', 'atlantic', 12);
+            } else {
+                // Climate projection for right map (more hurricanes)
+                return hurricaneGenerator.generateHurricaneData('rcp85', 'atlantic', 18);
+            }
         }
         
         // Initialize maps when DOM is ready

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLIMADA Hurricane Test with Generator</title>
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+        
+        .info-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            max-width: 300px;
+            z-index: 1000;
+        }
+        
+        .status {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        
+        .success { color: #4CAF50; }
+        .error { color: #f44336; }
+        .info { color: #2196F3; }
+    </style>
+    
+    <!-- Hurricane Generator -->
+    <script src="improved-hurricane-generator.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <div class="info-panel">
+        <h3>CLIMADA Hurricane Test</h3>
+        <div id="status" class="status info">Initializing...</div>
+        <div id="count" class="status"></div>
+        <div id="backend" class="status"></div>
+    </div>
+    
+    <script>
+        // Set Mapbox token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+        
+        // Update status
+        function updateStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${type}`;
+            statusEl.textContent = message;
+            console.log(`[${type}]`, message);
+        }
+        
+        // Initialize map
+        updateStatus('Creating map...');
+        
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v11',
+            center: [-60, 25],
+            zoom: 3.5
+        });
+        
+        map.on('load', () => {
+            updateStatus('Map loaded! Adding hurricanes...', 'success');
+            
+            // Generate hurricane data using the improved generator
+            const hurricaneData = hurricaneGenerator.generateCombinedBasinData('baseline');
+            console.log('Hurricane data:', hurricaneData);
+            
+            document.getElementById('count').textContent = `Hurricanes generated: ${hurricaneData.features.length}`;
+            document.getElementById('count').className = 'status success';
+            
+            // Add data source
+            map.addSource('hurricanes', {
+                type: 'geojson',
+                data: hurricaneData
+            });
+            
+            // Add hurricane tracks
+            map.addLayer({
+                id: 'hurricane-tracks',
+                type: 'line',
+                source: 'hurricanes',
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                paint: {
+                    'line-color': [
+                        'case',
+                        ['==', ['get', 'category'], 5], '#D63031',
+                        ['==', ['get', 'category'], 4], '#FF6B6B',
+                        ['==', ['get', 'category'], 3], '#FF8C42',
+                        ['==', ['get', 'category'], 2], '#FFD23F',
+                        '#74CCFF'
+                    ],
+                    'line-width': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'category'],
+                        1, 2,
+                        5, 5
+                    ],
+                    'line-opacity': 0.9
+                }
+            });
+            
+            // Add start points
+            map.addLayer({
+                id: 'hurricane-starts',
+                type: 'circle',
+                source: 'hurricanes',
+                paint: {
+                    'circle-radius': 6,
+                    'circle-color': '#4CAF50',
+                    'circle-stroke-color': '#ffffff',
+                    'circle-stroke-width': 2
+                }
+            });
+            
+            updateStatus('Hurricanes added successfully!', 'success');
+            
+            // Check backend status
+            document.getElementById('backend').textContent = 'Backend: Using fallback generator (CLIMADA not required)';
+            document.getElementById('backend').className = 'status info';
+            
+            // Validate some paths
+            if (hurricaneData.features.length > 0) {
+                const validation = hurricaneGenerator.validatePath(hurricaneData.features[0]);
+                console.log('Path validation:', validation);
+            }
+        });
+        
+        map.on('error', (e) => {
+            updateStatus(`Map error: ${e.error.message}`, 'error');
+        });
+    </script>
+</body>
+</html>

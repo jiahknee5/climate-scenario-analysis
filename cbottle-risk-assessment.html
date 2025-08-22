@@ -10,6 +10,9 @@
     <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
     <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
     
+    <!-- C-bottle Property Risk Engine -->
+    <script src="cbottle-property-engine.js"></script>
+    
     <style>
         * {
             margin: 0;
@@ -480,76 +483,51 @@
             console.log(`Added ${properties.features.length} properties to map ${mapNum}`);
         }
         
-        // Generate property data
+        // Generate property data using C-bottle property engine
         function generatePropertyData(mapNum) {
-            const features = [];
-            const baseRisk = mapNum === '1' ? 0.6 : 0.85; // Higher risk in future
+            // Use C-bottle property-level risk engine
+            const location = 'miami'; // Default to Miami for demo
+            const scenario = mapNum === '1' ? 'current' : 'severe';
             
-            // Generate properties around Miami Beach
-            for (let i = 0; i < 20; i++) {
-                const lng = -80.13 + (Math.random() - 0.5) * 0.02;
-                const lat = 25.79 + (Math.random() - 0.5) * 0.02;
-                const risk = baseRisk + (Math.random() - 0.5) * 0.3;
-                
-                features.push({
-                    type: 'Feature',
-                    properties: {
-                        address: `${Math.floor(Math.random() * 999) + 1} Ocean Dr`,
-                        risk: Math.max(0, Math.min(1, risk)),
-                        value: Math.floor(Math.random() * 5000000) + 500000,
-                        type: ['residential', 'commercial', 'condo'][Math.floor(Math.random() * 3)]
-                    },
-                    geometry: {
-                        type: 'Point',
-                        coordinates: [lng, lat]
-                    }
-                });
-            }
+            const data = cbottleEngine.generatePropertyRiskData(location, scenario);
+            
+            console.log(`C-bottle Property Data for ${location} (${scenario}):`, data);
+            console.log('Aggregate Stats:', data.properties.aggregateStats);
+            
+            // Convert polygon features to points for better visualization
+            const pointFeatures = data.features.map(feature => ({
+                type: 'Feature',
+                properties: {
+                    ...feature.properties,
+                    risk: feature.properties.riskScore / 10 // Normalize to 0-1
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [
+                        feature.geometry.coordinates[0][0][0] + 0.0002,
+                        feature.geometry.coordinates[0][0][1] + 0.0002
+                    ]
+                }
+            }));
             
             return {
                 type: 'FeatureCollection',
-                features: features
+                features: pointFeatures
             };
         }
         
-        // Generate risk zones
+        // Generate risk zones using C-bottle engine
         function generateRiskZones(mapNum) {
-            const features = [];
-            const baseRisk = mapNum === '1' ? 0.5 : 0.7;
+            // Use the same property data to create risk zones
+            const location = 'miami';
+            const scenario = mapNum === '1' ? 'current' : 'severe';
             
-            // Create risk zones as polygons
-            for (let i = 0; i < 5; i++) {
-                const centerLng = -80.13 + (Math.random() - 0.5) * 0.03;
-                const centerLat = 25.79 + (Math.random() - 0.5) * 0.03;
-                const size = 0.005 + Math.random() * 0.01;
-                const risk = baseRisk + (Math.random() - 0.5) * 0.4;
-                
-                const coordinates = [[]];
-                for (let j = 0; j < 8; j++) {
-                    const angle = (j / 8) * Math.PI * 2;
-                    coordinates[0].push([
-                        centerLng + Math.cos(angle) * size,
-                        centerLat + Math.sin(angle) * size * 0.8
-                    ]);
-                }
-                coordinates[0].push(coordinates[0][0]); // Close polygon
-                
-                features.push({
-                    type: 'Feature',
-                    properties: {
-                        risk: Math.max(0, Math.min(1, risk)),
-                        zone: ['AE', 'VE', 'X'][Math.floor(Math.random() * 3)]
-                    },
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: coordinates
-                    }
-                });
-            }
+            const data = cbottleEngine.generatePropertyRiskData(location, scenario);
             
+            // Keep original polygon features for zone visualization
             return {
                 type: 'FeatureCollection',
-                features: features
+                features: data.features
             };
         }
         
