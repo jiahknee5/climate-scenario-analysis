@@ -1,7 +1,8 @@
-# Vercel ignore file  
-# Only ignore actual temp/backup files, not test pages
-node_modules/
-.git/
+node_modules
+.next
+.git
 *.log
 .DS_Store
-.env.local
+src/
+components/
+package.json.backup
