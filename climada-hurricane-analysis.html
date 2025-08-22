@@ -196,11 +196,11 @@
         }
     </style>
 
-    <!-- Improved Hurricane Generator with Meteorological Accuracy -->
-    <script src="improved-hurricane-generator.js"></script>
+    <!-- CLIMADA API Client for real data -->
+    <script src="climada-api-client.js"></script>
     <script>
-        // Initialize improved hurricane generator
-        const hurricaneGenerator = new ImprovedHurricaneGenerator();
+        // Initialize CLIMADA API client
+        const climadaClient = new ClimadaAPIClient();
         
         // Override any existing hurricane data functions
         if (typeof generateStatisticalData === 'undefined') {
@@ -242,7 +242,12 @@
     <!-- Header -->
     <div class="header">
         <h1>CLIMADA Hurricane Analysis</h1>
-        <p>Scientific framework for probabilistic hurricane risk modeling</p>
+        <p>Powered by CLIMADA framework from ETH Zurich</p>
+        <div style="background: #2196F3; padding: 10px; margin-top: 10px; border-radius: 6px; font-size: 0.9em;">
+            <strong>ℹ️ Data Source:</strong> This interface uses the official CLIMADA Python package for real climate risk analysis. 
+            Historical tracks from IBTrACS, synthetic tracks from CLIMADA's probabilistic model.
+            <a href="https://github.com/CLIMADA-project/climada_python" style="color: #fff; margin-left: 10px;">Learn more →</a>
+        </div>
     </div>
 
     <!-- Main Layout -->
@@ -391,9 +396,28 @@
             }
         }
         
-        // Add hurricane data to map
-        function addHurricaneData(map, mapNum) {
-            const hurricanes = generateHurricaneData(mapNum === '1' ? 10 : 15);
+        // Add hurricane data to map using real CLIMADA data
+        async function addHurricaneData(map, mapNum) {
+            // Check if CLIMADA backend is available
+            const isBackendAvailable = await climadaClient.checkStatus();
+            
+            let hurricanes;
+            if (isBackendAvailable) {
+                // Use real CLIMADA data
+                if (mapNum === '1') {
+                    // Historical data for left map
+                    hurricanes = await climadaClient.getHistoricalTracks('NA', 2010, 2019);
+                    console.log('Loaded historical CLIMADA data:', hurricanes);
+                } else {
+                    // Climate projection for right map (synthetic tracks)
+                    hurricanes = await climadaClient.getSyntheticTracks('rcp85', 100, 'NA');
+                    console.log('Loaded synthetic CLIMADA data:', hurricanes);
+                }
+            } else {
+                // Fallback to synthetic data if backend not available
+                console.warn('CLIMADA backend not available, using fallback data');
+                hurricanes = generateHurricaneData(mapNum === '1' ? 10 : 15);
+            }
             
             map.addSource('hurricanes', {
                 type: 'geojson',
@@ -526,18 +550,29 @@
             }
         }
         
-        // Update climate scenario data
-        function updateClimateScenario(map, scenario) {
+        // Update climate scenario data using CLIMADA API
+        async function updateClimateScenario(map, scenario) {
             if (!map || !map.getSource('hurricanes')) return;
             
-            // Generate new data based on scenario
+            const isBackendAvailable = await climadaClient.checkStatus();
             let newData;
-            if (scenario === 'baseline') {
-                newData = hurricaneGenerator.generateHurricaneData('baseline', 'atlantic', 15);
-            } else if (scenario === '2c') {
-                newData = hurricaneGenerator.generateHurricaneData('rcp26', 'atlantic', 18);
-            } else if (scenario === '4c') {
-                newData = hurricaneGenerator.generateHurricaneData('rcp85', 'atlantic', 24);
+            
+            if (isBackendAvailable) {
+                // Map UI scenario names to CLIMADA scenario names
+                const climadaScenario = climadaClient.mapScenarioName(scenario);
+                
+                // Get synthetic tracks for the scenario
+                newData = await climadaClient.getSyntheticTracks(climadaScenario, 100, 'NA');
+                console.log(`Loaded CLIMADA ${climadaScenario} scenario data`);
+            } else {
+                // Fallback to synthetic data
+                if (scenario === 'baseline') {
+                    newData = generateHurricaneData(15);
+                } else if (scenario === '2c') {
+                    newData = generateHurricaneData(18);
+                } else if (scenario === '4c') {
+                    newData = generateHurricaneData(24);
+                }
             }
             
             // Update the source data
