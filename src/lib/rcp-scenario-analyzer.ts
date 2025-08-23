@@ -192,7 +192,7 @@ export class RCPScenarioAnalyzer {
     climateData: ClimateXData[],
     rcpScenario: keyof typeof RCPScenarioAnalyzer.RCP_DEFINITIONS,
     timeframe: TimeframedAnalysis,
-    businessObjective: BusinessObjective
+    _businessObjective: BusinessObjective
   ): RCPScenarioResult {
     
     const scenarioDefinition = this.RCP_DEFINITIONS[rcpScenario];
