@@ -14,7 +14,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
   const [selectedScenario, setSelectedScenario] = useState<ClimateScenario | null>(null)
 
   // Use first loan as default example
-  const exampleLoan = selectedLoan || portfolio[0] || {
+  const exampleLoan = useMemo(() => selectedLoan || portfolio[0] || {
     id: 'example_001',
     type: 'RRE' as const,
     property_type: 'single_family',
@@ -26,9 +26,9 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
     maturity_date: '2050-03-15',
     interest_rate: 4.25,
     risk_rating: 'A',
-  }
+  }, [selectedLoan, portfolio])
 
-  const exampleScenario = selectedScenario || scenarios[0] || {
+  const exampleScenario = useMemo(() => selectedScenario || scenarios[0] || {
     id: 'disorderly_transition',
     name: 'Disorderly Transition',
     description: 'Late and sudden policy action leading to economic disruption',
@@ -46,7 +46,7 @@ export default function CalculationWalkthrough({ portfolio, scenarios }: Calcula
       policy_stringency: 0.9,
       technology_disruption: 0.8,
     },
-  }
+  }, [selectedScenario, scenarios])
 
   const baselineLTV = exampleLoan ? exampleLoan.outstanding_balance / exampleLoan.property_value : 0
 

@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from 'react'
+import Link from 'next/link'
 
 export default function Home() {
   useEffect(() => {
@@ -18,7 +19,7 @@ export default function Home() {
     }}>
       <div style={{ textAlign: 'center' }}>
         <h1>Redirecting to Climate Risk Analysis Platform...</h1>
-        <p>If you are not redirected, <a href="/index.html">click here</a></p>
+        <p>If you are not redirected, <Link href="/index.html">click here</Link></p>
       </div>
     </div>
   )

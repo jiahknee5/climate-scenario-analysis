@@ -168,7 +168,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
         <div className="flex items-center space-x-4">
           <select
             value={reportType}
-            onChange={(e) => setReportType(e.target.value as any)}
+            onChange={(e) => setReportType(e.target.value as 'ccar' | 'fed_scenario' | 'basel' | 'ifrs9')}
             className="px-3 py-2 border rounded"
           >
             <option value="ccar">CCAR Stress Testing</option>
@@ -179,7 +179,7 @@ export default function RegulatoryReporting({ portfolio, scenarios }: Regulatory
           
           <select
             value={timeHorizon}
-            onChange={(e) => setTimeHorizon(e.target.value as any)}
+            onChange={(e) => setTimeHorizon(e.target.value as '1_year' | '3_year' | '9_year')}
             className="px-3 py-2 border rounded"
           >
             <option value="1_year">1 Year</option>
@@ -392,10 +392,10 @@ function calculateStateConcentration(portfolio: LoanPortfolio[]) {
     .slice(0, 10) // Top 10 states
 }
 
-function convertToCSV(data: any): string {
+function convertToCSV(data: Record<string, unknown>): string {
   const headers = Object.keys(data).join(',')
-  const rows = Object.values(data).map((value: any) => 
-    typeof value === 'object' ? JSON.stringify(value) : value
+  const rows = Object.values(data).map((value) => 
+    typeof value === 'object' ? JSON.stringify(value) : String(value)
   ).join(',')
   
   return `${headers}\n${rows}`

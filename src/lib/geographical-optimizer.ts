@@ -1,6 +1,5 @@
-import { LoanData, PortfolioSummary } from '@/types/loan-data';
-import { ClimateXData, PortfolioGeography } from '@/types/climate-data';
-import { ExceedanceMetrics } from './exceedance-curve-analyzer';
+import { LoanData } from '@/types/loan-data';
+import { ClimateXData } from '@/types/climate-data';
 
 /**
  * Geographical Portfolio Optimization Engine
@@ -92,7 +91,6 @@ export class GeographicalOptimizer {
   ): OptimizationRecommendation[] {
     
     const recommendations: OptimizationRecommendation[] = [];
-    const totalExposure = currentMetrics.reduce((sum, m) => sum + m.current_allocation, 0);
     
     // Calculate optimal allocations using mean-variance optimization
     const optimalAllocations = this.calculateOptimalAllocations(
@@ -225,7 +223,6 @@ export class GeographicalOptimizer {
   ): number[] {
     
     // Build covariance matrix (simplified approach)
-    const n = metrics.length;
     const covarianceMatrix = this.buildCovarianceMatrix(metrics);
     const expectedReturns = metrics.map(m => m.sharpe_ratio * 0.1); // Convert Sharpe to return proxy
     
@@ -234,9 +231,7 @@ export class GeographicalOptimizer {
     
     const optimalWeights = this.solvePortfolioOptimization(
       covarianceMatrix,
-      expectedReturns,
-      returnRequirement,
-      riskBudget
+      expectedReturns
     );
     
     return optimalWeights;
@@ -394,9 +389,7 @@ export class GeographicalOptimizer {
   
   private static solvePortfolioOptimization(
     covariance: number[][],
-    returns: number[],
-    returnRequirement: number,
-    riskBudget: number
+    returns: number[]
   ): number[] {
     
     // Simplified optimization using risk parity with return adjustment

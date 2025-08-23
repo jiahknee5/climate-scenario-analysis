@@ -52,8 +52,7 @@ export class Young2004InsuranceCalculator {
     // Step 4: Separate hazard and flood components
     const hazardComponent = this.separateHazardComponents(
       loan,
-      grossPremium,
-      expectedAnnualLoss
+      grossPremium
     );
     
     return {
@@ -113,8 +112,7 @@ export class Young2004InsuranceCalculator {
    */
   private static separateHazardComponents(
     loan: LoanData,
-    totalPremium: number,
-    totalExpectedLoss: number
+    totalPremium: number
   ): { hazard_premium: number; flood_premium: number } {
     
     // Use existing baseline premiums as proportional weights

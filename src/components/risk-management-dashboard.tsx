@@ -57,7 +57,7 @@ export default function RiskManagementDashboard({ portfolio, scenarios }: RiskMa
                   portfolio.reduce((sum, l) => sum + l.outstanding_balance, 0) * 100,
       }
     })
-  }, [riskAnalysis, scenarios])
+  }, [riskAnalysis, scenarios, portfolio])
 
   // Business Objective: Geographic concentration limits and diversification monitoring
   const concentrationAnalysis = useMemo(() => {

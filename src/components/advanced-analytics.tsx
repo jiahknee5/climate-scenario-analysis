@@ -225,7 +225,7 @@ export default function AdvancedAnalytics({ portfolio, scenarios }: AdvancedAnal
               <div>
                 <h4 className="font-medium mb-3">Stress Test Results</h4>
                 <div className="space-y-3">
-                  {scenarios.map((scenario, index) => {
+                  {scenarios.map((scenario) => {
                     const stressMultiplier = getStressMultiplier(scenario.id)
                     const stressedLoss = portfolio.reduce((sum, loan) => 
                       sum + loan.outstanding_balance * 0.005 * stressMultiplier, 0)
@@ -268,7 +268,7 @@ export default function AdvancedAnalytics({ portfolio, scenarios }: AdvancedAnal
               <div className="mt-6">
                 <h4 className="font-medium mb-3">Top State Concentrations</h4>
                 <div className="space-y-2">
-                  {concentrationMetrics.topStates.map((state, index) => (
+                  {concentrationMetrics.topStates.map((state) => (
                     <div key={state.state} className="flex justify-between items-center">
                       <span className="text-sm">{state.state}</span>
                       <div className="text-right">

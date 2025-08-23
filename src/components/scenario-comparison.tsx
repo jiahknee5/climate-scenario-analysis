@@ -13,7 +13,6 @@ interface ScenarioComparisonProps {
 
 export default function ScenarioComparison({ portfolio, scenarios, selectedYear }: ScenarioComparisonProps) {
   const [comparisonType, setComparisonType] = useState<'impact' | 'timeline' | 'stress'>('impact')
-  const [selectedMetric, setSelectedMetric] = useState<'expected_loss' | 'property_value' | 'risk_rating'>('expected_loss')
 
   const scenarioResults = useMemo(() => {
     if (!portfolio.length || !scenarios.length) return []
@@ -34,7 +33,7 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
     const years = [2025, 2030, 2035, 2040, 2050, 2070, 2100]
     
     return years.map(year => {
-      const yearData: any = { year }
+      const yearData: Record<string, number> = { year }
       
       scenarios.forEach(scenario => {
         // Calculate progressive impact over time
@@ -76,8 +75,6 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
   }, [scenarios, scenarioResults])
 
   const radarData = useMemo(() => {
-    const metrics = ['Physical Risk', 'Transition Risk', 'Expected Loss', 'Property Impact', 'Stress Factor']
-    
     return scenarios.map(scenario => {
       const data = impactComparisonData.find(d => d.scenario === scenario.name)
       if (!data) return { scenario: scenario.name, data: [] }
@@ -99,7 +96,7 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
     const stressLevels = [1.0, 1.25, 1.5, 2.0, 2.5, 3.0]
     
     return stressLevels.map(stressLevel => {
-      const dataPoint: any = { stressLevel: `${stressLevel}x` }
+      const dataPoint: Record<string, string | number> = { stressLevel: `${stressLevel}x` }
       
       scenarios.forEach(scenario => {
         const baseImpact = impactComparisonData.find(d => d.scenario === scenario.name)?.expectedLoss || 0
@@ -127,7 +124,7 @@ export default function ScenarioComparison({ portfolio, scenarios, selectedYear 
         <div className="flex items-center space-x-4">
           <select
             value={comparisonType}
-            onChange={(e) => setComparisonType(e.target.value as any)}
+            onChange={(e) => setComparisonType(e.target.value as 'impact' | 'timeline' | 'stress')}
             className="px-3 py-2 border rounded"
           >
             <option value="impact">Impact Comparison</option>

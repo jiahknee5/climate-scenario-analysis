@@ -562,12 +562,7 @@ export class RCPScenarioAnalyzer {
       .map((item, index) => ({ ...item, risk_ranking: index + 1 }));
   }
   
-  private static calculateScenarioSensitivity(
-    loans: LoanData[],
-    climateData: ClimateXData[],
-    rcpScenario: string,
-    analysisYear: number
-  ) {
+  private static calculateScenarioSensitivity() {
     // Simplified sensitivity calculation
     return {
       temperature_sensitivity: 0.1, // 10% loss increase per degree
@@ -578,9 +573,7 @@ export class RCPScenarioAnalyzer {
   }
   
   private static calculateBusinessImpact(
-    portfolioMetrics: any,
-    businessObjective: BusinessObjective,
-    timeframe: TimeframedAnalysis
+    portfolioMetrics: any
   ) {
     const lossIncrease = portfolioMetrics.climate_adjusted_expected_loss - portfolioMetrics.baseline_expected_loss;
     const lossRate = lossIncrease / portfolioMetrics.total_exposure;
@@ -595,8 +588,7 @@ export class RCPScenarioAnalyzer {
   
   private static generateCCARStressTest(
     scenarioResults: RCPScenarioResult[],
-    timeframe: '3_year' | '5_year',
-    businessObjective: BusinessObjective
+    timeframe: '3_year' | '5_year'
   ): CCARStressTest {
     const relevantScenarios = scenarioResults.filter(s => 
       s.timeframe.timeframe === (timeframe === '3_year' ? 'ccar_3yr' : 'ccar_5yr')

@@ -1,4 +1,4 @@
-import { ExceedanceCurve, HazardData, ClimateXData } from '@/types/climate-data';
+import { ExceedanceCurve, HazardData } from '@/types/climate-data';
 import { LoanData } from '@/types/loan-data';
 
 /**

@@ -1,4 +1,4 @@
-import { ClimateXData, HazardData, HazardProjection, InsurancePremium } from '@/types/climate-data';
+import { ClimateXData, HazardData } from '@/types/climate-data';
 import { LoanData } from '@/types/loan-data';
 
 export class SyntheticDataGenerator {
@@ -127,7 +127,7 @@ export class SyntheticDataGenerator {
       property_id: loan.property_id,
       baseline_year: 2023,
       projection_years: [2026, 2028, 2050, 2100],
-      rcp_scenarios: this.rcpScenarios as any,
+      rcp_scenarios: this.rcpScenarios,
       hazards: this.generateHazardData(loan)
     }));
   }
