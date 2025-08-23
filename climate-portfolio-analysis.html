@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Scenario Analysis - Loan Portfolio Impact</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #58a6ff;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #8b949e;
+            font-size: 1.1rem;
+        }
+        
+        .portfolio-selector {
+            background: #0d1117;
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .portfolio-selector button {
+            background: #238636;
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            margin: 0 0.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+        
+        .portfolio-selector button:hover {
+            background: #2ea043;
+        }
+        
+        .portfolio-selector button.active {
+            background: #1f6feb;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .workflow-diagram {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .workflow-diagram h2 {
+            color: #58a6ff;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .workflow-step {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .workflow-step:hover {
+            border-color: #58a6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(88, 166, 255, 0.1);
+        }
+        
+        .step-number {
+            background: #58a6ff;
+            color: #0d1117;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        .step-title {
+            color: #f0f6fc;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .step-description {
+            color: #8b949e;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .key-metrics {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .key-metrics h2 {
+            color: #58a6ff;
+            margin-bottom: 1.5rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .metric-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #58a6ff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+        
+        .framework-comparison {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 2rem;
+        }
+        
+        .framework-comparison h2 {
+            color: #58a6ff;
+            margin-bottom: 1.5rem;
+        }
+        
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .framework-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+        
+        .framework-card h3 {
+            margin-bottom: 1rem;
+        }
+        
+        .climada { color: #2196F3; }
+        .climate-os { color: #A23B72; }
+        .cbottle { color: #4285F4; }
+        
+        .framework-features {
+            list-style: none;
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+        
+        .framework-features li {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .framework-features li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: currentColor;
+        }
+        
+        .start-button {
+            display: block;
+            background: #238636;
+            color: white;
+            text-decoration: none;
+            padding: 1rem 3rem;
+            border-radius: 6px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 3rem auto;
+            width: fit-content;
+            transition: background 0.2s;
+        }
+        
+        .start-button:hover {
+            background: #2ea043;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Climate Scenario Analysis</h1>
+        <p>Step-by-Step Portfolio Impact Assessment</p>
+    </div>
+    
+    <div class="portfolio-selector">
+        <button class="active" onclick="selectPortfolio('CRE')">Commercial Real Estate (CRE)</button>
+        <button onclick="selectPortfolio('RRE')">Residential Real Estate (RRE)</button>
+    </div>
+    
+    <div class="container">
+        <div class="workflow-diagram">
+            <h2>Analysis Workflow</h2>
+            <div class="workflow-steps">
+                <a href="step1-portfolio-ingestion.html" class="workflow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Portfolio Data Ingestion</div>
+                    <div class="step-description">Load loan portfolio data and geocode property locations for climate exposure analysis</div>
+                </a>
+                
+                <a href="step2-hazard-mapping.html" class="workflow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Climate Hazard Mapping</div>
+                    <div class="step-description">Map each property to climate hazards using CLIMADA, Climate-OS, and C-bottle</div>
+                </a>
+                
+                <a href="step3-damage-calculation.html" class="workflow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Physical Damage Calculation</div>
+                    <div class="step-description">Calculate expected physical damage under baseline, 2°C, and 4°C scenarios</div>
+                </a>
+                
+                <a href="step4-insurance-impact.html" class="workflow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Insurance Premium Impact</div>
+                    <div class="step-description">Assess how climate risks affect insurance costs and borrower cash flows</div>
+                </a>
+                
+                <a href="step5-pd-adjustment.html" class="workflow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-title">PD Adjustment</div>
+                    <div class="step-description">Calculate climate-adjusted Probability of Default for each loan</div>
+                </a>
+                
+                <a href="step6-lgd-adjustment.html" class="workflow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-title">LGD Adjustment</div>
+                    <div class="step-description">Determine Loss Given Default considering property damage and market impacts</div>
+                </a>
+                
+                <a href="step7-expected-loss.html" class="workflow-step">
+                    <div class="step-number">7</div>
+                    <div class="step-title">Expected Loss Calculation</div>
+                    <div class="step-description">Calculate Expected Loss = PD × LGD × EAD for each loan</div>
+                </a>
+                
+                <a href="step8-aal-computation.html" class="workflow-step">
+                    <div class="step-number">8</div>
+                    <div class="step-title">AAL Computation</div>
+                    <div class="step-description">Aggregate to portfolio-level Average Annual Loss</div>
+                </a>
+                
+                <a href="step9-exceedance-curves.html" class="workflow-step">
+                    <div class="step-number">9</div>
+                    <div class="step-title">Exceedance Curves</div>
+                    <div class="step-description">Generate loss exceedance curves and tail risk metrics</div>
+                </a>
+                
+                <a href="step10-risk-metrics.html" class="workflow-step">
+                    <div class="step-number">10</div>
+                    <div class="step-title">Portfolio Risk Metrics</div>
+                    <div class="step-description">Calculate VaR, CVaR, and risk drift across scenarios</div>
+                </a>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <a href="step11-sensitivity-analysis.html" class="workflow-step" style="background: #ff1744; border-color: #ff1744; max-width: 400px; margin: 0 auto; display: block;">
+                    <div class="step-number" style="background: #fff; color: #ff1744;">SA</div>
+                    <div class="step-title">Sensitivity Analysis</div>
+                    <div class="step-description">Analyze how AAL changes with parameter variations</div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="key-metrics">
+            <h2>Portfolio Overview - CRE</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">$2.5B</div>
+                    <div class="metric-label">Total Exposure</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">150</div>
+                    <div class="metric-label">Number of Loans</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">65%</div>
+                    <div class="metric-label">Average LTV</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">2.1%</div>
+                    <div class="metric-label">Current Avg PD</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">35%</div>
+                    <div class="metric-label">Current Avg LGD</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$18.4M</div>
+                    <div class="metric-label">Baseline Expected Loss</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="framework-comparison">
+            <h2>Framework Methodologies</h2>
+            <div class="framework-grid">
+                <div class="framework-card">
+                    <h3 class="climada">CLIMADA</h3>
+                    <ul class="framework-features">
+                        <li>Physical climate models</li>
+                        <li>Event-based simulation</li>
+                        <li>Damage functions from engineering data</li>
+                        <li>Peer-reviewed methodologies</li>
+                        <li>Open-source implementation</li>
+                    </ul>
+                </div>
+                
+                <div class="framework-card">
+                    <h3 class="climate-os">Climate-OS</h3>
+                    <ul class="framework-features">
+                        <li>Statistical trend analysis</li>
+                        <li>Historical loss data</li>
+                        <li>Regression models</li>
+                        <li>Fast computation</li>
+                        <li>Confidence intervals</li>
+                    </ul>
+                </div>
+                
+                <div class="framework-card">
+                    <h3 class="cbottle">C-bottle</h3>
+                    <ul class="framework-features">
+                        <li>Property-level assessment</li>
+                        <li>Building characteristics</li>
+                        <li>Local vulnerability factors</li>
+                        <li>Mitigation recommendations</li>
+                        <li>Granular risk scoring</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <a href="step1-portfolio-ingestion.html" class="start-button">Start Analysis →</a>
+    </div>
+    
+    <script>
+        function selectPortfolio(type) {
+            // Update active button
+            document.querySelectorAll('.portfolio-selector button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update metrics based on portfolio type
+            const metricsTitle = document.querySelector('.key-metrics h2');
+            metricsTitle.textContent = `Portfolio Overview - ${type}`;
+            
+            // Update values (in real implementation, these would come from data)
+            if (type === 'RRE') {
+                document.querySelector('.metric-value').textContent = '$1.8B';
+                // Update other metrics...
+            }
+            
+            // Store selection
+            localStorage.setItem('selectedPortfolio', type);
+        }
+    </script>
+</body>
+</html>

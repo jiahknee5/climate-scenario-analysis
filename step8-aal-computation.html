@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 8: AAL (Average Annual Loss) Computation - Climate Scenario Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 1.5rem 2rem;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #58a6ff;
+            font-size: 1.8rem;
+        }
+        
+        .progress-bar {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .progress-step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #30363d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .progress-step.active {
+            background: #58a6ff;
+            color: #0d1117;
+        }
+        
+        .progress-step.completed {
+            background: #238636;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .step-header {
+            margin-bottom: 2rem;
+        }
+        
+        .step-title {
+            font-size: 2rem;
+            color: #f0f6fc;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-description {
+            color: #8b949e;
+            font-size: 1.1rem;
+        }
+        
+        .content-section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            color: #58a6ff;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .methodology-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .methodology-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .methodology-tab.active {
+            color: #f0f6fc;
+        }
+        
+        .methodology-tab.climada.active {
+            border-bottom-color: #2196F3;
+            color: #2196F3;
+        }
+        
+        .methodology-tab.climate-os.active {
+            border-bottom-color: #A23B72;
+            color: #A23B72;
+        }
+        
+        .methodology-tab.cbottle.active {
+            border-bottom-color: #4285F4;
+            color: #4285F4;
+        }
+        
+        .methodology-content {
+            display: none;
+        }
+        
+        .methodology-content.active {
+            display: block;
+        }
+        
+        .formula-box {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            display: block;
+        }
+        
+        .data-table table {
+            width: 100%;
+            min-width: 800px;
+        }
+        
+        .data-table th {
+            background: #0d1117;
+            color: #58a6ff;
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 2px solid #30363d;
+            position: sticky;
+            top: 0;
+        }
+        
+        .data-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .data-table tr:hover {
+            background: rgba(88, 166, 255, 0.05);
+        }
+        
+        .number {
+            font-family: 'Courier New', monospace;
+            color: #79c0ff;
+        }
+        
+        .chart-container {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            height: 400px;
+            position: relative;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .summary-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        
+        .climada-value { color: #2196F3; }
+        .climate-os-value { color: #A23B72; }
+        .cbottle-value { color: #4285F4; }
+        
+        .summary-label {
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+        
+        .scenario-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .scenario-button {
+            padding: 0.5rem 1rem;
+            background: #30363d;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .scenario-button.active {
+            background: #1f6feb;
+            border-color: #1f6feb;
+            color: white;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+        
+        .nav-button {
+            background: #238636;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .nav-button:hover {
+            background: #2ea043;
+        }
+        
+        .nav-button.prev {
+            background: #30363d;
+        }
+        
+        .nav-button.prev:hover {
+            background: #484f58;
+        }
+        
+        .info-box {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid #2196F3;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .info-box h4 {
+            color: #2196F3;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>Climate Scenario Analysis</h1>
+            <div class="progress-bar">
+                <div class="progress-step completed">1</div>
+                <div class="progress-step completed">2</div>
+                <div class="progress-step completed">3</div>
+                <div class="progress-step completed">4</div>
+                <div class="progress-step completed">5</div>
+                <div class="progress-step completed">6</div>
+                <div class="progress-step completed">7</div>
+                <div class="progress-step active">8</div>
+                <div class="progress-step">9</div>
+                <div class="progress-step">10</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="step-header">
+            <h2 class="step-title">Step 8: AAL (Average Annual Loss) Computation</h2>
+            <p class="step-description">
+                Calculate the Average Annual Loss from physical hurricane damage BEFORE insurance coverage. 
+                This represents the expected annual property damage across all hurricane events and their probabilities.
+            </p>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Understanding AAL</h3>
+            <div class="info-box">
+                <h4>Key Concept</h4>
+                <p>AAL represents the expected annual physical damage to properties from hurricanes, calculated as the probability-weighted sum of losses from all possible events. This is calculated BEFORE insurance coverage is applied.</p>
+            </div>
+            
+            <p style="margin-top: 1rem;">The AAL calculation involves:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem; color: #8b949e;">
+                <li><strong>Event Set:</strong> All possible hurricanes (historical + stochastic)</li>
+                <li><strong>Event Probability:</strong> Annual occurrence probability for each event</li>
+                <li><strong>Event Loss:</strong> Physical damage for each property from each event</li>
+                <li><strong>Categories:</strong> All hurricane categories (1-5) with appropriate frequencies</li>
+                <li><strong>Simulation Count:</strong> 10,000 years of stochastic events</li>
+            </ul>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Scenario Selection</h3>
+            <div class="scenario-selector">
+                <button class="scenario-button active" onclick="selectScenario('current')">Current Trend (Baseline)</button>
+                <button class="scenario-button" onclick="selectScenario('2c')">2°C Warming</button>
+                <button class="scenario-button" onclick="selectScenario('4c')">4°C Warming</button>
+            </div>
+            
+            <div style="color: #8b949e; font-size: 0.9rem;">
+                <p><strong>Current Trend:</strong> Based on 1980-2023 historical data with current warming trajectory</p>
+                <p><strong>Number of Simulations:</strong> 10,000 synthetic years per scenario</p>
+                <p><strong>Confidence Interval:</strong> 95% (shown in ranges)</p>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Framework Methodologies</h3>
+            <div class="methodology-tabs">
+                <button class="methodology-tab climada active" onclick="showMethodology('climada')">CLIMADA</button>
+                <button class="methodology-tab climate-os" onclick="showMethodology('climate-os')">Climate-OS</button>
+                <button class="methodology-tab cbottle" onclick="showMethodology('cbottle')">C-bottle</button>
+            </div>
+            
+            <div id="climada-methodology" class="methodology-content active">
+                <h4 style="color: #2196F3; margin-bottom: 1rem;">CLIMADA Physical Model Approach</h4>
+                <p>CLIMADA uses event-based modeling with physical hurricane simulations:</p>
+                <div class="formula-box">
+                    AAL = Σ(P_event × L_event) for all events
+                    
+                    Where:
+                    - P_event = Annual probability of event
+                    - L_event = Σ(Damage_i) for all properties i
+                    - Damage_i = Property_Value_i × MDR(v_max, building_type)
+                    - MDR = Mean Damage Ratio from wind speed
+                    
+                    Category Distribution (Current Trend):
+                    Cat 1: 35% | Cat 2: 26% | Cat 3: 21% | Cat 4: 13% | Cat 5: 5%
+                </div>
+                <p style="margin-top: 1rem; color: #8b949e;">
+                    Uses 10,000 synthetic tracks generated from historical data, with damage functions 
+                    calibrated to engineering studies and insurance claims.
+                </p>
+            </div>
+            
+            <div id="climate-os-methodology" class="methodology-content">
+                <h4 style="color: #A23B72; margin-bottom: 1rem;">Climate-OS Statistical Approach</h4>
+                <p>Climate-OS uses historical loss statistics and trend analysis:</p>
+                <div class="formula-box">
+                    AAL = Base_AAL × Trend_Factor × Location_Factor
+                    
+                    Where:
+                    - Base_AAL = Historical average (1980-2023)
+                    - Trend_Factor = (1 + annual_trend)^years
+                    - Location_Factor = Regional adjustment
+                    
+                    Statistical Parameters:
+                    - Mean annual events: 14.8 (Atlantic basin)
+                    - Trend: +1.4 storms per decade
+                    - Major hurricane trend: +8% per decade
+                </div>
+                <p style="margin-top: 1rem; color: #8b949e;">
+                    Based on 45 years of NOAA data with regression models for frequency and intensity trends.
+                </p>
+            </div>
+            
+            <div id="cbottle-methodology" class="methodology-content">
+                <h4 style="color: #4285F4; margin-bottom: 1rem;">C-bottle Property-Level Approach</h4>
+                <p>C-bottle calculates AAL using detailed property vulnerability:</p>
+                <div class="formula-box">
+                    AAL = Σ(Hazard_AAL × Vulnerability × Exposure)
+                    
+                    For each property:
+                    - Hazard_AAL = Local hurricane frequency × intensity
+                    - Vulnerability = f(construction, elevation, mitigation)
+                    - Exposure = Property value at risk
+                    
+                    Granular Factors:
+                    - Distance to coast (exponential decay)
+                    - Building age degradation
+                    - Local topography effects
+                </div>
+                <p style="margin-top: 1rem; color: #8b949e;">
+                    Incorporates building-specific factors and local mitigation measures for refined estimates.
+                </p>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Property-Level AAL Results (Current Trend)</h3>
+            <p style="margin-bottom: 1rem; color: #8b949e;">Physical damage AAL for sample properties (before insurance):</p>
+            
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Loan ID</th>
+                            <th>Property Value</th>
+                            <th>Location</th>
+                            <th>CLIMADA AAL</th>
+                            <th>Climate-OS AAL</th>
+                            <th>C-bottle AAL</th>
+                            <th>AAL % of Value</th>
+                            <th>Category Breakdown</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CRE001</td>
+                            <td class="number">$50,000,000</td>
+                            <td>Miami, FL</td>
+                            <td class="number">$625,000</td>
+                            <td class="number">$587,500</td>
+                            <td class="number">$612,500</td>
+                            <td class="number">1.25%</td>
+                            <td>Cat1: 30%, Cat2: 25%, Cat3: 20%, Cat4: 15%, Cat5: 10%</td>
+                        </tr>
+                        <tr>
+                            <td>CRE002</td>
+                            <td class="number">$75,000,000</td>
+                            <td>Miami, FL</td>
+                            <td class="number">$843,750</td>
+                            <td class="number">$806,250</td>
+                            <td class="number">$825,000</td>
+                            <td class="number">1.13%</td>
+                            <td>Cat1: 32%, Cat2: 26%, Cat3: 19%, Cat4: 14%, Cat5: 9%</td>
+                        </tr>
+                        <tr>
+                            <td>CRE003</td>
+                            <td class="number">$30,000,000</td>
+                            <td>New Orleans, LA</td>
+                            <td class="number">$450,000</td>
+                            <td class="number">$465,000</td>
+                            <td class="number">$480,000</td>
+                            <td class="number">1.50%</td>
+                            <td>Cat1: 28%, Cat2: 24%, Cat3: 22%, Cat4: 16%, Cat5: 10%</td>
+                        </tr>
+                        <tr>
+                            <td>CRE004</td>
+                            <td class="number">$120,000,000</td>
+                            <td>New York, NY</td>
+                            <td class="number">$360,000</td>
+                            <td class="number">$342,000</td>
+                            <td class="number">$348,000</td>
+                            <td class="number">0.30%</td>
+                            <td>Cat1: 45%, Cat2: 30%, Cat3: 15%, Cat4: 8%, Cat5: 2%</td>
+                        </tr>
+                        <tr>
+                            <td>CRE005</td>
+                            <td class="number">$95,000,000</td>
+                            <td>San Francisco, CA</td>
+                            <td class="number">$47,500</td>
+                            <td class="number">$42,750</td>
+                            <td class="number">$45,125</td>
+                            <td class="number">0.05%</td>
+                            <td>Cat1: 70%, Cat2: 20%, Cat3: 8%, Cat4: 2%, Cat5: 0%</td>
+                        </tr>
+                        <tr>
+                            <td>CRE006</td>
+                            <td class="number">$65,000,000</td>
+                            <td>Los Angeles, CA</td>
+                            <td class="number">$97,500</td>
+                            <td class="number">$91,000</td>
+                            <td class="number">$94,250</td>
+                            <td class="number">0.15%</td>
+                            <td>Cat1: 60%, Cat2: 25%, Cat3: 10%, Cat4: 4%, Cat5: 1%</td>
+                        </tr>
+                        <tr>
+                            <td>CRE007</td>
+                            <td class="number">$55,000,000</td>
+                            <td>Houston, TX</td>
+                            <td class="number">$522,500</td>
+                            <td class="number">$539,000</td>
+                            <td class="number">$533,500</td>
+                            <td class="number">0.95%</td>
+                            <td>Cat1: 35%, Cat2: 28%, Cat3: 20%, Cat4: 12%, Cat5: 5%</td>
+                        </tr>
+                        <tr>
+                            <td>CRE008</td>
+                            <td class="number">$88,000,000</td>
+                            <td>Los Angeles, CA</td>
+                            <td class="number">$132,000</td>
+                            <td class="number">$123,200</td>
+                            <td class="number">$127,600</td>
+                            <td class="number">0.15%</td>
+                            <td>Cat1: 60%, Cat2: 25%, Cat3: 10%, Cat4: 4%, Cat5: 1%</td>
+                        </tr>
+                        <tr>
+                            <td>CRE009</td>
+                            <td class="number">$110,000,000</td>
+                            <td>Chicago, IL</td>
+                            <td class="number">$55,000</td>
+                            <td class="number">$49,500</td>
+                            <td class="number">$52,250</td>
+                            <td class="number">0.05%</td>
+                            <td>Cat1: 80%, Cat2: 15%, Cat3: 4%, Cat4: 1%, Cat5: 0%</td>
+                        </tr>
+                        <tr>
+                            <td>CRE010</td>
+                            <td class="number">$42,000,000</td>
+                            <td>Fort Lauderdale, FL</td>
+                            <td class="number">$546,000</td>
+                            <td class="number">$529,200</td>
+                            <td class="number">$537,600</td>
+                            <td class="number">1.30%</td>
+                            <td>Cat1: 31%, Cat2: 26%, Cat3: 20%, Cat4: 14%, Cat5: 9%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Portfolio-Level AAL Summary</h3>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h4>CLIMADA</h4>
+                    <div class="summary-value climada-value">$4.28M</div>
+                    <div class="summary-label">Annual Expected Loss</div>
+                    <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #8b949e;">
+                        95% CI: $3.85M - $4.71M
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>Climate-OS</h4>
+                    <div class="summary-value climate-os-value">$4.11M</div>
+                    <div class="summary-label">Annual Expected Loss</div>
+                    <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #8b949e;">
+                        95% CI: $3.70M - $4.52M
+                    </div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>C-bottle</h4>
+                    <div class="summary-value cbottle-value">$4.19M</div>
+                    <div class="summary-label">Annual Expected Loss</div>
+                    <div style="margin-top: 0.5rem; font-size: 0.85rem; color: #8b949e;">
+                        95% CI: $3.77M - $4.61M
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-container">
+                <p style="text-align: center; color: #8b949e; line-height: 350px;">
+                    [AAL Distribution Chart - showing probability distribution of annual losses]
+                </p>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Hurricane Category Contribution to AAL</h3>
+            <p style="margin-bottom: 1rem; color: #8b949e;">Breakdown of AAL by hurricane category (Current Trend):</p>
+            
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h4>Category 1</h4>
+                    <div class="summary-value" style="color: #4CAF50;">18%</div>
+                    <div class="summary-label">High frequency, low damage</div>
+                </div>
+                <div class="summary-card">
+                    <h4>Category 2</h4>
+                    <div class="summary-value" style="color: #8BC34A;">22%</div>
+                    <div class="summary-label">Moderate frequency & damage</div>
+                </div>
+                <div class="summary-card">
+                    <h4>Category 3</h4>
+                    <div class="summary-value" style="color: #FFC107;">25%</div>
+                    <div class="summary-label">Major hurricane threshold</div>
+                </div>
+                <div class="summary-card">
+                    <h4>Category 4</h4>
+                    <div class="summary-value" style="color: #FF9800;">20%</div>
+                    <div class="summary-label">Low frequency, high damage</div>
+                </div>
+                <div class="summary-card">
+                    <h4>Category 5</h4>
+                    <div class="summary-value" style="color: #F44336;">15%</div>
+                    <div class="summary-label">Rare but catastrophic</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="step7-expected-loss.html" class="nav-button prev">← Step 7: Expected Loss</a>
+            <a href="step9-exceedance-curves.html" class="nav-button">Next: Exceedance Curves →</a>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="step11-sensitivity-analysis.html" class="nav-button" style="background: #ff7b72;">Sensitivity Analysis →</a>
+        </div>
+    </div>
+    
+    <script>
+        function showMethodology(framework) {
+            document.querySelectorAll('.methodology-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.methodology-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(`${framework}-methodology`).classList.add('active');
+            document.querySelector(`.methodology-tab.${framework}`).classList.add('active');
+        }
+        
+        function selectScenario(scenario) {
+            document.querySelectorAll('.scenario-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // In real implementation, this would update the data tables and charts
+            console.log('Selected scenario:', scenario);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensitivity Analysis - Climate Scenario Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 1.5rem 2rem;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #58a6ff;
+            font-size: 1.8rem;
+        }
+        
+        .progress-bar {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .progress-step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #30363d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .progress-step.active {
+            background: #58a6ff;
+            color: #0d1117;
+        }
+        
+        .progress-step.completed {
+            background: #238636;
+            color: white;
+        }
+        
+        .progress-step.sensitivity {
+            background: #ff7b72;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .step-header {
+            margin-bottom: 2rem;
+        }
+        
+        .step-title {
+            font-size: 2rem;
+            color: #f0f6fc;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-description {
+            color: #8b949e;
+            font-size: 1.1rem;
+        }
+        
+        .content-section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            color: #58a6ff;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .parameter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .parameter-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .parameter-name {
+            color: #f0f6fc;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .parameter-description {
+            color: #8b949e;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .parameter-range {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .range-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: #30363d;
+            border-radius: 3px;
+            outline: none;
+        }
+        
+        .range-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #58a6ff;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .range-value {
+            min-width: 80px;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            color: #79c0ff;
+            font-weight: bold;
+        }
+        
+        .impact-display {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #30363d;
+        }
+        
+        .impact-item {
+            text-align: center;
+        }
+        
+        .impact-framework {
+            font-size: 0.8rem;
+            color: #8b949e;
+            margin-bottom: 0.3rem;
+        }
+        
+        .impact-value {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+        
+        .climada-impact { color: #2196F3; }
+        .climate-os-impact { color: #A23B72; }
+        .cbottle-impact { color: #4285F4; }
+        
+        .sensitivity-chart {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 2rem;
+            height: 400px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #8b949e;
+        }
+        
+        .tornado-chart {
+            margin-top: 2rem;
+        }
+        
+        .tornado-item {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            align-items: center;
+        }
+        
+        .tornado-label {
+            text-align: right;
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+        
+        .tornado-bar-container {
+            position: relative;
+            height: 30px;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 4px;
+        }
+        
+        .tornado-bar {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+        
+        .tornado-bar.negative {
+            right: 50%;
+            background: linear-gradient(to left, #f85149, #da3633);
+        }
+        
+        .tornado-bar.positive {
+            left: 50%;
+            background: linear-gradient(to right, #238636, #2ea043);
+        }
+        
+        .tornado-center-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #58a6ff;
+        }
+        
+        .scenario-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .scenario-button {
+            padding: 0.5rem 1rem;
+            background: #30363d;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .scenario-button.active {
+            background: #1f6feb;
+            border-color: #1f6feb;
+            color: white;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .summary-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .summary-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+        
+        .summary-label {
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+        
+        .nav-button {
+            background: #238636;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .nav-button:hover {
+            background: #2ea043;
+        }
+        
+        .nav-button.prev {
+            background: #30363d;
+        }
+        
+        .nav-button.prev:hover {
+            background: #484f58;
+        }
+        
+        .info-box {
+            background: rgba(255, 123, 114, 0.1);
+            border: 1px solid #ff7b72;
+            border-radius: 6px;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .info-box h4 {
+            color: #ff7b72;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>Climate Scenario Analysis</h1>
+            <div class="progress-bar">
+                <div class="progress-step completed">1</div>
+                <div class="progress-step completed">2</div>
+                <div class="progress-step completed">3</div>
+                <div class="progress-step completed">4</div>
+                <div class="progress-step completed">5</div>
+                <div class="progress-step completed">6</div>
+                <div class="progress-step completed">7</div>
+                <div class="progress-step completed">8</div>
+                <div class="progress-step completed">9</div>
+                <div class="progress-step completed">10</div>
+                <div class="progress-step sensitivity">SA</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="step-header">
+            <h2 class="step-title">Sensitivity Analysis</h2>
+            <p class="step-description">
+                Analyze how Average Annual Loss (AAL) from physical hurricane damage changes with variations 
+                in key input parameters. Understand which factors have the greatest impact on portfolio risk.
+            </p>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Parameter Sensitivity Testing</h3>
+            <div class="info-box">
+                <h4>Interactive Analysis</h4>
+                <p>Adjust the sliders below to see how changes in each parameter affect the AAL calculations across all three frameworks. The baseline AAL represents physical hurricane damage before insurance coverage.</p>
+            </div>
+            
+            <div class="scenario-selector">
+                <button class="scenario-button active" onclick="selectScenario('current')">Current Trend</button>
+                <button class="scenario-button" onclick="selectScenario('2c')">2°C Warming</button>
+                <button class="scenario-button" onclick="selectScenario('4c')">4°C Warming</button>
+            </div>
+            
+            <div class="parameter-grid">
+                <div class="parameter-card">
+                    <h4 class="parameter-name">Hurricane Frequency</h4>
+                    <p class="parameter-description">Annual number of hurricanes affecting the portfolio region</p>
+                    <div class="parameter-range">
+                        <span>-50%</span>
+                        <input type="range" class="range-slider" id="frequency" min="-50" max="50" value="0" oninput="updateSensitivity('frequency', this.value)">
+                        <span>+50%</span>
+                        <span class="range-value" id="frequency-value">0%</span>
+                    </div>
+                    <div class="impact-display">
+                        <div class="impact-item">
+                            <div class="impact-framework">CLIMADA</div>
+                            <div class="impact-value climada-impact" id="frequency-climada">$4.28M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">Climate-OS</div>
+                            <div class="impact-value climate-os-impact" id="frequency-climate-os">$4.11M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">C-bottle</div>
+                            <div class="impact-value cbottle-impact" id="frequency-cbottle">$4.19M</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="parameter-card">
+                    <h4 class="parameter-name">Storm Intensity</h4>
+                    <p class="parameter-description">Average wind speed and central pressure of hurricanes</p>
+                    <div class="parameter-range">
+                        <span>-30%</span>
+                        <input type="range" class="range-slider" id="intensity" min="-30" max="30" value="0" oninput="updateSensitivity('intensity', this.value)">
+                        <span>+30%</span>
+                        <span class="range-value" id="intensity-value">0%</span>
+                    </div>
+                    <div class="impact-display">
+                        <div class="impact-item">
+                            <div class="impact-framework">CLIMADA</div>
+                            <div class="impact-value climada-impact" id="intensity-climada">$4.28M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">Climate-OS</div>
+                            <div class="impact-value climate-os-impact" id="intensity-climate-os">$4.11M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">C-bottle</div>
+                            <div class="impact-value cbottle-impact" id="intensity-cbottle">$4.19M</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="parameter-card">
+                    <h4 class="parameter-name">Damage Function</h4>
+                    <p class="parameter-description">Relationship between wind speed and property damage</p>
+                    <div class="parameter-range">
+                        <span>-25%</span>
+                        <input type="range" class="range-slider" id="damage" min="-25" max="25" value="0" oninput="updateSensitivity('damage', this.value)">
+                        <span>+25%</span>
+                        <span class="range-value" id="damage-value">0%</span>
+                    </div>
+                    <div class="impact-display">
+                        <div class="impact-item">
+                            <div class="impact-framework">CLIMADA</div>
+                            <div class="impact-value climada-impact" id="damage-climada">$4.28M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">Climate-OS</div>
+                            <div class="impact-value climate-os-impact" id="damage-climate-os">$4.11M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">C-bottle</div>
+                            <div class="impact-value cbottle-impact" id="damage-cbottle">$4.19M</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="parameter-card">
+                    <h4 class="parameter-name">Sea Surface Temperature</h4>
+                    <p class="parameter-description">Ocean temperature affecting hurricane formation and strength</p>
+                    <div class="parameter-range">
+                        <span>-2°C</span>
+                        <input type="range" class="range-slider" id="sst" min="-2" max="4" value="0" step="0.5" oninput="updateSensitivity('sst', this.value)">
+                        <span>+4°C</span>
+                        <span class="range-value" id="sst-value">0°C</span>
+                    </div>
+                    <div class="impact-display">
+                        <div class="impact-item">
+                            <div class="impact-framework">CLIMADA</div>
+                            <div class="impact-value climada-impact" id="sst-climada">$4.28M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">Climate-OS</div>
+                            <div class="impact-value climate-os-impact" id="sst-climate-os">$4.11M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">C-bottle</div>
+                            <div class="impact-value cbottle-impact" id="sst-cbottle">$4.19M</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="parameter-card">
+                    <h4 class="parameter-name">Building Vulnerability</h4>
+                    <p class="parameter-description">Property resistance to hurricane damage</p>
+                    <div class="parameter-range">
+                        <span>-40%</span>
+                        <input type="range" class="range-slider" id="vulnerability" min="-40" max="40" value="0" oninput="updateSensitivity('vulnerability', this.value)">
+                        <span>+40%</span>
+                        <span class="range-value" id="vulnerability-value">0%</span>
+                    </div>
+                    <div class="impact-display">
+                        <div class="impact-item">
+                            <div class="impact-framework">CLIMADA</div>
+                            <div class="impact-value climada-impact" id="vulnerability-climada">$4.28M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">Climate-OS</div>
+                            <div class="impact-value climate-os-impact" id="vulnerability-climate-os">$4.11M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">C-bottle</div>
+                            <div class="impact-value cbottle-impact" id="vulnerability-cbottle">$4.19M</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="parameter-card">
+                    <h4 class="parameter-name">Category Distribution</h4>
+                    <p class="parameter-description">Shift in hurricane category frequencies (more major hurricanes)</p>
+                    <div class="parameter-range">
+                        <span>Cat 1-2</span>
+                        <input type="range" class="range-slider" id="category" min="-50" max="50" value="0" oninput="updateSensitivity('category', this.value)">
+                        <span>Cat 4-5</span>
+                        <span class="range-value" id="category-value">Baseline</span>
+                    </div>
+                    <div class="impact-display">
+                        <div class="impact-item">
+                            <div class="impact-framework">CLIMADA</div>
+                            <div class="impact-value climada-impact" id="category-climada">$4.28M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">Climate-OS</div>
+                            <div class="impact-value climate-os-impact" id="category-climate-os">$4.11M</div>
+                        </div>
+                        <div class="impact-item">
+                            <div class="impact-framework">C-bottle</div>
+                            <div class="impact-value cbottle-impact" id="category-cbottle">$4.19M</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Tornado Diagram - Parameter Impact Ranking</h3>
+            <p style="margin-bottom: 1.5rem; color: #8b949e;">
+                Impact on portfolio AAL when each parameter varies from minimum to maximum range (baseline: Current Trend)
+            </p>
+            
+            <div class="tornado-chart">
+                <div class="tornado-item">
+                    <div class="tornado-label">Storm Intensity</div>
+                    <div class="tornado-bar-container">
+                        <div class="tornado-center-line"></div>
+                        <div class="tornado-bar negative" style="width: 35%;"></div>
+                        <div class="tornado-bar positive" style="width: 45%;"></div>
+                    </div>
+                </div>
+                
+                <div class="tornado-item">
+                    <div class="tornado-label">Hurricane Frequency</div>
+                    <div class="tornado-bar-container">
+                        <div class="tornado-center-line"></div>
+                        <div class="tornado-bar negative" style="width: 30%;"></div>
+                        <div class="tornado-bar positive" style="width: 40%;"></div>
+                    </div>
+                </div>
+                
+                <div class="tornado-item">
+                    <div class="tornado-label">Building Vulnerability</div>
+                    <div class="tornado-bar-container">
+                        <div class="tornado-center-line"></div>
+                        <div class="tornado-bar negative" style="width: 25%;"></div>
+                        <div class="tornado-bar positive" style="width: 35%;"></div>
+                    </div>
+                </div>
+                
+                <div class="tornado-item">
+                    <div class="tornado-label">Category Distribution</div>
+                    <div class="tornado-bar-container">
+                        <div class="tornado-center-line"></div>
+                        <div class="tornado-bar negative" style="width: 20%;"></div>
+                        <div class="tornado-bar positive" style="width: 30%;"></div>
+                    </div>
+                </div>
+                
+                <div class="tornado-item">
+                    <div class="tornado-label">Damage Function</div>
+                    <div class="tornado-bar-container">
+                        <div class="tornado-center-line"></div>
+                        <div class="tornado-bar negative" style="width: 15%;"></div>
+                        <div class="tornado-bar positive" style="width: 25%;"></div>
+                    </div>
+                </div>
+                
+                <div class="tornado-item">
+                    <div class="tornado-label">Sea Surface Temp</div>
+                    <div class="tornado-bar-container">
+                        <div class="tornado-center-line"></div>
+                        <div class="tornado-bar negative" style="width: 10%;"></div>
+                        <div class="tornado-bar positive" style="width: 20%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Key Insights</h3>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h4>Most Sensitive Parameter</h4>
+                    <div class="summary-value" style="color: #ff7b72;">Storm Intensity</div>
+                    <div class="summary-label">±30% change → ±45% AAL impact</div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>Framework Agreement</h4>
+                    <div class="summary-value" style="color: #58a6ff;">High</div>
+                    <div class="summary-label">All frameworks show similar sensitivity patterns</div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>Climate Impact</h4>
+                    <div class="summary-value" style="color: #f85149;">+85%</div>
+                    <div class="summary-label">AAL increase from current to 4°C scenario</div>
+                </div>
+                
+                <div class="summary-card">
+                    <h4>Mitigation Potential</h4>
+                    <div class="summary-value" style="color: #238636;">-40%</div>
+                    <div class="summary-label">AAL reduction with improved building standards</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Sensitivity Summary Chart</h3>
+            <div class="sensitivity-chart">
+                <p>[Interactive 3D surface plot showing AAL response to simultaneous changes in frequency and intensity]</p>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="step10-risk-metrics.html" class="nav-button prev">← Step 10: Risk Metrics</a>
+            <a href="climate-portfolio-analysis.html" class="nav-button">Back to Overview →</a>
+        </div>
+    </div>
+    
+    <script>
+        // Baseline AAL values by framework
+        const baselineAAL = {
+            climada: 4.28,
+            'climate-os': 4.11,
+            cbottle: 4.19
+        };
+        
+        // Sensitivity multipliers for each parameter and framework
+        const sensitivities = {
+            frequency: {
+                climada: 0.85,
+                'climate-os': 0.80,
+                cbottle: 0.82
+            },
+            intensity: {
+                climada: 1.5,
+                'climate-os': 1.4,
+                cbottle: 1.45
+            },
+            damage: {
+                climada: 1.0,
+                'climate-os': 0.9,
+                cbottle: 0.95
+            },
+            sst: {
+                climada: 0.15,
+                'climate-os': 0.18,
+                cbottle: 0.16
+            },
+            vulnerability: {
+                climada: 1.1,
+                'climate-os': 1.0,
+                cbottle: 1.2
+            },
+            category: {
+                climada: 0.8,
+                'climate-os': 0.85,
+                cbottle: 0.9
+            }
+        };
+        
+        function updateSensitivity(parameter, value) {
+            // Update displayed value
+            const valueElement = document.getElementById(`${parameter}-value`);
+            if (parameter === 'sst') {
+                valueElement.textContent = value >= 0 ? `+${value}°C` : `${value}°C`;
+            } else if (parameter === 'category') {
+                if (value < -25) {
+                    valueElement.textContent = 'More Cat 1-2';
+                } else if (value > 25) {
+                    valueElement.textContent = 'More Cat 4-5';
+                } else {
+                    valueElement.textContent = 'Baseline';
+                }
+            } else {
+                valueElement.textContent = value >= 0 ? `+${value}%` : `${value}%`;
+            }
+            
+            // Calculate new AAL values
+            const frameworks = ['climada', 'climate-os', 'cbottle'];
+            frameworks.forEach(framework => {
+                let multiplier = 1;
+                
+                if (parameter === 'sst') {
+                    // SST has a different scale
+                    multiplier = 1 + (value * sensitivities[parameter][framework] / 2);
+                } else {
+                    multiplier = 1 + (value / 100 * sensitivities[parameter][framework]);
+                }
+                
+                const newAAL = baselineAAL[framework] * multiplier;
+                const element = document.getElementById(`${parameter}-${framework}`);
+                element.textContent = `$${newAAL.toFixed(2)}M`;
+                
+                // Color code based on change
+                if (newAAL > baselineAAL[framework] * 1.1) {
+                    element.style.color = '#f85149';
+                } else if (newAAL < baselineAAL[framework] * 0.9) {
+                    element.style.color = '#238636';
+                } else {
+                    element.style.color = '';
+                }
+            });
+        }
+        
+        function selectScenario(scenario) {
+            document.querySelectorAll('.scenario-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update baseline values based on scenario
+            if (scenario === '2c') {
+                baselineAAL.climada = 5.57;
+                baselineAAL['climate-os'] = 5.34;
+                baselineAAL.cbottle = 5.45;
+            } else if (scenario === '4c') {
+                baselineAAL.climada = 7.91;
+                baselineAAL['climate-os'] = 7.60;
+                baselineAAL.cbottle = 7.75;
+            } else {
+                baselineAAL.climada = 4.28;
+                baselineAAL['climate-os'] = 4.11;
+                baselineAAL.cbottle = 4.19;
+            }
+            
+            // Reset all sliders and update values
+            document.querySelectorAll('.range-slider').forEach(slider => {
+                slider.value = 0;
+                updateSensitivity(slider.id, 0);
+            });
+        }
+    </script>
+</body>
+</html>

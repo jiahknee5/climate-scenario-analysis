@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step 1: Portfolio Data Ingestion - Climate Scenario Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 1.5rem 2rem;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            color: #58a6ff;
+            font-size: 1.8rem;
+        }
+        
+        .progress-bar {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        .progress-step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #30363d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .progress-step.active {
+            background: #58a6ff;
+            color: #0d1117;
+        }
+        
+        .progress-step.completed {
+            background: #238636;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .step-header {
+            margin-bottom: 2rem;
+        }
+        
+        .step-title {
+            font-size: 2rem;
+            color: #f0f6fc;
+            margin-bottom: 0.5rem;
+        }
+        
+        .step-description {
+            color: #8b949e;
+            font-size: 1.1rem;
+        }
+        
+        .content-section {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .section-title {
+            color: #58a6ff;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .methodology-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .methodology-tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            color: #8b949e;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .methodology-tab.active {
+            color: #f0f6fc;
+        }
+        
+        .methodology-tab.climada.active {
+            border-bottom-color: #2196F3;
+            color: #2196F3;
+        }
+        
+        .methodology-tab.climate-os.active {
+            border-bottom-color: #A23B72;
+            color: #A23B72;
+        }
+        
+        .methodology-tab.cbottle.active {
+            border-bottom-color: #4285F4;
+            color: #4285F4;
+        }
+        
+        .methodology-content {
+            display: none;
+        }
+        
+        .methodology-content.active {
+            display: block;
+        }
+        
+        .formula-box {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .data-table th {
+            background: #0d1117;
+            color: #58a6ff;
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 2px solid #30363d;
+        }
+        
+        .data-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .data-table tr:hover {
+            background: rgba(88, 166, 255, 0.05);
+        }
+        
+        .number {
+            font-family: 'Courier New', monospace;
+            color: #79c0ff;
+        }
+        
+        .comparison-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .comparison-card {
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+        
+        .comparison-card h4 {
+            margin-bottom: 1rem;
+        }
+        
+        .climada-card h4 { color: #2196F3; }
+        .climate-os-card h4 { color: #A23B72; }
+        .cbottle-card h4 { color: #4285F4; }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+        }
+        
+        .nav-button {
+            background: #238636;
+            color: white;
+            text-decoration: none;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .nav-button:hover {
+            background: #2ea043;
+        }
+        
+        .nav-button.prev {
+            background: #30363d;
+        }
+        
+        .nav-button.prev:hover {
+            background: #484f58;
+        }
+        
+        .download-button {
+            background: #1f6feb;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        
+        .download-button:hover {
+            background: #388bfd;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <h1>Climate Scenario Analysis</h1>
+            <div class="progress-bar">
+                <div class="progress-step active">1</div>
+                <div class="progress-step">2</div>
+                <div class="progress-step">3</div>
+                <div class="progress-step">4</div>
+                <div class="progress-step">5</div>
+                <div class="progress-step">6</div>
+                <div class="progress-step">7</div>
+                <div class="progress-step">8</div>
+                <div class="progress-step">9</div>
+                <div class="progress-step">10</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="step-header">
+            <h2 class="step-title">Step 1: Portfolio Data Ingestion</h2>
+            <p class="step-description">
+                Load and prepare loan portfolio data for climate risk analysis. This step involves ingesting 
+                loan-level data, geocoding property locations, and preparing the dataset for hazard mapping.
+            </p>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Data Requirements</h3>
+            <p>Each loan record must contain the following fields for comprehensive climate risk assessment:</p>
+            <ul style="margin: 1rem 0; padding-left: 2rem; color: #8b949e;">
+                <li><strong>Loan ID:</strong> Unique identifier for tracking</li>
+                <li><strong>Property Address:</strong> Full address for geocoding</li>
+                <li><strong>Property Value:</strong> Current market value</li>
+                <li><strong>Loan Amount:</strong> Outstanding balance</li>
+                <li><strong>LTV (Loan-to-Value):</strong> Risk indicator</li>
+                <li><strong>Current PD:</strong> Baseline probability of default</li>
+                <li><strong>Current LGD:</strong> Baseline loss given default</li>
+                <li><strong>Insurance Coverage:</strong> Percentage of property value covered</li>
+            </ul>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Framework Methodologies</h3>
+            <div class="methodology-tabs">
+                <button class="methodology-tab climada active" onclick="showMethodology('climada')">CLIMADA</button>
+                <button class="methodology-tab climate-os" onclick="showMethodology('climate-os')">Climate-OS</button>
+                <button class="methodology-tab cbottle" onclick="showMethodology('cbottle')">C-bottle</button>
+            </div>
+            
+            <div id="climada-methodology" class="methodology-content active">
+                <h4 style="color: #2196F3; margin-bottom: 1rem;">CLIMADA Approach</h4>
+                <p>CLIMADA requires precise geographic coordinates for physical hazard modeling:</p>
+                <div class="formula-box">
+                    Geocoding: Address → (latitude, longitude)
+                    Exposure Object: {
+                        value: property_value,
+                        deductible: loan_amount * 0.02,
+                        cover: property_value * insurance_coverage,
+                        category: property_type,
+                        geometry: Point(lon, lat)
+                    }
+                </div>
+                <p style="margin-top: 1rem; color: #8b949e;">
+                    CLIMADA uses the exposure data to calculate physical impacts using engineering-based 
+                    damage functions specific to each hazard type and building category.
+                </p>
+            </div>
+            
+            <div id="climate-os-methodology" class="methodology-content">
+                <h4 style="color: #A23B72; margin-bottom: 1rem;">Climate-OS Approach</h4>
+                <p>Climate-OS maps properties to statistical risk zones based on historical loss data:</p>
+                <div class="formula-box">
+                    Risk Zone = f(ZIP code, Property Type, Historical Losses)
+                    Base Risk Score = Σ(hazard_frequency × average_loss) for zone
+                    Adjusted Score = Base Risk × Property_Specific_Factors
+                </div>
+                <p style="margin-top: 1rem; color: #8b949e;">
+                    Uses regression models trained on 40+ years of insurance claims data to predict 
+                    future loss probabilities at the ZIP code level.
+                </p>
+            </div>
+            
+            <div id="cbottle-methodology" class="methodology-content">
+                <h4 style="color: #4285F4; margin-bottom: 1rem;">C-bottle Approach</h4>
+                <p>C-bottle performs detailed property-level analysis using building characteristics:</p>
+                <div class="formula-box">
+                    Property Risk = Base_Hazard_Exposure × 
+                                   Building_Vulnerability × 
+                                   Mitigation_Factor
+                    
+                    Where:
+                    - Building_Vulnerability = f(construction, age, elevation)
+                    - Mitigation_Factor = f(retrofits, defenses, maintenance)
+                </div>
+                <p style="margin-top: 1rem; color: #8b949e;">
+                    Integrates satellite imagery analysis and property records to assess individual 
+                    building vulnerability beyond just location-based risk.
+                </p>
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Sample Portfolio Data (Commercial Real Estate)</h3>
+            <p style="margin-bottom: 1rem; color: #8b949e;">First 10 loans from the portfolio after ingestion:</p>
+            
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Loan ID</th>
+                        <th>Property Address</th>
+                        <th>Property Value</th>
+                        <th>Loan Amount</th>
+                        <th>LTV</th>
+                        <th>Current PD</th>
+                        <th>Current LGD</th>
+                        <th>Insurance</th>
+                        <th>Lat</th>
+                        <th>Lon</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CRE001</td>
+                        <td>100 Park Ave, Miami, FL</td>
+                        <td class="number">$50,000,000</td>
+                        <td class="number">$35,000,000</td>
+                        <td class="number">70.0%</td>
+                        <td class="number">2.10%</td>
+                        <td class="number">35.0%</td>
+                        <td class="number">80.0%</td>
+                        <td class="number">25.7617</td>
+                        <td class="number">-80.1918</td>
+                    </tr>
+                    <tr>
+                        <td>CRE002</td>
+                        <td>450 Biscayne Blvd, Miami, FL</td>
+                        <td class="number">$75,000,000</td>
+                        <td class="number">$48,750,000</td>
+                        <td class="number">65.0%</td>
+                        <td class="number">1.85%</td>
+                        <td class="number">32.0%</td>
+                        <td class="number">85.0%</td>
+                        <td class="number">25.7867</td>
+                        <td class="number">-80.1868</td>
+                    </tr>
+                    <tr>
+                        <td>CRE003</td>
+                        <td>200 Canal St, New Orleans, LA</td>
+                        <td class="number">$30,000,000</td>
+                        <td class="number">$21,000,000</td>
+                        <td class="number">70.0%</td>
+                        <td class="number">2.50%</td>
+                        <td class="number">38.0%</td>
+                        <td class="number">75.0%</td>
+                        <td class="number">29.9511</td>
+                        <td class="number">-90.0715</td>
+                    </tr>
+                    <tr>
+                        <td>CRE004</td>
+                        <td>1500 Broadway, New York, NY</td>
+                        <td class="number">$120,000,000</td>
+                        <td class="number">$72,000,000</td>
+                        <td class="number">60.0%</td>
+                        <td class="number">1.50%</td>
+                        <td class="number">30.0%</td>
+                        <td class="number">90.0%</td>
+                        <td class="number">40.7579</td>
+                        <td class="number">-73.9855</td>
+                    </tr>
+                    <tr>
+                        <td>CRE005</td>
+                        <td>800 Market St, San Francisco, CA</td>
+                        <td class="number">$95,000,000</td>
+                        <td class="number">$66,500,000</td>
+                        <td class="number">70.0%</td>
+                        <td class="number">1.95%</td>
+                        <td class="number">33.0%</td>
+                        <td class="number">85.0%</td>
+                        <td class="number">37.7849</td>
+                        <td class="number">-122.4064</td>
+                    </tr>
+                    <tr>
+                        <td>CRE006</td>
+                        <td>5900 Wilshire Blvd, Los Angeles, CA</td>
+                        <td class="number">$65,000,000</td>
+                        <td class="number">$45,500,000</td>
+                        <td class="number">70.0%</td>
+                        <td class="number">2.25%</td>
+                        <td class="number">36.0%</td>
+                        <td class="number">80.0%</td>
+                        <td class="number">34.0623</td>
+                        <td class="number">-118.3569</td>
+                    </tr>
+                    <tr>
+                        <td>CRE007</td>
+                        <td>1000 Louisiana St, Houston, TX</td>
+                        <td class="number">$55,000,000</td>
+                        <td class="number">$35,750,000</td>
+                        <td class="number">65.0%</td>
+                        <td class="number">2.35%</td>
+                        <td class="number">37.0%</td>
+                        <td class="number">75.0%</td>
+                        <td class="number">29.7604</td>
+                        <td class="number">-95.3698</td>
+                    </tr>
+                    <tr>
+                        <td>CRE008</td>
+                        <td>300 S Grand Ave, Los Angeles, CA</td>
+                        <td class="number">$88,000,000</td>
+                        <td class="number">$61,600,000</td>
+                        <td class="number">70.0%</td>
+                        <td class="number">2.00%</td>
+                        <td class="number">34.0%</td>
+                        <td class="number">85.0%</td>
+                        <td class="number">34.0522</td>
+                        <td class="number">-118.2512</td>
+                    </tr>
+                    <tr>
+                        <td>CRE009</td>
+                        <td>233 S Wacker Dr, Chicago, IL</td>
+                        <td class="number">$110,000,000</td>
+                        <td class="number">$71,500,000</td>
+                        <td class="number">65.0%</td>
+                        <td class="number">1.75%</td>
+                        <td class="number">31.0%</td>
+                        <td class="number">90.0%</td>
+                        <td class="number">41.8789</td>
+                        <td class="number">-87.6359</td>
+                    </tr>
+                    <tr>
+                        <td>CRE010</td>
+                        <td>401 E Las Olas Blvd, Fort Lauderdale, FL</td>
+                        <td class="number">$42,000,000</td>
+                        <td class="number">$29,400,000</td>
+                        <td class="number">70.0%</td>
+                        <td class="number">2.45%</td>
+                        <td class="number">38.0%</td>
+                        <td class="number">80.0%</td>
+                        <td class="number">26.1201</td>
+                        <td class="number">-80.1302</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <button class="download-button" onclick="downloadCSV()">Download Full Portfolio CSV</button>
+        </div>
+        
+        <div class="content-section">
+            <h3 class="section-title">Data Validation & Framework Comparison</h3>
+            <div class="comparison-section">
+                <div class="comparison-card climada-card">
+                    <h4>CLIMADA Requirements</h4>
+                    <ul style="list-style: none; font-size: 0.9rem; color: #8b949e;">
+                        <li>✓ Precise coordinates (±0.001°)</li>
+                        <li>✓ Building type classification</li>
+                        <li>✓ Construction year</li>
+                        <li>✓ Number of floors</li>
+                        <li>✓ Occupancy type</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        <strong>Data Quality:</strong> 98% geocoding success
+                    </p>
+                </div>
+                
+                <div class="comparison-card climate-os-card">
+                    <h4>Climate-OS Requirements</h4>
+                    <ul style="list-style: none; font-size: 0.9rem; color: #8b949e;">
+                        <li>✓ ZIP code (5-digit)</li>
+                        <li>✓ Property type</li>
+                        <li>✓ Historical loss data</li>
+                        <li>✓ Market segment</li>
+                        <li>○ Optional: FEMA zone</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        <strong>Coverage:</strong> 100% ZIP match
+                    </p>
+                </div>
+                
+                <div class="comparison-card cbottle-card">
+                    <h4>C-bottle Requirements</h4>
+                    <ul style="list-style: none; font-size: 0.9rem; color: #8b949e;">
+                        <li>✓ Street address</li>
+                        <li>✓ Building characteristics</li>
+                        <li>✓ Elevation data</li>
+                        <li>✓ Distance to coast</li>
+                        <li>✓ Local mitigation</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        <strong>Enhancement:</strong> 95% enriched
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <a href="climate-portfolio-analysis.html" class="nav-button prev">← Overview</a>
+            <a href="step2-hazard-mapping.html" class="nav-button">Next: Hazard Mapping →</a>
+        </div>
+    </div>
+    
+    <script>
+        function showMethodology(framework) {
+            // Hide all methodology content
+            document.querySelectorAll('.methodology-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.methodology-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected methodology
+            document.getElementById(`${framework}-methodology`).classList.add('active');
+            document.querySelector(`.methodology-tab.${framework}`).classList.add('active');
+        }
+        
+        function downloadCSV() {
+            // In real implementation, this would download the actual portfolio data
+            alert('Downloading portfolio data as CSV...');
+        }
+    </script>
+</body>
+</html>
