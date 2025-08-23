@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-link {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .test-link:hover {
+            background: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Link Test Page</h1>
+    <p>Testing all framework application links:</p>
+    
+    <a href="climada-hurricane-analysis.html" class="test-link" target="_blank">Test CLIMADA Link</a>
+    <a href="climate-os-statistical.html" class="test-link" target="_blank">Test Climate-OS Link</a>
+    <a href="cbottle-risk-assessment.html" class="test-link" target="_blank">Test C-bottle Link</a>
+    <a href="framework-comparison.html" class="test-link" target="_blank">Test Comparison Link</a>
+    <a href="index.html" class="test-link" target="_blank">Test Index Link</a>
+    
+    <h2>File Check</h2>
+    <p>Checking if files exist by attempting to link to them:</p>
+    
+    <script>
+        // Test if files exist
+        const files = [
+            'climada-hurricane-analysis.html',
+            'climate-os-statistical.html', 
+            'cbottle-risk-assessment.html',
+            'framework-comparison.html',
+            'index.html'
+        ];
+        
+        console.log('Testing file accessibility...');
+        files.forEach(file => {
+            console.log(`Checking: ${file}`);
+        });
+        
+        // Add click handlers to log clicks
+        document.querySelectorAll('.test-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                console.log(`Clicked link to: ${this.href}`);
+                console.log(`Target file: ${this.getAttribute('href')}`);
+            });
+        });
+    </script>
+</body>
+</html>

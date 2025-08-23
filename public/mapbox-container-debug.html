@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Mapbox Container Debug</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css" rel="stylesheet">
+    <style>
+        body { 
+            margin: 0; 
+            padding: 20px; 
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: white;
+        }
+        
+        .test-container {
+            margin: 20px 0;
+            border: 2px solid #00ff00;
+            padding: 10px;
+        }
+        
+        /* Test 1: Simple container */
+        #map-simple { 
+            width: 800px; 
+            height: 400px; 
+            border: 2px solid red;
+            background: yellow;
+        }
+        
+        /* Test 2: CLIMADA-like grid container */
+        .grid-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 1rem;
+            height: 500px;
+        }
+        
+        .controls-panel {
+            background: #2E3440;
+            border: 1px solid #4C566A;
+            border-radius: 12px;
+            padding: 1rem;
+        }
+        
+        .map-container {
+            background: #2E3440;
+            border: 1px solid #4C566A;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .map-header {
+            background: rgba(33, 150, 243, 0.1);
+            padding: 1rem;
+            border-bottom: 1px solid #4C566A;
+        }
+        
+        .climada-map {
+            width: 100%;
+            height: calc(100% - 80px);
+            border: 3px solid #ff00ff; /* Debug border */
+        }
+        
+        /* Test 3: Flex container */
+        .flex-container {
+            display: flex;
+            height: 400px;
+            gap: 20px;
+        }
+        
+        .flex-map {
+            flex: 1;
+            border: 2px solid #00ffff;
+        }
+        
+        .debug-info {
+            background: #333;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #0ff;
+        }
+        
+        .error {
+            color: #ff4444;
+        }
+        
+        .success {
+            color: #44ff44;
+        }
+    </style>
+</head>
+<body>
+    <h1>🗺️ Mapbox Container Debug Tests</h1>
+    
+    <div class="debug-info">
+        <h3>Debug Information:</h3>
+        <div id="debug-output">Initializing...</div>
+    </div>
+
+    <!-- Test 1: Simple Container -->
+    <div class="test-container">
+        <h2>Test 1: Simple Container (Working Baseline)</h2>
+        <div id="map-simple"></div>
+        <div id="status-simple">Status: Initializing...</div>
+    </div>
+
+    <!-- Test 2: CLIMADA-like Grid Container -->
+    <div class="test-container">
+        <h2>Test 2: CLIMADA Grid Layout</h2>
+        <div class="grid-container">
+            <div class="controls-panel">
+                <h3>Controls Panel</h3>
+                <p>This simulates the CLIMADA controls</p>
+            </div>
+            <div class="map-container">
+                <div class="map-header">
+                    <h4>CLIMADA Map Test</h4>
+                </div>
+                <div id="map-grid" class="climada-map"></div>
+            </div>
+        </div>
+        <div id="status-grid">Status: Initializing...</div>
+    </div>
+
+    <!-- Test 3: Flex Container -->
+    <div class="test-container">
+        <h2>Test 3: Flex Layout</h2>
+        <div class="flex-container">
+            <div id="map-flex" class="flex-map"></div>
+        </div>
+        <div id="status-flex">Status: Initializing...</div>
+    </div>
+
+    <div class="debug-info">
+        <h3>Console Output:</h3>
+        <div id="console-output"></div>
+    </div>
+
+    <script>
+        const debugDiv = document.getElementById('debug-output');
+        const consoleDiv = document.getElementById('console-output');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toISOString().substr(11, 8);
+            const fullMessage = `[${timestamp}] ${message}`;
+            console.log(fullMessage);
+            
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            consoleDiv.innerHTML += `<div class="${className}">${fullMessage}</div>`;
+            consoleDiv.scrollTop = consoleDiv.scrollHeight;
+        }
+        
+        function updateDebug(info) {
+            debugDiv.innerHTML = info;
+        }
+        
+        function updateStatus(containerId, status) {
+            const statusEl = document.getElementById(`status-${containerId}`);
+            if (statusEl) {
+                statusEl.innerHTML = `Status: ${status}`;
+            }
+        }
+        
+        // Check Mapbox availability
+        updateDebug(`
+            <strong>Environment Check:</strong><br>
+            Mapbox GL available: ${typeof mapboxgl !== 'undefined'}<br>
+            User Agent: ${navigator.userAgent}<br>
+            WebGL Support: ${checkWebGLSupport()}<br>
+            Screen: ${screen.width}x${screen.height}
+        `);
+        
+        function checkWebGLSupport() {
+            try {
+                const canvas = document.createElement('canvas');
+                return !!(window.WebGLRenderingContext && canvas.getContext('webgl'));
+            } catch (e) {
+                return false;
+            }
+        }
+        
+        if (typeof mapboxgl === 'undefined') {
+            log('❌ ERROR: Mapbox GL JS not loaded', 'error');
+            updateDebug('❌ FATAL: Mapbox GL JS not loaded');
+        } else {
+            log(`✅ Mapbox GL JS loaded, version: ${mapboxgl.version}`, 'success');
+            
+            // Set token
+            mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+            log('✅ Token set', 'success');
+            
+            // Test container dimensions before creating maps
+            setTimeout(() => {
+                checkContainerDimensions();
+                createTestMaps();
+            }, 100);
+        }
+        
+        function checkContainerDimensions() {
+            const containers = ['map-simple', 'map-grid', 'map-flex'];
+            
+            containers.forEach(id => {
+                const container = document.getElementById(id);
+                if (container) {
+                    const rect = container.getBoundingClientRect();
+                    log(`📐 Container ${id}: ${rect.width}x${rect.height} (computed: ${getComputedStyle(container).width} x ${getComputedStyle(container).height})`);
+                    
+                    if (rect.width === 0 || rect.height === 0) {
+                        log(`⚠️ WARNING: Container ${id} has zero dimensions!`, 'error');
+                    }
+                }
+            });
+        }
+        
+        function createTestMaps() {
+            // Test 1: Simple container
+            createMap('map-simple', 'simple');
+            
+            // Test 2: Grid container (like CLIMADA)
+            setTimeout(() => createMap('map-grid', 'grid'), 500);
+            
+            // Test 3: Flex container
+            setTimeout(() => createMap('map-flex', 'flex'), 1000);
+        }
+        
+        function createMap(containerId, testType) {
+            try {
+                log(`🗺️ Creating map for ${containerId} (${testType} test)...`);
+                updateStatus(testType, 'Creating map...');
+                
+                const container = document.getElementById(containerId);
+                if (!container) {
+                    log(`❌ Container ${containerId} not found`, 'error');
+                    updateStatus(testType, 'ERROR: Container not found');
+                    return;
+                }
+                
+                const rect = container.getBoundingClientRect();
+                log(`📐 Pre-creation dimensions: ${rect.width}x${rect.height}`);
+                
+                const map = new mapboxgl.Map({
+                    container: containerId,
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-74.5, 40],
+                    zoom: 9,
+                    attributionControl: false
+                });
+                
+                log(`✅ Map object created for ${containerId}`, 'success');
+                updateStatus(testType, 'Map object created, waiting for load...');
+                
+                map.on('load', () => {
+                    log(`🎉 Map ${containerId} loaded successfully!`, 'success');
+                    updateStatus(testType, '✅ SUCCESS - Map loaded and rendering');
+                    
+                    // Add a test marker
+                    new mapboxgl.Marker({ color: '#ff0000' })
+                        .setLngLat([-74.5, 40])
+                        .addTo(map);
+                    
+                    log(`📍 Marker added to ${containerId}`, 'success');
+                });
+                
+                map.on('error', (e) => {
+                    log(`❌ Map ${containerId} error: ${JSON.stringify(e.error)}`, 'error');
+                    updateStatus(testType, `❌ ERROR: ${e.error?.message || 'Unknown error'}`);
+                });
+                
+                map.on('sourcedata', (e) => {
+                    if (e.isSourceLoaded && e.sourceId) {
+                        log(`📊 Source loaded for ${containerId}: ${e.sourceId}`);
+                    }
+                });
+                
+                map.on('data', (e) => {
+                    if (e.type === 'style') {
+                        log(`🎨 Style loaded for ${containerId}`);
+                    }
+                });
+                
+                // Timeout check
+                setTimeout(() => {
+                    if (!map.isStyleLoaded()) {
+                        log(`⏰ Timeout: Map ${containerId} still loading after 10 seconds`, 'error');
+                        updateStatus(testType, '⏰ TIMEOUT - Map did not load in 10 seconds');
+                    }
+                }, 10000);
+                
+            } catch (error) {
+                log(`💥 Exception creating map ${containerId}: ${error.message}`, 'error');
+                updateStatus(testType, `💥 EXCEPTION: ${error.message}`);
+            }
+        }
+        
+        // Additional debug: Check for CSP issues
+        window.addEventListener('error', (e) => {
+            log(`🚨 Global error: ${e.message} at ${e.filename}:${e.lineno}`, 'error');
+        });
+        
+        // Check for network issues
+        window.addEventListener('offline', () => {
+            log('🌐 Network went offline', 'error');
+        });
+        
+        window.addEventListener('online', () => {
+            log('🌐 Network back online', 'success');
+        });
+        
+        // Monitor for any blocked requests
+        if ('serviceWorker' in navigator) {
+            log('🔧 Service Worker support detected');
+        }
+        
+        // Final check after everything loads
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                log('🏁 Page fully loaded, running final checks...');
+                checkContainerDimensions();
+                
+                // Check if any maps are actually rendering
+                const canvases = document.querySelectorAll('canvas');
+                log(`🖼️ Found ${canvases.length} canvas elements on page`);
+                
+                canvases.forEach((canvas, index) => {
+                    log(`Canvas ${index}: ${canvas.width}x${canvas.height}, parent: ${canvas.parentElement?.id || 'unknown'}`);
+                });
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

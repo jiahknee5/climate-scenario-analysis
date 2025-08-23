@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal CLIMADA Test</title>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin: 0; padding: 20px; background: #000; color: #fff; }
+        .test-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 400px; }
+        .map { width: 100%; height: 100%; border: 1px solid #fff; }
+        .status { margin: 10px 0; font-family: monospace; }
+    </style>
+</head>
+<body>
+    <h1>Minimal CLIMADA Dual-Map Test</h1>
+    <div class="status" id="status">Loading...</div>
+    
+    <div class="test-grid">
+        <div id="map1" class="map"></div>
+        <div id="map2" class="map"></div>
+    </div>
+
+    <script>
+        const status = document.getElementById('status');
+        
+        function log(msg) {
+            status.innerHTML += '<br>' + msg;
+            console.log(msg);
+        }
+
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+        
+        log('Token set: ' + (mapboxgl.accessToken ? 'YES' : 'NO'));
+        log('Mapbox version: ' + mapboxgl.version);
+        
+        try {
+            const map1 = new mapboxgl.Map({
+                container: 'map1',
+                style: 'mapbox://styles/mapbox/dark-v11',
+                center: [-74, 40],
+                zoom: 8
+            });
+            
+            const map2 = new mapboxgl.Map({
+                container: 'map2',
+                style: 'mapbox://styles/mapbox/dark-v11',
+                center: [-74, 40],
+                zoom: 8
+            });
+            
+            log('Maps created successfully');
+            
+            map1.on('load', () => {
+                log('Map 1 loaded');
+                new mapboxgl.Marker().setLngLat([-74, 40]).addTo(map1);
+            });
+            
+            map2.on('load', () => {
+                log('Map 2 loaded');
+                new mapboxgl.Marker().setLngLat([-74, 40]).addTo(map2);
+            });
+            
+            map1.on('error', (e) => log('Map 1 error: ' + e.error.message));
+            map2.on('error', (e) => log('Map 2 error: ' + e.error.message));
+            
+        } catch (error) {
+            log('ERROR: ' + error.message);
+        }
+    </script>
+</body>
+</html>

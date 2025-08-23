@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Deployment Check</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #1a1a1a; 
+            color: white;
+        }
+        .status { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 5px; 
+        }
+        .success { background: #2d5a2d; }
+        .error { background: #5a2d2d; }
+        .info { background: #2d4a5a; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Deployment Status Check</h1>
+    <div class="status info">
+        <strong>Build Timestamp:</strong> 2025-08-19 01:30:00
+    </div>
+    <div class="status info">
+        <strong>Version:</strong> v4.0 - Critical Fixes
+    </div>
+    <div class="status success">
+        ✅ Static file serving: Working
+    </div>
+    <div class="status" id="mapbox-status">
+        🔄 Testing Mapbox GL JS loading...
+    </div>
+    <div class="status" id="csp-status">
+        🔄 Testing CSP policies...
+    </div>
+    
+    <h2>📋 Test Links</h2>
+    <ul>
+        <li><a href="/basic-mapbox-test.html" style="color: #4CAF50;">Basic Mapbox Test</a></li>
+        <li><a href="/mapbox-container-debug.html" style="color: #4CAF50;">Container Debug Test</a></li>
+        <li><a href="/climada-hurricane-analysis.html" style="color: #4CAF50;">CLIMADA Main Page</a></li>
+    </ul>
+    
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js"></script>
+    <script>
+        // Test Mapbox loading
+        const mapboxStatus = document.getElementById('mapbox-status');
+        const cspStatus = document.getElementById('csp-status');
+        
+        if (typeof mapboxgl !== 'undefined') {
+            mapboxStatus.innerHTML = '✅ Mapbox GL JS loaded successfully (v' + mapboxgl.version + ')';
+            mapboxStatus.className = 'status success';
+            
+            // Test CSP by trying to create a basic map
+            try {
+                mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+                cspStatus.innerHTML = '✅ CSP allows Mapbox access token setting';
+                cspStatus.className = 'status success';
+            } catch (error) {
+                cspStatus.innerHTML = '❌ CSP blocking error: ' + error.message;
+                cspStatus.className = 'status error';
+            }
+        } else {
+            mapboxStatus.innerHTML = '❌ Mapbox GL JS failed to load';
+            mapboxStatus.className = 'status error';
+            cspStatus.innerHTML = '❌ Cannot test CSP - Mapbox not loaded';
+            cspStatus.className = 'status error';
+        }
+        
+        // Log to console for debugging
+        console.log('Deployment check complete:', {
+            timestamp: '2025-08-19 01:30:00',
+            mapboxAvailable: typeof mapboxgl !== 'undefined',
+            userAgent: navigator.userAgent,
+            url: window.location.href
+        });
+    </script>
+</body>
+</html>

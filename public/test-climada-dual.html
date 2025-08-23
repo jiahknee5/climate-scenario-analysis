@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test CLIMADA Dual-Map</title>
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; }
+        .test-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 500px; }
+        .map { width: 100%; height: 100%; border: 1px solid #ccc; }
+        .loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        .controls { margin-bottom: 20px; }
+        button { margin: 5px; padding: 10px 15px; }
+    </style>
+</head>
+<body>
+    <h1>CLIMADA Dual-Map Test</h1>
+    
+    <div class="controls">
+        <button onclick="testMaps()">Test Maps</button>
+        <button onclick="addTestData()">Add Test Data</button>
+        <button onclick="clearMaps()">Clear Maps</button>
+    </div>
+    
+    <div class="test-container">
+        <div>
+            <h3>Map 1</h3>
+            <div id="map1" class="map">
+                <div id="loading1" class="loading">Loading Map 1...</div>
+            </div>
+        </div>
+        <div>
+            <h3>Map 2</h3>
+            <div id="map2" class="map">
+                <div id="loading2" class="loading">Loading Map 2...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="status" style="margin-top: 20px; padding: 10px; background: #f0f0f0;"></div>
+
+    <script>
+        // Mapbox access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+
+        let map1, map2;
+        
+        function updateStatus(message) {
+            document.getElementById('status').innerHTML += '<div>' + new Date().toLocaleTimeString() + ': ' + message + '</div>';
+        }
+
+        // Initialize maps
+        function initMaps() {
+            updateStatus('Initializing maps...');
+            
+            try {
+                map1 = new mapboxgl.Map({
+                    container: 'map1',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                map2 = new mapboxgl.Map({
+                    container: 'map2',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                map1.on('load', () => {
+                    document.getElementById('loading1').style.display = 'none';
+                    updateStatus('Map 1 loaded successfully');
+                });
+                
+                map2.on('load', () => {
+                    document.getElementById('loading2').style.display = 'none';
+                    updateStatus('Map 2 loaded successfully');
+                });
+                
+                map1.on('error', (e) => {
+                    updateStatus('Map 1 error: ' + e.error.message);
+                });
+                
+                map2.on('error', (e) => {
+                    updateStatus('Map 2 error: ' + e.error.message);
+                });
+                
+                updateStatus('Maps initialized');
+                
+            } catch (error) {
+                updateStatus('Error initializing maps: ' + error.message);
+            }
+        }
+        
+        function testMaps() {
+            updateStatus('Testing map functionality...');
+            if (map1 && map2) {
+                updateStatus('Both maps are available');
+                updateStatus('Map 1 center: ' + JSON.stringify(map1.getCenter()));
+                updateStatus('Map 2 center: ' + JSON.stringify(map2.getCenter()));
+            } else {
+                updateStatus('Maps not properly initialized');
+            }
+        }
+        
+        function addTestData() {
+            updateStatus('Adding test hurricane data...');
+            
+            if (!map1 || !map2) {
+                updateStatus('Maps not ready');
+                return;
+            }
+            
+            const testTrack = {
+                type: 'Feature',
+                geometry: {
+                    type: 'LineString',
+                    coordinates: [[-80, 20], [-78, 22], [-76, 24], [-74, 26]]
+                },
+                properties: {
+                    name: 'Test Hurricane'
+                }
+            };
+            
+            try {
+                // Add to map 1
+                map1.addSource('test-track-1', {
+                    type: 'geojson',
+                    data: testTrack
+                });
+                
+                map1.addLayer({
+                    id: 'test-track-1',
+                    type: 'line',
+                    source: 'test-track-1',
+                    paint: {
+                        'line-color': '#ff0000',
+                        'line-width': 3
+                    }
+                });
+                
+                // Add to map 2
+                map2.addSource('test-track-2', {
+                    type: 'geojson',
+                    data: testTrack
+                });
+                
+                map2.addLayer({
+                    id: 'test-track-2',
+                    type: 'line',
+                    source: 'test-track-2',
+                    paint: {
+                        'line-color': '#0000ff',
+                        'line-width': 3
+                    }
+                });
+                
+                updateStatus('Test data added successfully');
+                
+            } catch (error) {
+                updateStatus('Error adding test data: ' + error.message);
+            }
+        }
+        
+        function clearMaps() {
+            updateStatus('Clearing maps...');
+            try {
+                if (map1) {
+                    if (map1.getSource('test-track-1')) {
+                        map1.removeLayer('test-track-1');
+                        map1.removeSource('test-track-1');
+                    }
+                }
+                if (map2) {
+                    if (map2.getSource('test-track-2')) {
+                        map2.removeLayer('test-track-2');
+                        map2.removeSource('test-track-2');
+                    }
+                }
+                updateStatus('Maps cleared');
+            } catch (error) {
+                updateStatus('Error clearing maps: ' + error.message);
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStatus('Page loaded, initializing...');
+            initMaps();
+        });
+    </script>
+</body>
+</html>

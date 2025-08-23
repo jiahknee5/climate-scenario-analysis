@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Dual-Map Validation Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin: 0;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .test-section {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 12px;
+            padding: 25px;
+        }
+        
+        .test-section h2 {
+            color: #495057;
+            margin: 0 0 20px 0;
+            font-size: 1.6em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .framework-links {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .test-link {
+            display: block;
+            padding: 15px 20px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .test-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .test-link.climada {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+        }
+        
+        .test-link.climate-os {
+            background: linear-gradient(45deg, #A23B72, #8B2559);
+        }
+        
+        .test-link.cbottle {
+            background: linear-gradient(45deg, #4285F4, #3367D6);
+        }
+        
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .status-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-card h3 {
+            margin: 0 0 10px 0;
+            color: #495057;
+            font-size: 1.1em;
+        }
+        
+        .status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            background: #6c757d;
+        }
+        
+        .status-indicator.loading {
+            background: #ffc107;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .status-indicator.success {
+            background: #28a745;
+        }
+        
+        .status-indicator.error {
+            background: #dc3545;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .test-controls {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+        }
+        
+        .btn-success {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(45deg, #ffc107, #e0a800);
+            color: #212529;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .results-section {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .test-result {
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            border-left: 4px solid;
+        }
+        
+        .test-result.info {
+            background: #cce7ff;
+            color: #004085;
+            border-left-color: #007bff;
+        }
+        
+        .test-result.success {
+            background: #d4edda;
+            color: #155724;
+            border-left-color: #28a745;
+        }
+        
+        .test-result.warning {
+            background: #fff3cd;
+            color: #856404;
+            border-left-color: #ffc107;
+        }
+        
+        .test-result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="header">
+            <h1>🚀 Quick Dual-Map Validation Test</h1>
+            <p>Comprehensive validation suite for CLIMADA and Climate-OS dual-map implementations</p>
+        </div>
+        
+        <!-- Status Overview -->
+        <div class="status-grid">
+            <div class="status-card">
+                <h3>CLIMADA Dual-Map</h3>
+                <div class="status-indicator" id="climada-status"></div>
+                <div id="climada-status-text">Not Tested</div>
+            </div>
+            <div class="status-card">
+                <h3>Climate-OS Dual-Map</h3>
+                <div class="status-indicator" id="climate-os-status"></div>
+                <div id="climate-os-status-text">Not Tested</div>
+            </div>
+            <div class="status-card">
+                <h3>C-bottle Reference</h3>
+                <div class="status-indicator" id="cbottle-status"></div>
+                <div id="cbottle-status-text">Not Tested</div>
+            </div>
+            <div class="status-card">
+                <h3>Overall Score</h3>
+                <div class="status-indicator" id="overall-status"></div>
+                <div id="overall-score">0%</div>
+            </div>
+        </div>
+        
+        <div class="test-grid">
+            <!-- Quick Links -->
+            <div class="test-section">
+                <h2>🔗 Framework Links</h2>
+                
+                <div class="framework-links">
+                    <a href="working-dual-climada.html" class="test-link climada" target="_blank">
+                        CLIMADA Dual-Map
+                    </a>
+                    <a href="test-climada-dual-functionality.html" class="test-link climada" target="_blank">
+                        CLIMADA Tests
+                    </a>
+                    <a href="working-dual-climate-os.html" class="test-link climate-os" target="_blank">
+                        Climate-OS Dual-Map
+                    </a>
+                    <a href="test-climate-os-dual-functionality.html" class="test-link climate-os" target="_blank">
+                        Climate-OS Tests
+                    </a>
+                    <a href="cbottle-scenario-analysis.html" class="test-link cbottle" target="_blank">
+                        C-bottle Reference
+                    </a>
+                    <a href="test-framework/test-runner.html" class="test-link" target="_blank">
+                        Full Test Suite
+                    </a>
+                </div>
+                
+                <div class="test-controls">
+                    <button class="btn btn-primary" onclick="runQuickValidation()">🚀 Run Quick Validation</button>
+                    <button class="btn btn-success" onclick="runDeepTest()">🔬 Run Deep Tests</button>
+                    <button class="btn btn-warning" onclick="runPerformanceTest()">⚡ Performance Test</button>
+                    <button class="btn btn-primary" onclick="clearResults()">🗑️ Clear Results</button>
+                </div>
+            </div>
+            
+            <!-- Test Results -->
+            <div class="test-section">
+                <h2>📊 Test Results</h2>
+                <div class="results-section" id="test-results">
+                    <div class="test-result info">[Ready] Click "Run Quick Validation" to start testing</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Live Test Frame -->
+        <div class="test-section full-width">
+            <h2>🗺️ Live Test Frame</h2>
+            <div class="test-controls">
+                <button class="btn btn-primary" onclick="loadFramework('climada')">Load CLIMADA</button>
+                <button class="btn btn-primary" onclick="loadFramework('climate-os')">Load Climate-OS</button>
+                <button class="btn btn-primary" onclick="loadFramework('cbottle')">Load C-bottle</button>
+                <span style="margin: 0 20px;">|</span>
+                <span id="current-framework">No framework loaded</span>
+            </div>
+            <div class="iframe-container">
+                <iframe id="test-frame" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+        let currentFramework = null;
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const result = {
+                timestamp,
+                message: `[${timestamp}] ${message}`,
+                type
+            };
+            
+            testResults.push(result);
+            updateResultsUI();
+            console.log(`${type.toUpperCase()}: ${message}`);
+        }
+        
+        function updateResultsUI() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = testResults.slice(-20).map(result => 
+                `<div class="test-result ${result.type}">${result.message}</div>`
+            ).join('');
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+        
+        function clearResults() {
+            testResults = [];
+            updateResultsUI();
+            log('Test results cleared', 'info');
+            
+            // Reset status indicators
+            ['climada', 'climate-os', 'cbottle', 'overall'].forEach(id => {
+                document.getElementById(`${id}-status`).className = 'status-indicator';
+            });
+            document.getElementById('climada-status-text').textContent = 'Not Tested';
+            document.getElementById('climate-os-status-text').textContent = 'Not Tested';
+            document.getElementById('cbottle-status-text').textContent = 'Not Tested';
+            document.getElementById('overall-score').textContent = '0%';
+        }
+        
+        function updateStatus(framework, status, text = null) {
+            const statusElement = document.getElementById(`${framework}-status`);
+            const textElement = document.getElementById(`${framework}-status-text`);
+            
+            statusElement.className = `status-indicator ${status}`;
+            if (text) {
+                textElement.textContent = text;
+            }
+            
+            updateOverallScore();
+        }
+        
+        function updateOverallScore() {
+            const statuses = ['climada', 'climate-os', 'cbottle'].map(framework => {
+                const element = document.getElementById(`${framework}-status`);
+                return element.classList.contains('success') ? 1 : 
+                       element.classList.contains('error') ? 0 : 0.5;
+            });
+            
+            const average = statuses.reduce((a, b) => a + b, 0) / statuses.length;
+            const percentage = Math.round(average * 100);
+            
+            document.getElementById('overall-score').textContent = `${percentage}%`;
+            
+            const overallStatus = document.getElementById('overall-status');
+            if (percentage >= 90) {
+                overallStatus.className = 'status-indicator success';
+            } else if (percentage >= 70) {
+                overallStatus.className = 'status-indicator loading';
+            } else {
+                overallStatus.className = 'status-indicator error';
+            }
+        }
+        
+        function loadFramework(framework) {
+            const frame = document.getElementById('test-frame');
+            const currentFrameworkSpan = document.getElementById('current-framework');
+            
+            const urls = {
+                'climada': 'working-dual-climada.html',
+                'climate-os': 'working-dual-climate-os.html',
+                'cbottle': 'cbottle-scenario-analysis.html'
+            };
+            
+            const names = {
+                'climada': 'CLIMADA Dual-Map',
+                'climate-os': 'Climate-OS Dual-Map',
+                'cbottle': 'C-bottle Reference'
+            };
+            
+            if (urls[framework]) {
+                frame.src = urls[framework];
+                currentFramework = framework;
+                currentFrameworkSpan.textContent = `Loading ${names[framework]}...`;
+                
+                updateStatus(framework, 'loading', 'Loading...');
+                
+                frame.onload = () => {
+                    currentFrameworkSpan.textContent = names[framework];
+                    log(`✅ ${names[framework]} loaded successfully`, 'success');
+                    
+                    // Quick validation of the loaded framework
+                    setTimeout(() => validateLoadedFramework(framework), 1000);
+                };
+                
+                frame.onerror = () => {
+                    updateStatus(framework, 'error', 'Failed to load');
+                    log(`❌ Failed to load ${names[framework]}`, 'error');
+                };
+            }
+        }
+        
+        function validateLoadedFramework(framework) {
+            const frame = document.getElementById('test-frame');
+            
+            try {
+                const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                const frameWindow = frame.contentWindow;
+                
+                if (!frameDoc) {
+                    updateStatus(framework, 'error', 'Access denied');
+                    log(`❌ Cannot access ${framework} frame content`, 'error');
+                    return;
+                }
+                
+                // Check basic elements
+                const appContent = frameDoc.querySelector('.app-content');
+                const mapContainers = frameDoc.querySelectorAll('.map-container');
+                const controlPanels = frameDoc.querySelectorAll('.controls-panel');
+                
+                let score = 0;
+                let maxScore = 5;
+                
+                if (appContent) {
+                    score++;
+                    log(`✅ ${framework}: App content found`, 'success');
+                } else {
+                    log(`❌ ${framework}: App content missing`, 'error');
+                }
+                
+                if (mapContainers.length >= 2) {
+                    score++;
+                    log(`✅ ${framework}: Found ${mapContainers.length} map containers`, 'success');
+                } else {
+                    log(`❌ ${framework}: Expected 2+ map containers, found ${mapContainers.length}`, 'error');
+                }
+                
+                if (controlPanels.length >= 2) {
+                    score++;
+                    log(`✅ ${framework}: Found ${controlPanels.length} control panels`, 'success');
+                } else {
+                    log(`❌ ${framework}: Expected 2+ control panels, found ${controlPanels.length}`, 'error');
+                }
+                
+                // Check for Mapbox
+                if (frameWindow.mapboxgl) {
+                    score++;
+                    log(`✅ ${framework}: Mapbox GL JS loaded`, 'success');
+                } else {
+                    log(`❌ ${framework}: Mapbox GL JS not loaded`, 'error');
+                }
+                
+                // Check for framework-specific functions
+                const expectedFunctions = framework === 'climada' 
+                    ? ['generateHurricaneData']
+                    : framework === 'climate-os'
+                    ? ['generateStatisticalData'] 
+                    : [];
+                
+                let functionsFound = 0;
+                expectedFunctions.forEach(funcName => {
+                    if (typeof frameWindow[funcName] === 'function') {
+                        functionsFound++;
+                        log(`✅ ${framework}: ${funcName} function available`, 'success');
+                    } else {
+                        log(`❌ ${framework}: ${funcName} function missing`, 'error');
+                    }
+                });
+                
+                if (expectedFunctions.length > 0) {
+                    score += functionsFound / expectedFunctions.length;
+                }
+                
+                const percentage = Math.round((score / maxScore) * 100);
+                
+                if (percentage >= 80) {
+                    updateStatus(framework, 'success', `${percentage}% valid`);
+                    log(`✅ ${framework}: Validation passed (${percentage}%)`, 'success');
+                } else if (percentage >= 60) {
+                    updateStatus(framework, 'loading', `${percentage}% valid`);
+                    log(`⚠️ ${framework}: Partial validation (${percentage}%)`, 'warning');
+                } else {
+                    updateStatus(framework, 'error', `${percentage}% valid`);
+                    log(`❌ ${framework}: Validation failed (${percentage}%)`, 'error');
+                }
+                
+            } catch (error) {
+                updateStatus(framework, 'error', 'Validation failed');
+                log(`❌ ${framework}: Validation error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function runQuickValidation() {
+            log('🚀 Starting quick validation of all frameworks', 'info');
+            clearResults();
+            
+            const frameworks = ['climada', 'climate-os', 'cbottle'];
+            
+            for (const framework of frameworks) {
+                log(`Testing ${framework}...`, 'info');
+                loadFramework(framework);
+                
+                // Wait for load and validation
+                await new Promise(resolve => setTimeout(resolve, 3000));
+            }
+            
+            log('✅ Quick validation completed', 'success');
+        }
+        
+        async function runDeepTest() {
+            log('🔬 Starting deep testing...', 'info');
+            
+            if (!currentFramework) {
+                log('❌ No framework loaded. Load a framework first.', 'error');
+                return;
+            }
+            
+            const frame = document.getElementById('test-frame');
+            
+            try {
+                const frameWindow = frame.contentWindow;
+                const frameDoc = frame.contentDocument || frameWindow.document;
+                
+                log(`Deep testing ${currentFramework}...`, 'info');
+                
+                // Test 1: Element dimensions
+                const mapContainers = frameDoc.querySelectorAll('.map-container');
+                mapContainers.forEach((container, index) => {
+                    const rect = container.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0) {
+                        log(`✅ Map ${index + 1}: ${rect.width}x${rect.height}`, 'success');
+                    } else {
+                        log(`❌ Map ${index + 1}: Invalid dimensions`, 'error');
+                    }
+                });
+                
+                // Test 2: Control interaction
+                const controls = frameDoc.querySelectorAll('select');
+                controls.forEach((control, index) => {
+                    if (control.options.length > 0) {
+                        log(`✅ Control ${index + 1}: ${control.options.length} options`, 'success');
+                    } else {
+                        log(`❌ Control ${index + 1}: No options`, 'error');
+                    }
+                });
+                
+                // Test 3: Data generation performance
+                const dataFunction = currentFramework === 'climada' 
+                    ? 'generateHurricaneData' 
+                    : 'generateStatisticalData';
+                
+                if (typeof frameWindow[dataFunction] === 'function') {
+                    const startTime = performance.now();
+                    const testParam = currentFramework === 'climada' ? 'baseline' : 'historical';
+                    
+                    for (let i = 0; i < 5; i++) {
+                        frameWindow[dataFunction](testParam);
+                    }
+                    
+                    const endTime = performance.now();
+                    const duration = endTime - startTime;
+                    
+                    if (duration < 1000) {
+                        log(`✅ Data generation: ${duration.toFixed(2)}ms for 5 calls`, 'success');
+                    } else {
+                        log(`⚠️ Data generation: ${duration.toFixed(2)}ms (slow)`, 'warning');
+                    }
+                }
+                
+                log('✅ Deep testing completed', 'success');
+                
+            } catch (error) {
+                log(`❌ Deep test failed: ${error.message}`, 'error');
+            }
+        }
+        
+        async function runPerformanceTest() {
+            log('⚡ Starting performance testing...', 'info');
+            
+            // Test load times
+            const frameworks = [
+                { name: 'CLIMADA', url: 'working-dual-climada.html' },
+                { name: 'Climate-OS', url: 'working-dual-climate-os.html' },
+                { name: 'C-bottle', url: 'cbottle-scenario-analysis.html' }
+            ];
+            
+            for (const framework of frameworks) {
+                const startTime = performance.now();
+                
+                const testFrame = document.createElement('iframe');
+                testFrame.style.display = 'none';
+                document.body.appendChild(testFrame);
+                
+                await new Promise((resolve) => {
+                    testFrame.onload = () => {
+                        const loadTime = performance.now() - startTime;
+                        
+                        if (loadTime < 3000) {
+                            log(`✅ ${framework.name}: ${loadTime.toFixed(2)}ms load time`, 'success');
+                        } else {
+                            log(`⚠️ ${framework.name}: ${loadTime.toFixed(2)}ms load time (slow)`, 'warning');
+                        }
+                        
+                        document.body.removeChild(testFrame);
+                        resolve();
+                    };
+                    
+                    testFrame.onerror = () => {
+                        log(`❌ ${framework.name}: Failed to load`, 'error');
+                        document.body.removeChild(testFrame);
+                        resolve();
+                    };
+                    
+                    testFrame.src = framework.url;
+                });
+                
+                // Small delay between tests
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            // Memory usage
+            if (performance.memory) {
+                const memUsage = Math.round(performance.memory.usedJSHeapSize / 1024 / 1024);
+                if (memUsage < 100) {
+                    log(`✅ Memory usage: ${memUsage}MB`, 'success');
+                } else {
+                    log(`⚠️ Memory usage: ${memUsage}MB (high)`, 'warning');
+                }
+            }
+            
+            log('✅ Performance testing completed', 'success');
+        }
+        
+        // Auto-load CLIMADA on startup
+        window.addEventListener('load', () => {
+            log('🧪 Quick validation test framework ready', 'info');
+            setTimeout(() => {
+                log('Auto-loading CLIMADA for initial validation...', 'info');
+                loadFramework('climada');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

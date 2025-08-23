@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Risk Analysis - Framework Comparison [DEPLOYMENT TEST 2025-08-19]</title>
+    <meta name="description" content="Comprehensive climate risk analysis platform showcasing 3 frameworks: CLIMADA, Climate-OS, and C-bottle with interactive comparison">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0c1445 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .header {
+            padding: 40px 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 3em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        
+        .description {
+            font-size: 1.1em;
+            color: #ccc;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        
+        .frameworks-section {
+            margin-bottom: 80px;
+        }
+        
+        .section-title {
+            font-size: 2.2em;
+            color: #00d4ff;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        .section-description {
+            text-align: center;
+            color: #aaa;
+            font-size: 1.1em;
+            margin-bottom: 50px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .frameworks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .framework-card {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 35px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .framework-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .framework-card.climada::before {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(33, 150, 243, 0.05));
+        }
+        
+        .framework-card.climate-os::before {
+            background: linear-gradient(135deg, rgba(162, 59, 114, 0.1), rgba(162, 59, 114, 0.05));
+        }
+        
+        .framework-card.cbottle::before {
+            background: linear-gradient(135deg, rgba(66, 133, 244, 0.1), rgba(66, 133, 244, 0.05));
+        }
+        
+        .framework-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .framework-card:hover::before {
+            opacity: 1;
+        }
+        
+        .framework-card.climada:hover {
+            border-color: rgba(33, 150, 243, 0.4);
+        }
+        
+        .framework-card.climate-os:hover {
+            border-color: rgba(162, 59, 114, 0.4);
+        }
+        
+        .framework-card.cbottle:hover {
+            border-color: rgba(66, 133, 244, 0.4);
+        }
+        
+        .framework-badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .framework-badge.climada {
+            background: linear-gradient(135deg, #2196F3, #1976D2);
+        }
+        
+        .framework-badge.climate-os {
+            background: linear-gradient(135deg, #A23B72, #8B2559);
+        }
+        
+        .framework-badge.cbottle {
+            background: linear-gradient(135deg, #4285F4, #3367D6);
+        }
+        
+        .framework-title {
+            font-size: 1.6em;
+            margin: 20px 0 15px 0;
+            font-weight: 500;
+            position: relative;
+        }
+        
+        .framework-title.climada {
+            color: #2196F3;
+        }
+        
+        .framework-title.climate-os {
+            color: #A23B72;
+        }
+        
+        .framework-title.cbottle {
+            color: #4285F4;
+        }
+        
+        .framework-description {
+            color: #ddd;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+            line-height: 1.7;
+        }
+        
+        .framework-difference {
+            color: #aaa;
+            margin-bottom: 25px;
+            font-size: 0.95em;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        
+        .framework-difference strong {
+            color: #fff;
+            font-style: normal;
+        }
+        
+        .framework-features {
+            margin-bottom: 25px;
+        }
+        
+        .features-title {
+            font-size: 0.9em;
+            color: #00d4ff;
+            margin-bottom: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .features-list {
+            list-style: none;
+            font-size: 0.9em;
+            color: #bbb;
+        }
+        
+        .features-list li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .features-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+        
+        .framework-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+            font-size: 0.85em;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            display: block;
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #00d4ff;
+            margin-bottom: 4px;
+        }
+        
+        .stat-label {
+            color: #888;
+            font-size: 0.9em;
+        }
+        
+        .framework-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            text-align: center;
+            min-width: 120px;
+            display: inline-block;
+            position: relative;
+            z-index: 10000;
+            pointer-events: auto;
+            user-select: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #000;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #33ddff, #00b3e6);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #00d4ff;
+            border: 1px solid #00d4ff;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .comparison-section {
+            margin-top: 80px;
+            text-align: center;
+        }
+        
+        .comparison-card {
+            background: rgba(30, 30, 30, 0.9);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 800px;
+            backdrop-filter: blur(15px);
+        }
+        
+        .comparison-title {
+            font-size: 2em;
+            color: #00d4ff;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+        
+        .comparison-description {
+            font-size: 1.2em;
+            color: #ccc;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        .comparison-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-feature {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .comparison-feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: #00d4ff;
+        }
+        
+        .comparison-feature-title {
+            font-size: 1.1em;
+            color: #fff;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .comparison-feature-desc {
+            font-size: 0.9em;
+            color: #aaa;
+        }
+        
+        .footer {
+            margin-top: 100px;
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.2);
+        }
+        
+        .footer p {
+            color: #888;
+            margin-bottom: 15px;
+        }
+        
+        .footer a {
+            color: #00d4ff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .frameworks-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            
+            .framework-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .framework-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Climate Risk Analysis Platform</h1>
+        <p class="subtitle">Comprehensive Framework Comparison</p>
+        <p class="description">
+            Advanced climate risk modeling platform showcasing three distinct frameworks: 
+            <strong>CLIMADA</strong> (scientific modeling), <strong>Climate-OS</strong> (statistical analysis), 
+            and <strong>C-bottle</strong> (synthetic modeling) with interactive comparison tools.
+        </p>
+    </div>
+    
+    <div class="container">
+        <div class="frameworks-section">
+            <h2 class="section-title">Climate Risk Frameworks</h2>
+            <p class="section-description">
+                Each framework provides unique capabilities for climate risk assessment, 
+                from scientific accuracy to rapid prototyping and statistical analysis.
+            </p>
+            
+            <div class="frameworks-grid">
+                <!-- CLIMADA Framework -->
+                <div class="framework-card climada">
+                    <div class="framework-badge climada">Scientific Framework</div>
+                    <h3 class="framework-title climada">CLIMADA Framework</h3>
+                    <p class="framework-description">
+                        <strong>Scientific hurricane risk modeling</strong> using the CLIMADA Python package from ETH Zurich. 
+                        Analyzes real historical tracks from IBTrACS and generates probabilistic projections 
+                        using peer-reviewed climate models.
+                    </p>
+                    <p class="framework-difference">
+                        <em>Why it's different:</em> Uses <strong>actual scientific models</strong> 
+                        (Emanuel, Holland) with calibrated damage functions and real climate data, 
+                        not simplified visualizations. <a href="https://climada-python.readthedocs.io/" style="color: #58a6ff;">Documentation →</a>
+                    </p>
+                    
+                    <div class="framework-features">
+                        <div class="features-title">Key Capabilities</div>
+                        <ul class="features-list">
+                            <li>IBTrACS historical hurricane data</li>
+                            <li>Probabilistic synthetic tracks</li>
+                            <li>Emanuel & Holland models</li>
+                            <li>Climate scenario projections</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="framework-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">Scientific</span>
+                            <span class="stat-label">Accuracy</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">IBTrACS</span>
+                            <span class="stat-label">Data Source</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">Python</span>
+                            <span class="stat-label">Backend</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">ETH Zurich</span>
+                            <span class="stat-label">Developer</span>
+                        </div>
+                    </div>
+                    
+                    <div class="framework-actions">
+                        <a href="climada-hurricane-analysis" class="btn btn-primary">Launch CLIMADA</a>
+                        <a href="working-dual-climada" class="btn btn-secondary">Dual-Map Comparison</a>
+                    </div>
+                </div>
+                
+                <!-- Climate-OS Framework -->
+                <div class="framework-card climate-os">
+                    <div class="framework-badge climate-os">Statistical Framework</div>
+                    <h3 class="framework-title climate-os">Climate-OS Framework</h3>
+                    <p class="framework-description">
+                        <strong>Historical data analysis</strong> engine for tracking hurricane trends over decades. 
+                        Uses 45+ years of NOAA data to identify patterns, calculate return periods, 
+                        and project future risk based on observed trends.
+                    </p>
+                    <p class="framework-difference">
+                        <em>Why it's different:</em> Focuses on <strong>statistical trends and frequency analysis</strong> 
+                        rather than physical modeling, perfect for insurance and risk assessment professionals.
+                    </p>
+                    
+                    <div class="framework-features">
+                        <div class="features-title">Key Capabilities</div>
+                        <ul class="features-list">
+                            <li>Historical data analysis (1980-2024)</li>
+                            <li>Statistical trend identification</li>
+                            <li>Return period calculations</li>
+                            <li>Real NOAA data integration</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="framework-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">Fast</span>
+                            <span class="stat-label">Execution</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">45 Years</span>
+                            <span class="stat-label">Data Period</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">14.8</span>
+                            <span class="stat-label">Avg Storms/Year</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">+1.4</span>
+                            <span class="stat-label">Trend/Decade</span>
+                        </div>
+                    </div>
+                    
+                    <div class="framework-actions">
+                        <a href="climate-os-statistical" class="btn btn-primary">Launch Climate-OS</a>
+                        <a href="working-dual-climate-os" class="btn btn-secondary">Dual-Map Comparison</a>
+                    </div>
+                </div>
+                
+                <!-- C-bottle Framework -->
+                <div class="framework-card cbottle">
+                    <div class="framework-badge cbottle">Synthetic Framework</div>
+                    <h3 class="framework-title cbottle">C-bottle Framework</h3>
+                    <p class="framework-description">
+                        <strong>Property-level risk assessment</strong> using satellite imagery and AI-driven analysis. 
+                        Evaluates individual buildings and properties for specific hurricane vulnerabilities 
+                        with Google Earth integration for precise location data.
+                    </p>
+                    <p class="framework-difference">
+                        <em>Why it's different:</em> Zooms in to <strong>individual property analysis</strong> 
+                        rather than regional patterns, using satellite imagery instead of abstract maps for homeowners and real estate professionals.
+                    </p>
+                    
+                    <div class="framework-features">
+                        <div class="features-title">Key Capabilities</div>
+                        <ul class="features-list">
+                            <li>Property-level risk assessment</li>
+                            <li>Synthetic data generation</li>
+                            <li>Dual-map comparison views</li>
+                            <li>Modern glass morphism UI</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="framework-stats">
+                        <div class="stat-item">
+                            <span class="stat-value">Rapid</span>
+                            <span class="stat-label">Prototyping</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">Modern</span>
+                            <span class="stat-label">UI/UX</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">Property</span>
+                            <span class="stat-label">Level</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value">GPU</span>
+                            <span class="stat-label">Accelerated</span>
+                        </div>
+                    </div>
+                    
+                    <div class="framework-actions">
+                        <a href="cbottle-risk-assessment" class="btn btn-primary">Launch C-bottle</a>
+                        <a href="cbottle-scenario-analysis" class="btn btn-secondary">Dual-Map Comparison</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-section">
+            <div class="comparison-card">
+                <h2 class="comparison-title">Framework Comparison Tool</h2>
+                <p class="comparison-description">
+                    Interactive comparison dashboard showing side-by-side analysis of all three frameworks 
+                    with methodology comparison, performance benchmarks, and use case recommendations.
+                </p>
+                
+                <div class="comparison-features">
+                    <div class="comparison-feature">
+                        <div class="comparison-feature-icon">📊</div>
+                        <div class="comparison-feature-title">Side-by-Side Analysis</div>
+                        <div class="comparison-feature-desc">Compare outputs across frameworks</div>
+                    </div>
+                    <div class="comparison-feature">
+                        <div class="comparison-feature-icon">⚡</div>
+                        <div class="comparison-feature-title">Performance Metrics</div>
+                        <div class="comparison-feature-desc">Speed and accuracy benchmarks</div>
+                    </div>
+                    <div class="comparison-feature">
+                        <div class="comparison-feature-icon">🎯</div>
+                        <div class="comparison-feature-title">Use Case Matrix</div>
+                        <div class="comparison-feature-desc">Framework selection guidance</div>
+                    </div>
+                    <div class="comparison-feature">
+                        <div class="comparison-feature-icon">📈</div>
+                        <div class="comparison-feature-title">Decision Support</div>
+                        <div class="comparison-feature-desc">Framework recommendation engine</div>
+                    </div>
+                </div>
+                
+                <div class="framework-actions">
+                    <a href="framework-comparison" class="btn btn-primary">Launch Comparison</a>
+                    <a href="#comparison-details" class="btn btn-secondary">View Documentation</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <p>Climate Risk Analysis Platform - Advanced Framework Comparison</p>
+        <p>
+            <a href="mailto:johnny@johnnycchung.com">Contact</a>
+            <a href="https://github.com/jiahknee5/project-chimera" target="_blank">GitHub</a>
+            <a href="/portfolio/" target="_blank">Portfolio</a>
+        </p>
+    </div>
+
+    <script>
+    // Ensure buttons are clickable - debug function
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Page loaded - setting up button debugging');
+        
+        // Find all launch buttons
+        const buttons = document.querySelectorAll('.btn-primary');
+        console.log('Found buttons:', buttons.length);
+        
+        buttons.forEach(function(button, index) {
+            console.log('Button ' + index + ':', button.href, button.textContent);
+            
+            // Force button to be interactive
+            button.style.pointerEvents = 'auto';
+            button.style.position = 'relative';
+            button.style.zIndex = '99999';
+            button.style.cursor = 'pointer';
+            
+            // Add multiple event listeners to ensure clicking works
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Button clicked:', this.href);
+                
+                // Force navigation
+                if (this.href) {
+                    console.log('Navigating to:', this.href);
+                    window.location.href = this.href;
+                }
+            });
+            
+            // Also add mousedown for backup
+            button.addEventListener('mousedown', function(e) {
+                console.log('Button mousedown:', this.href);
+            });
+            
+            // Test if button is visible and clickable
+            const rect = button.getBoundingClientRect();
+            console.log('Button ' + index + ' position:', rect);
+            
+            // Check if anything is covering the button
+            const elementAtPoint = document.elementFromPoint(rect.left + rect.width/2, rect.top + rect.height/2);
+            console.log('Element at button center:', elementAtPoint);
+        });
+    });
+    </script>
+</body>
+</html><!-- Cache buster: 1755472717 -->

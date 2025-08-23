@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Frameworks Test - All Three Methods</title>
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <!-- Framework Engines -->
+    <script src="improved-hurricane-generator.js"></script>
+    <script src="climate-os-statistical-engine.js"></script>
+    <script src="cbottle-property-engine.js"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+        }
+        
+        .header {
+            background: #161b22;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .header h1 {
+            margin: 0 0 10px 0;
+            color: #58a6ff;
+        }
+        
+        .frameworks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .framework-card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .framework-header {
+            padding: 15px;
+            background: #0d1117;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .framework-header h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.2em;
+        }
+        
+        .framework-header p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #8b949e;
+        }
+        
+        .climada-header { color: #2196F3; }
+        .climate-os-header { color: #A23B72; }
+        .cbottle-header { color: #4285F4; }
+        
+        .map {
+            width: 100%;
+            height: 400px;
+        }
+        
+        .stats {
+            padding: 15px;
+            background: #0d1117;
+            font-size: 0.9em;
+        }
+        
+        .stat-item {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .stat-label {
+            color: #8b949e;
+        }
+        
+        .stat-value {
+            color: #58a6ff;
+            font-weight: bold;
+        }
+        
+        .methodology {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 0.85em;
+            color: #8b949e;
+            border-top: 1px solid #30363d;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Climate Risk Analysis Frameworks Comparison</h1>
+        <p>Each framework using its proprietary methodology</p>
+    </div>
+    
+    <div class="frameworks">
+        <!-- CLIMADA Framework -->
+        <div class="framework-card">
+            <div class="framework-header">
+                <h2 class="climada-header">CLIMADA</h2>
+                <p>Scientific hurricane modeling (fallback mode)</p>
+            </div>
+            <div id="climada-map" class="map"></div>
+            <div class="stats" id="climada-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Data Source:</span>
+                    <span class="stat-value">IBTrACS/Synthetic</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Methodology:</span>
+                    <span class="stat-value">Physical Modeling</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Hurricanes:</span>
+                    <span class="stat-value" id="climada-count">0</span>
+                </div>
+            </div>
+            <div class="methodology">
+                Using meteorologically accurate hurricane tracks with Coriolis effect, 
+                realistic formation zones, and proper recurvature patterns. 
+                Would use actual CLIMADA Python backend when available.
+            </div>
+        </div>
+        
+        <!-- Climate-OS Framework -->
+        <div class="framework-card">
+            <div class="framework-header">
+                <h2 class="climate-os-header">Climate-OS</h2>
+                <p>Statistical trend analysis</p>
+            </div>
+            <div id="climate-os-map" class="map"></div>
+            <div class="stats" id="climate-os-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Data Source:</span>
+                    <span class="stat-value">NOAA Historical</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Methodology:</span>
+                    <span class="stat-value">Statistical Analysis</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Hurricanes:</span>
+                    <span class="stat-value" id="climate-os-count">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Trend:</span>
+                    <span class="stat-value" id="climate-os-trend">+1.4/decade</span>
+                </div>
+            </div>
+            <div class="methodology">
+                Statistical analysis based on 45+ years of NOAA data. 
+                Uses Poisson distribution for frequency, Weibull for intensity, 
+                and Gumbel for return periods.
+            </div>
+        </div>
+        
+        <!-- C-bottle Framework -->
+        <div class="framework-card">
+            <div class="framework-header">
+                <h2 class="cbottle-header">C-bottle</h2>
+                <p>Property-level risk assessment</p>
+            </div>
+            <div id="cbottle-map" class="map"></div>
+            <div class="stats" id="cbottle-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Data Source:</span>
+                    <span class="stat-value">Property Data</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Methodology:</span>
+                    <span class="stat-value">Individual Risk</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Properties:</span>
+                    <span class="stat-value" id="cbottle-count">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">High Risk:</span>
+                    <span class="stat-value" id="cbottle-high-risk">0</span>
+                </div>
+            </div>
+            <div class="methodology">
+                Property-specific vulnerability assessment considering building type, 
+                construction materials, elevation, and distance to coast. 
+                Provides mitigation recommendations and insurance estimates.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Set Mapbox token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+        
+        // Initialize CLIMADA map
+        function initializeCLIMADA() {
+            const map = new mapboxgl.Map({
+                container: 'climada-map',
+                style: 'mapbox://styles/mapbox/dark-v11',
+                center: [-60, 25],
+                zoom: 3.5
+            });
+            
+            map.on('load', () => {
+                // Use improved hurricane generator (fallback for CLIMADA)
+                const hurricaneData = hurricaneGenerator.generateCombinedBasinData('baseline');
+                document.getElementById('climada-count').textContent = hurricaneData.features.length;
+                
+                map.addSource('hurricanes', {
+                    type: 'geojson',
+                    data: hurricaneData
+                });
+                
+                map.addLayer({
+                    id: 'hurricane-tracks',
+                    type: 'line',
+                    source: 'hurricanes',
+                    paint: {
+                        'line-color': [
+                            'case',
+                            ['==', ['get', 'category'], 5], '#D63031',
+                            ['==', ['get', 'category'], 4], '#FF6B6B',
+                            ['==', ['get', 'category'], 3], '#FF8C42',
+                            ['==', ['get', 'category'], 2], '#FFD23F',
+                            '#74CCFF'
+                        ],
+                        'line-width': 3,
+                        'line-opacity': 0.8
+                    }
+                });
+            });
+        }
+        
+        // Initialize Climate-OS map
+        function initializeClimateOS() {
+            const map = new mapboxgl.Map({
+                container: 'climate-os-map',
+                style: 'mapbox://styles/mapbox/dark-v11',
+                center: [-60, 25],
+                zoom: 3.5
+            });
+            
+            map.on('load', () => {
+                // Use Climate-OS statistical engine
+                const data = climateOSEngine.generateStatisticalHurricaneData('2020s', 'frequency');
+                document.getElementById('climate-os-count').textContent = data.features.length;
+                
+                if (data.properties.statistics) {
+                    const trend = data.properties.statistics.trendAnalysis;
+                    document.getElementById('climate-os-trend').textContent = 
+                        `+${trend.decadalIncrease * 10}/decade`;
+                }
+                
+                map.addSource('statistical', {
+                    type: 'geojson',
+                    data: data
+                });
+                
+                map.addLayer({
+                    id: 'statistical-tracks',
+                    type: 'line',
+                    source: 'statistical',
+                    paint: {
+                        'line-color': '#A23B72',
+                        'line-width': 3,
+                        'line-opacity': 0.7,
+                        'line-dasharray': [2, 1]
+                    }
+                });
+                
+                // Add confidence intervals as circles
+                map.addLayer({
+                    id: 'confidence-points',
+                    type: 'circle',
+                    source: 'statistical',
+                    paint: {
+                        'circle-radius': [
+                            'interpolate',
+                            ['linear'],
+                            ['get', 'returnPeriod'],
+                            2, 4,
+                            50, 12
+                        ],
+                        'circle-color': '#A23B72',
+                        'circle-opacity': 0.3
+                    }
+                });
+            });
+        }
+        
+        // Initialize C-bottle map
+        function initializeCBottle() {
+            const map = new mapboxgl.Map({
+                container: 'cbottle-map',
+                style: 'mapbox://styles/mapbox/satellite-streets-v12',
+                center: [-80.1918, 25.7617],
+                zoom: 12
+            });
+            
+            map.on('load', () => {
+                // Use C-bottle property engine
+                const data = cbottleEngine.generatePropertyRiskData('miami', 'current');
+                document.getElementById('cbottle-count').textContent = data.features.length;
+                
+                if (data.properties.aggregateStats) {
+                    document.getElementById('cbottle-high-risk').textContent = 
+                        data.properties.aggregateStats.highRiskProperties;
+                }
+                
+                map.addSource('properties', {
+                    type: 'geojson',
+                    data: data
+                });
+                
+                // Add property risk zones
+                map.addLayer({
+                    id: 'risk-zones',
+                    type: 'fill',
+                    source: 'properties',
+                    paint: {
+                        'fill-color': [
+                            'interpolate',
+                            ['linear'],
+                            ['get', 'riskScore'],
+                            0, '#00FF00',
+                            5, '#FFFF00',
+                            10, '#FF0000'
+                        ],
+                        'fill-opacity': 0.6
+                    }
+                });
+                
+                // Add property boundaries
+                map.addLayer({
+                    id: 'property-borders',
+                    type: 'line',
+                    source: 'properties',
+                    paint: {
+                        'line-color': '#FFFFFF',
+                        'line-width': 2
+                    }
+                });
+                
+                // Add labels
+                map.addLayer({
+                    id: 'property-labels',
+                    type: 'symbol',
+                    source: 'properties',
+                    layout: {
+                        'text-field': ['get', 'riskCategory'],
+                        'text-size': 10
+                    },
+                    paint: {
+                        'text-color': '#FFFFFF',
+                        'text-halo-color': '#000000',
+                        'text-halo-width': 1
+                    }
+                });
+            });
+        }
+        
+        // Initialize all maps
+        initializeCLIMADA();
+        initializeClimateOS();
+        initializeCBottle();
+    </script>
+</body>
+</html>

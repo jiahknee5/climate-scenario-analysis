@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug CLIMADA Maps</title>
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <style>
+        body { margin: 0; padding: 20px; font-family: Arial, sans-serif; background: #000; color: #fff; }
+        .debug-info { margin-bottom: 20px; padding: 10px; background: #333; }
+        .maps-container { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; height: 400px; }
+        .map { width: 100%; height: 100%; border: 1px solid #666; }
+        .status { margin-top: 20px; padding: 10px; background: #333; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>CLIMADA Debug Page</h1>
+    
+    <div class="debug-info">
+        <h3>System Status</h3>
+        <div id="system-status"></div>
+    </div>
+    
+    <div class="maps-container">
+        <div>
+            <h3>Map 1</h3>
+            <div id="map1" class="map"></div>
+        </div>
+        <div>
+            <h3>Map 2</h3>
+            <div id="map2" class="map"></div>
+        </div>
+    </div>
+    
+    <div class="status" id="debug-log"></div>
+
+    <script>
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logDiv = document.getElementById('debug-log');
+            logDiv.innerHTML += `<div>${timestamp}: ${message}</div>`;
+            console.log(message);
+        }
+
+        function updateSystemStatus() {
+            const status = document.getElementById('system-status');
+            status.innerHTML = `
+                <div>Mapbox GL JS: ${typeof mapboxgl !== 'undefined' ? '✅ Loaded (v' + mapboxgl.version + ')' : '❌ Not loaded'}</div>
+                <div>Access Token: ${mapboxgl.accessToken ? '✅ Set' : '❌ Not set'}</div>
+                <div>Map 1 Element: ${document.getElementById('map1') ? '✅ Found' : '❌ Not found'}</div>
+                <div>Map 2 Element: ${document.getElementById('map2') ? '✅ Found' : '❌ Not found'}</div>
+            `;
+        }
+
+        // Set the access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+
+        log('Starting debug session...');
+        updateSystemStatus();
+
+        let map1, map2;
+
+        // Test basic map creation
+        try {
+            log('Creating Map 1...');
+            map1 = new mapboxgl.Map({
+                container: 'map1',
+                style: 'mapbox://styles/mapbox/dark-v11',
+                center: [-75, 25],
+                zoom: 3
+            });
+
+            log('Creating Map 2...');
+            map2 = new mapboxgl.Map({
+                container: 'map2',
+                style: 'mapbox://styles/mapbox/dark-v11',
+                center: [-75, 25],
+                zoom: 3
+            });
+
+            log('Maps created successfully');
+
+            map1.on('load', () => {
+                log('Map 1 loaded successfully');
+                // Add a simple test marker
+                new mapboxgl.Marker({ color: 'red' })
+                    .setLngLat([-75, 25])
+                    .addTo(map1);
+            });
+
+            map2.on('load', () => {
+                log('Map 2 loaded successfully');
+                // Add a simple test marker
+                new mapboxgl.Marker({ color: 'blue' })
+                    .setLngLat([-75, 25])
+                    .addTo(map2);
+            });
+
+            map1.on('error', (e) => {
+                log('Map 1 error: ' + JSON.stringify(e));
+            });
+
+            map2.on('error', (e) => {
+                log('Map 2 error: ' + JSON.stringify(e));
+            });
+
+        } catch (error) {
+            log('Error creating maps: ' + error.message);
+        }
+
+        // Update status periodically
+        setInterval(updateSystemStatus, 2000);
+    </script>
+</body>
+</html>

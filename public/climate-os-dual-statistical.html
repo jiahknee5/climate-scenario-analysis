@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate-OS Dual Statistical Analysis</title>
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared-styles.css">
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <style>
+        .app-content {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px 1fr;
+            gap: 1rem;
+            padding: 1rem;
+            height: calc(100vh - 80px);
+            box-sizing: border-box;
+        }
+        
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            .app-content {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+                padding: 0.5rem;
+                height: auto;
+                min-height: calc(100vh - 80px);
+            }
+            
+            .controls-panel {
+                margin-bottom: 1rem;
+            }
+            
+            .map-container {
+                height: 300px;
+                margin-bottom: 1rem;
+            }
+        }
+        
+        @media (max-width: 1024px) and (min-width: 769px) {
+            .app-content {
+                grid-template-columns: 250px 1fr 250px 1fr;
+            }
+        }
+        
+        .controls-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1rem;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        
+        .map-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-sizing: border-box;
+        }
+        
+        .map-header {
+            background: rgba(162, 59, 114, 0.1);
+            padding: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .map-header h4 {
+            color: var(--climate-os-primary);
+            font-size: 1rem;
+            margin: 0;
+        }
+        
+        .climate-os-map {
+            width: 100%;
+            height: calc(100% - 50px);
+            box-sizing: border-box;
+        }
+        
+        .controls-panel h3 {
+            color: var(--climate-os-primary);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .control-group {
+            margin-bottom: 1rem;
+        }
+        
+        .control-group label {
+            display: block;
+            color: var(--text);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .control-group select {
+            width: 100%;
+            padding: 0.5rem;
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--surface);
+            color: var(--climate-os-primary);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+    <!-- Standardized Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="framework-logo">
+                <div class="framework-icon climate-os">CO</div>
+                <div>
+                    <h1 class="app-title climate-os">Climate-OS Framework</h1>
+                    <div class="app-subtitle">Dual Statistical Analysis</div>
+                </div>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="climada-hurricane-analysis" class="nav-link framework climada">CLIMADA</a>
+            <a href="cbottle-risk-assessment" class="nav-link framework cbottle">C-bottle</a>
+            <a href="/" class="nav-link primary">Overview</a>
+        </nav>
+    </header>
+
+    <main class="app-content">
+        <!-- Left Controls Panel -->
+        <div class="controls-panel">
+            <h3>📊 Map 1 Controls</h3>
+            <div class="control-group">
+                <label for="analysis1">Analysis Type:</label>
+                <select id="analysis1">
+                    <option value="historical">Historical Data</option>
+                    <option value="trends">Trend Analysis</option>
+                    <option value="projections">Future Projections</option>
+                    <option value="risk">Risk Assessment</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="timeframe1">Time Frame:</label>
+                <select id="timeframe1">
+                    <option value="1980-2000">1980-2000</option>
+                    <option value="2000-2020">2000-2020</option>
+                    <option value="2020-2040">2020-2040</option>
+                    <option value="2040-2060">2040-2060</option>
+                    <option value="2060-2080">2060-2080</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Left Map -->
+        <div class="map-container">
+            <div class="map-header">
+                <h4>Map 1 - <span id="map1-title">Historical Data | 1980-2000</span></h4>
+            </div>
+            <div id="climate-os-map1" class="climate-os-map"></div>
+            <div id="loading1" class="loading">Loading Map 1...</div>
+        </div>
+
+        <!-- Right Controls Panel -->
+        <div class="controls-panel">
+            <h3>📊 Map 2 Controls</h3>
+            <div class="control-group">
+                <label for="analysis2">Analysis Type:</label>
+                <select id="analysis2">
+                    <option value="historical">Historical Data</option>
+                    <option value="trends">Trend Analysis</option>
+                    <option value="projections" selected>Future Projections</option>
+                    <option value="risk">Risk Assessment</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="timeframe2">Time Frame:</label>
+                <select id="timeframe2">
+                    <option value="1980-2000">1980-2000</option>
+                    <option value="2000-2020">2000-2020</option>
+                    <option value="2020-2040">2020-2040</option>
+                    <option value="2040-2060">2040-2060</option>
+                    <option value="2060-2080" selected>2060-2080</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Right Map -->
+        <div class="map-container">
+            <div class="map-header">
+                <h4>Map 2 - <span id="map2-title">Future Projections | 2060-2080</span></h4>
+            </div>
+            <div id="climate-os-map2" class="climate-os-map"></div>
+            <div id="loading2" class="loading">Loading Map 2...</div>
+        </div>
+    </main>
+
+    <script>
+        // Mapbox access token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+
+        console.log('Starting working Climate-OS dual-map...');
+
+        let map1, map2;
+
+        // Initialize maps
+        function initMaps() {
+            console.log('Initializing maps...');
+            
+            try {
+                // Create map 1
+                map1 = new mapboxgl.Map({
+                    container: 'climate-os-map1',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                // Create map 2
+                map2 = new mapboxgl.Map({
+                    container: 'climate-os-map2',
+                    style: 'mapbox://styles/mapbox/dark-v11',
+                    center: [-75, 25],
+                    zoom: 3
+                });
+
+                console.log('Maps created successfully');
+
+                // Map 1 loaded
+                map1.on('load', () => {
+                    console.log('Map 1 loaded');
+                    document.getElementById('loading1').style.display = 'none';
+                    
+                    // Add sample statistical data for map 1
+                    addStatisticalData(map1, 'historical');
+                });
+                
+                // Map 2 loaded
+                map2.on('load', () => {
+                    console.log('Map 2 loaded');
+                    document.getElementById('loading2').style.display = 'none';
+                    
+                    // Add sample statistical data for map 2
+                    addStatisticalData(map2, 'projections');
+                });
+
+                // Error handling
+                map1.on('error', (e) => {
+                    console.error('Map 1 error:', e);
+                });
+                
+                map2.on('error', (e) => {
+                    console.error('Map 2 error:', e);
+                });
+
+                // Setup controls
+                setupControls();
+
+            } catch (error) {
+                console.error('Error initializing maps:', error);
+            }
+        }
+
+        // Add statistical data to maps
+        function addStatisticalData(map, analysisType) {
+            // Generate sample statistical data based on analysis type
+            const dataPoints = generateStatisticalData(analysisType);
+            
+            map.addSource('statistics', {
+                type: 'geojson',
+                data: {
+                    type: 'FeatureCollection',
+                    features: dataPoints
+                }
+            });
+
+            // Add statistical points
+            map.addLayer({
+                id: 'statistical-points',
+                type: 'circle',
+                source: 'statistics',
+                paint: {
+                    'circle-radius': ['*', ['get', 'confidence'], 8],
+                    'circle-color': [
+                        'interpolate',
+                        ['linear'],
+                        ['get', 'value'],
+                        0, '#A23B72',
+                        50, '#D64570',
+                        100, '#FF6B8A'
+                    ],
+                    'circle-opacity': 0.7,
+                    'circle-stroke-width': 2,
+                    'circle-stroke-color': '#fff'
+                }
+            });
+        }
+
+        // Generate sample statistical data
+        function generateStatisticalData(analysisType) {
+            const multiplier = analysisType === 'historical' ? 0.8 : analysisType === 'projections' ? 1.3 : 1;
+            const dataPoints = [];
+            
+            for (let i = 0; i < 15; i++) {
+                dataPoints.push({
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Point',
+                        coordinates: [
+                            -95 + Math.random() * 40, // Longitude
+                            15 + Math.random() * 25   // Latitude
+                        ]
+                    },
+                    properties: {
+                        value: Math.random() * 100 * multiplier,
+                        confidence: Math.random() * 1.5 + 0.5,
+                        type: analysisType
+                    }
+                });
+            }
+            
+            return dataPoints;
+        }
+
+        // Setup control event listeners
+        function setupControls() {
+            // Map 1 controls
+            document.getElementById('analysis1').addEventListener('change', (e) => {
+                updateMapTitle(1);
+                updateMapData(map1, e.target.value);
+            });
+            
+            document.getElementById('timeframe1').addEventListener('change', () => {
+                updateMapTitle(1);
+            });
+
+            // Map 2 controls
+            document.getElementById('analysis2').addEventListener('change', (e) => {
+                updateMapTitle(2);
+                updateMapData(map2, e.target.value);
+            });
+            
+            document.getElementById('timeframe2').addEventListener('change', () => {
+                updateMapTitle(2);
+            });
+        }
+
+        // Update map titles
+        function updateMapTitle(mapNum) {
+            const analysis = document.getElementById(`analysis${mapNum}`).value;
+            const timeframe = document.getElementById(`timeframe${mapNum}`).value;
+            
+            const analysisNames = {
+                'historical': 'Historical Data',
+                'trends': 'Trend Analysis',
+                'projections': 'Future Projections',
+                'risk': 'Risk Assessment'
+            };
+            
+            document.getElementById(`map${mapNum}-title`).textContent = 
+                `${analysisNames[analysis]} | ${timeframe}`;
+        }
+
+        // Update map data based on analysis type
+        function updateMapData(map, analysisType) {
+            if (map.getSource('statistics')) {
+                const newData = generateStatisticalData(analysisType);
+                map.getSource('statistics').setData({
+                    type: 'FeatureCollection',
+                    features: newData
+                });
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, checking prerequisites...');
+            
+            if (typeof mapboxgl === 'undefined') {
+                console.error('ERROR: Mapbox GL JS not loaded');
+                return;
+            }
+            
+            console.log('Mapbox GL JS available, version:', mapboxgl.version);
+            
+            const map1Container = document.getElementById('climate-os-map1');
+            const map2Container = document.getElementById('climate-os-map2');
+            
+            if (!map1Container || !map2Container) {
+                console.error('ERROR: Map containers not found');
+                return;
+            }
+            
+            console.log('All prerequisites met, initializing maps...');
+            initMaps();
+        });
+    </script>
+</body>
+</html>

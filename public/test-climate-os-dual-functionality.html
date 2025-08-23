@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate-OS Dual-Map Functionality Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-header {
+            background: #A23B72;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-button {
+            background: #A23B72;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-button:hover {
+            background: #8B2559;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .info { background: #cce7ff; color: #004085; }
+        .warning { background: #fff3cd; color: #856404; }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <h1>📊 Climate-OS Dual-Map Functionality Test</h1>
+        <p>Comprehensive testing of Climate-OS statistical dual-map implementation</p>
+    </div>
+
+    <div class="test-grid">
+        <div class="test-section">
+            <h2>🎯 Test Controls</h2>
+            <button class="test-button" onclick="runFullTest()">Run Complete Test Suite</button>
+            <button class="test-button" onclick="testBasicLoad()">Test Basic Loading</button>
+            <button class="test-button" onclick="testMapInitialization()">Test Map Initialization</button>
+            <button class="test-button" onclick="testControlInteraction()">Test Control Interaction</button>
+            <button class="test-button" onclick="testStatisticalData()">Test Statistical Data</button>
+            <button class="test-button" onclick="testAnalysisTypes()">Test Analysis Types</button>
+            <button class="test-button" onclick="testPerformance()">Test Performance</button>
+            <button class="test-button" onclick="clearResults()">Clear Results</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Test Results</h2>
+            <div id="test-results"></div>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🗺️ Live Climate-OS Dual-Map Test</h2>
+        <iframe id="climate-os-frame" src="working-dual-climate-os.html"></iframe>
+    </div>
+
+    <script>
+        let testResults = [];
+        let currentTest = 0;
+        let totalTests = 0;
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const result = {
+                message: `[${timestamp}] ${message}`,
+                type: type
+            };
+            
+            testResults.push(result);
+            updateResultsUI();
+            console.log(`${type.toUpperCase()}: ${message}`);
+        }
+
+        function updateResultsUI() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = testResults.map(result => 
+                `<div class="test-result ${result.type}">${result.message}</div>`
+            ).join('');
+            resultsDiv.scrollTop = resultsDiv.scrollHeight;
+        }
+
+        function clearResults() {
+            testResults = [];
+            updateResultsUI();
+            log('Test results cleared', 'info');
+        }
+
+        async function runFullTest() {
+            log('🚀 Starting comprehensive Climate-OS dual-map test suite', 'info');
+            clearResults();
+            
+            try {
+                await testBasicLoad();
+                await delay(1000);
+                await testMapInitialization();
+                await delay(1000);
+                await testControlInteraction();
+                await delay(1000);
+                await testStatisticalData();
+                await delay(1000);
+                await testAnalysisTypes();
+                await delay(1000);
+                await testPerformance();
+                
+                log('✅ Complete test suite finished', 'pass');
+                
+            } catch (error) {
+                log(`❌ Test suite failed: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testBasicLoad() {
+            log('Testing basic page load...', 'info');
+            
+            const frame = document.getElementById('climate-os-frame');
+            
+            return new Promise((resolve) => {
+                const timeout = setTimeout(() => {
+                    log('❌ Page load timeout (10 seconds)', 'fail');
+                    resolve();
+                }, 10000);
+                
+                frame.onload = () => {
+                    clearTimeout(timeout);
+                    log('✅ Page loaded successfully', 'pass');
+                    
+                    try {
+                        const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                        const title = frameDoc.title;
+                        
+                        if (title.includes('Climate-OS')) {
+                            log('✅ Correct page title loaded', 'pass');
+                        } else {
+                            log('❌ Incorrect page title', 'fail');
+                        }
+                        
+                        // Check for required elements
+                        const appContent = frameDoc.querySelector('.app-content');
+                        if (appContent) {
+                            log('✅ App content container found', 'pass');
+                        } else {
+                            log('❌ App content container missing', 'fail');
+                        }
+                        
+                        const mapContainers = frameDoc.querySelectorAll('.map-container');
+                        if (mapContainers.length >= 2) {
+                            log(`✅ Found ${mapContainers.length} map containers`, 'pass');
+                        } else {
+                            log(`❌ Expected 2+ map containers, found ${mapContainers.length}`, 'fail');
+                        }
+                        
+                        const controlPanels = frameDoc.querySelectorAll('.controls-panel');
+                        if (controlPanels.length >= 2) {
+                            log(`✅ Found ${controlPanels.length} control panels`, 'pass');
+                        } else {
+                            log(`❌ Expected 2+ control panels, found ${controlPanels.length}`, 'fail');
+                        }
+                        
+                    } catch (error) {
+                        log(`❌ Error accessing frame content: ${error.message}`, 'fail');
+                    }
+                    
+                    resolve();
+                };
+                
+                // Trigger reload to test
+                frame.src = frame.src;
+            });
+        }
+
+        async function testMapInitialization() {
+            log('Testing map initialization...', 'info');
+            
+            const frame = document.getElementById('climate-os-frame');
+            
+            try {
+                const frameWindow = frame.contentWindow;
+                const frameDoc = frame.contentDocument || frameWindow.document;
+                
+                // Check if Mapbox GL JS is loaded
+                if (frameWindow.mapboxgl) {
+                    log('✅ Mapbox GL JS loaded in frame', 'pass');
+                    
+                    // Check if access token is set
+                    if (frameWindow.mapboxgl.accessToken) {
+                        log('✅ Mapbox access token is set', 'pass');
+                    } else {
+                        log('❌ Mapbox access token missing', 'fail');
+                    }
+                    
+                    // Check if maps are initialized
+                    if (frameWindow.map1 && frameWindow.map2) {
+                        log('✅ Both map instances created', 'pass');
+                    } else {
+                        log('⚠️ Map instances not yet created (may still be loading)', 'warning');
+                    }
+                    
+                } else {
+                    log('❌ Mapbox GL JS not loaded in frame', 'fail');
+                }
+                
+                // Check for map containers
+                const mapContainers = frameDoc.querySelectorAll('#climate-os-map1, #climate-os-map2');
+                mapContainers.forEach((container, index) => {
+                    const rect = container.getBoundingClientRect();
+                    if (rect.width > 0 && rect.height > 0) {
+                        log(`✅ Map container ${index + 1} has dimensions: ${rect.width}x${rect.height}`, 'pass');
+                    } else {
+                        log(`❌ Map container ${index + 1} has zero dimensions`, 'fail');
+                    }
+                });
+                
+                // Check for loading indicators
+                const loadingElements = frameDoc.querySelectorAll('[id^="loading"]');
+                log(`📋 Found ${loadingElements.length} loading indicators`, 'info');
+                
+            } catch (error) {
+                log(`❌ Error testing map initialization: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testControlInteraction() {
+            log('Testing control interaction...', 'info');
+            
+            const frame = document.getElementById('climate-os-frame');
+            
+            try {
+                const frameDoc = frame.contentDocument || frame.contentWindow.document;
+                
+                // Test analysis type controls
+                const analysisControls = frameDoc.querySelectorAll('#analysis1, #analysis2');
+                analysisControls.forEach((control, index) => {
+                    if (control) {
+                        log(`✅ Analysis control ${index + 1} found`, 'pass');
+                        
+                        // Test options
+                        if (control.options.length > 0) {
+                            log(`✅ Analysis control ${index + 1} has ${control.options.length} options`, 'pass');
+                            
+                            // Check for expected analysis types
+                            const options = Array.from(control.options).map(opt => opt.value);
+                            const expectedTypes = ['historical', 'trends', 'projections', 'risk'];
+                            const hasExpectedTypes = expectedTypes.some(type => options.includes(type));
+                            
+                            if (hasExpectedTypes) {
+                                log(`✅ Analysis control ${index + 1} has expected analysis types`, 'pass');
+                            } else {
+                                log(`❌ Analysis control ${index + 1} missing expected types`, 'fail');
+                            }
+                        } else {
+                            log(`❌ Analysis control ${index + 1} has no options`, 'fail');
+                        }
+                        
+                        // Test change event (simulate)
+                        const originalValue = control.value;
+                        const newValue = control.options[1] ? control.options[1].value : originalValue;
+                        
+                        if (newValue !== originalValue) {
+                            control.value = newValue;
+                            control.dispatchEvent(new Event('change'));
+                            log(`✅ Analysis control ${index + 1} change event triggered`, 'pass');
+                            
+                            // Revert
+                            control.value = originalValue;
+                        }
+                    } else {
+                        log(`❌ Analysis control ${index + 1} not found`, 'fail');
+                    }
+                });
+                
+                // Test timeframe controls
+                const timeframeControls = frameDoc.querySelectorAll('#timeframe1, #timeframe2');
+                timeframeControls.forEach((control, index) => {
+                    if (control) {
+                        log(`✅ Timeframe control ${index + 1} found`, 'pass');
+                        
+                        if (control.options.length > 0) {
+                            log(`✅ Timeframe control ${index + 1} has ${control.options.length} options`, 'pass');
+                            
+                            // Check for time ranges
+                            const options = Array.from(control.options).map(opt => opt.value);
+                            const hasTimeRanges = options.some(opt => opt.includes('-'));
+                            
+                            if (hasTimeRanges) {
+                                log(`✅ Timeframe control ${index + 1} has time range format`, 'pass');
+                            } else {
+                                log(`❌ Timeframe control ${index + 1} missing time ranges`, 'fail');
+                            }
+                        } else {
+                            log(`❌ Timeframe control ${index + 1} has no options`, 'fail');
+                        }
+                    } else {
+                        log(`❌ Timeframe control ${index + 1} not found`, 'fail');
+                    }
+                });
+                
+                // Test title updates
+                const mapTitles = frameDoc.querySelectorAll('#map1-title, #map2-title');
+                mapTitles.forEach((title, index) => {
+                    if (title && title.textContent.trim()) {
+                        log(`✅ Map title ${index + 1}: "${title.textContent}"`, 'pass');
+                    } else {
+                        log(`❌ Map title ${index + 1} missing or empty`, 'fail');
+                    }
+                });
+                
+            } catch (error) {
+                log(`❌ Error testing control interaction: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testStatisticalData() {
+            log('Testing statistical data generation...', 'info');
+            
+            const frame = document.getElementById('climate-os-frame');
+            
+            try {
+                const frameWindow = frame.contentWindow;
+                
+                // Test data generation functions
+                if (typeof frameWindow.generateStatisticalData === 'function') {
+                    log('✅ generateStatisticalData function available', 'pass');
+                    
+                    // Test different analysis types
+                    const analysisTypes = ['historical', 'trends', 'projections', 'risk'];
+                    analysisTypes.forEach(analysisType => {
+                        try {
+                            const data = frameWindow.generateStatisticalData(analysisType);
+                            if (Array.isArray(data) && data.length > 0) {
+                                log(`✅ Generated ${data.length} data points for ${analysisType}`, 'pass');
+                                
+                                // Validate data structure
+                                const firstPoint = data[0];
+                                if (firstPoint.properties && firstPoint.properties.value !== undefined) {
+                                    log(`✅ Statistical data has value property for ${analysisType}`, 'pass');
+                                } else {
+                                    log(`❌ Statistical data missing value property for ${analysisType}`, 'fail');
+                                }
+                                
+                                if (firstPoint.properties && firstPoint.properties.confidence !== undefined) {
+                                    log(`✅ Statistical data has confidence property for ${analysisType}`, 'pass');
+                                } else {
+                                    log(`❌ Statistical data missing confidence property for ${analysisType}`, 'fail');
+                                }
+                                
+                            } else {
+                                log(`❌ No data generated for ${analysisType}`, 'fail');
+                            }
+                        } catch (error) {
+                            log(`❌ Error generating data for ${analysisType}: ${error.message}`, 'fail');
+                        }
+                    });
+                } else {
+                    log('❌ generateStatisticalData function not available', 'fail');
+                }
+                
+                // Test map data updates
+                if (typeof frameWindow.updateMapData === 'function') {
+                    log('✅ updateMapData function available', 'pass');
+                } else {
+                    log('❌ updateMapData function not available', 'fail');
+                }
+                
+                // Test title update function
+                if (typeof frameWindow.updateMapTitle === 'function') {
+                    log('✅ updateMapTitle function available', 'pass');
+                } else {
+                    log('❌ updateMapTitle function not available', 'fail');
+                }
+                
+            } catch (error) {
+                log(`❌ Error testing statistical data: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testAnalysisTypes() {
+            log('Testing analysis type variations...', 'info');
+            
+            const frame = document.getElementById('climate-os-frame');
+            
+            try {
+                const frameWindow = frame.contentWindow;
+                
+                if (typeof frameWindow.generateStatisticalData === 'function') {
+                    // Test that different analysis types produce different data patterns
+                    const historicalData = frameWindow.generateStatisticalData('historical');
+                    const projectionsData = frameWindow.generateStatisticalData('projections');
+                    
+                    if (historicalData.length > 0 && projectionsData.length > 0) {
+                        // Calculate average values for comparison
+                        const historicalAvg = historicalData.reduce((sum, d) => sum + d.properties.value, 0) / historicalData.length;
+                        const projectionsAvg = projectionsData.reduce((sum, d) => sum + d.properties.value, 0) / projectionsData.length;
+                        
+                        log(`📊 Historical average: ${historicalAvg.toFixed(2)}`, 'info');
+                        log(`📊 Projections average: ${projectionsAvg.toFixed(2)}`, 'info');
+                        
+                        if (Math.abs(historicalAvg - projectionsAvg) > 5) {
+                            log('✅ Analysis types produce different value ranges', 'pass');
+                        } else {
+                            log('⚠️ Analysis types produce similar values (may be expected)', 'warning');
+                        }
+                        
+                        // Test confidence levels
+                        const historicalConfidence = historicalData.reduce((sum, d) => sum + d.properties.confidence, 0) / historicalData.length;
+                        const projectionsConfidence = projectionsData.reduce((sum, d) => sum + d.properties.confidence, 0) / projectionsData.length;
+                        
+                        log(`📊 Historical confidence: ${historicalConfidence.toFixed(2)}`, 'info');
+                        log(`📊 Projections confidence: ${projectionsConfidence.toFixed(2)}`, 'info');
+                        
+                        if (historicalConfidence > 0 && projectionsConfidence > 0) {
+                            log('✅ Confidence values are positive', 'pass');
+                        } else {
+                            log('❌ Invalid confidence values detected', 'fail');
+                        }
+                    }
+                    
+                    // Test extreme cases
+                    try {
+                        const emptyResult = frameWindow.generateStatisticalData('');
+                        if (Array.isArray(emptyResult)) {
+                            log('✅ Function handles empty input gracefully', 'pass');
+                        }
+                    } catch (error) {
+                        log('✅ Function properly validates input', 'pass');
+                    }
+                }
+                
+            } catch (error) {
+                log(`❌ Error testing analysis types: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testPerformance() {
+            log('Testing performance...', 'info');
+            
+            const frame = document.getElementById('climate-os-frame');
+            
+            try {
+                const frameWindow = frame.contentWindow;
+                
+                // Test data generation performance
+                if (typeof frameWindow.generateStatisticalData === 'function') {
+                    const startTime = performance.now();
+                    
+                    for (let i = 0; i < 10; i++) {
+                        frameWindow.generateStatisticalData('historical');
+                    }
+                    
+                    const endTime = performance.now();
+                    const duration = endTime - startTime;
+                    
+                    log(`📊 Generated statistical data 10 times in ${duration.toFixed(2)}ms`, 'info');
+                    
+                    if (duration < 1000) {
+                        log('✅ Statistical data generation performance acceptable', 'pass');
+                    } else {
+                        log('❌ Statistical data generation too slow', 'fail');
+                    }
+                }
+                
+                // Test memory usage (basic check)
+                if (performance.memory) {
+                    const memInfo = performance.memory;
+                    log(`📊 Memory usage: ${(memInfo.usedJSHeapSize / 1024 / 1024).toFixed(2)}MB`, 'info');
+                    
+                    if (memInfo.usedJSHeapSize < 100 * 1024 * 1024) { // 100MB
+                        log('✅ Memory usage reasonable', 'pass');
+                    } else {
+                        log('⚠️ High memory usage detected', 'warning');
+                    }
+                }
+                
+                // Test rapid control changes
+                const frameDoc = frame.contentDocument || frameWindow.document;
+                const analysisControl = frameDoc.querySelector('#analysis1');
+                
+                if (analysisControl) {
+                    const startTime = performance.now();
+                    
+                    // Simulate rapid changes
+                    for (let i = 0; i < analysisControl.options.length; i++) {
+                        analysisControl.value = analysisControl.options[i].value;
+                        analysisControl.dispatchEvent(new Event('change'));
+                    }
+                    
+                    const endTime = performance.now();
+                    const duration = endTime - startTime;
+                    
+                    log(`📊 Rapid control changes completed in ${duration.toFixed(2)}ms`, 'info');
+                    
+                    if (duration < 500) {
+                        log('✅ Control response performance acceptable', 'pass');
+                    } else {
+                        log('⚠️ Control response may be slow', 'warning');
+                    }
+                }
+                
+                log('✅ Performance tests completed', 'pass');
+                
+            } catch (error) {
+                log(`❌ Error testing performance: ${error.message}`, 'fail');
+            }
+        }
+
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Auto-start basic validation
+        window.addEventListener('load', () => {
+            log('📊 Climate-OS dual-map test framework loaded', 'info');
+            setTimeout(() => {
+                log('Running automatic startup validation...', 'info');
+                testBasicLoad();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

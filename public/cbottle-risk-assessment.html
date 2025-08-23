@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-bottle Risk Assessment - Working Maps</title>
+    <meta name="description" content="C-bottle framework for property-level hurricane risk assessment">
+    
+    <!-- Mapbox GL JS -->
+    <script src='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v3.0.1/mapbox-gl.css' rel='stylesheet' />
+    
+    <!-- C-bottle Property Risk Engine -->
+    <script src="cbottle-property-engine.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0d1117;
+            color: #c9d1d9;
+            overflow-x: hidden;
+        }
+        
+        /* Header */
+        .header {
+            background: #161b22;
+            border-bottom: 1px solid #30363d;
+            padding: 1rem 2rem;
+            position: relative;
+            z-index: 1000;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            color: #4fbcff;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: #8b949e;
+            font-size: 0.9rem;
+        }
+        
+        /* Main Layout - Simple side-by-side */
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 100px);
+            padding: 1rem;
+            gap: 1rem;
+        }
+        
+        /* Each map section takes half the width */
+        .map-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        /* Map header */
+        .map-header {
+            background: #0d1117;
+            padding: 1rem;
+            border-bottom: 1px solid #30363d;
+        }
+        
+        .map-header h3 {
+            color: #4fbcff;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .map-header p {
+            color: #8b949e;
+            font-size: 0.85rem;
+        }
+        
+        /* Map container - CRITICAL: Fixed dimensions */
+        .map-wrapper {
+            flex: 1;
+            position: relative;
+            min-height: 400px;
+        }
+        
+        .map {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        /* Controls */
+        .controls {
+            background: #0d1117;
+            padding: 1rem;
+            border-top: 1px solid #30363d;
+        }
+        
+        .control-group {
+            margin-bottom: 0.75rem;
+        }
+        
+        .control-group label {
+            display: block;
+            color: #f0f6fc;
+            font-size: 0.85rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .control-group select, .control-group input {
+            width: 100%;
+            padding: 0.5rem;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            color: #c9d1d9;
+            font-size: 0.85rem;
+        }
+        
+        /* Property panel */
+        .property-panel {
+            background: rgba(79, 188, 255, 0.1);
+            border: 1px solid #4fbcff;
+            border-radius: 6px;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        
+        .property-panel h4 {
+            color: #4fbcff;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .property-item {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            margin: 0.25rem 0;
+        }
+        
+        .property-value {
+            color: #4fbcff;
+            font-weight: bold;
+        }
+        
+        .risk-high { color: #ff6b6b; }
+        .risk-medium { color: #ffd93d; }
+        .risk-low { color: #6bcf7f; }
+        
+        /* Loading indicator */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #161b22;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            z-index: 100;
+        }
+        
+        /* Debug info */
+        .debug-panel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(22, 27, 34, 0.9);
+            padding: 0.5rem;
+            border-radius: 6px;
+            border: 1px solid #30363d;
+            font-size: 0.75rem;
+            z-index: 101;
+            max-width: 200px;
+        }
+        
+        .debug-panel div {
+            margin: 0.25rem 0;
+        }
+        
+        .success { color: #3fb950; }
+        .error { color: #f85149; }
+        .info { color: #4fbcff; }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .main-layout {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .map-section {
+                height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>C-bottle Risk Assessment</h1>
+        <p>Property-level hurricane risk analysis with Google Earth integration</p>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left Map: Current Risk -->
+        <div class="map-section">
+            <div class="map-header">
+                <h3>Current Property Risk</h3>
+                <p>Real-time assessment based on location and structure</p>
+            </div>
+            
+            <div class="map-wrapper">
+                <div id="map1" class="map"></div>
+                <div id="loading1" class="loading">Loading property data...</div>
+                <div id="debug1" class="debug-panel">
+                    <div class="info">Map 1 Status:</div>
+                    <div id="status1">Initializing...</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Property Address</label>
+                    <input type="text" id="address1" placeholder="123 Main St, Miami, FL" value="Miami Beach, FL">
+                </div>
+                
+                <div class="control-group">
+                    <label>Building Type</label>
+                    <select id="building1">
+                        <option value="residential">Residential</option>
+                        <option value="commercial">Commercial</option>
+                        <option value="industrial">Industrial</option>
+                    </select>
+                </div>
+                
+                <div class="property-panel">
+                    <h4>Risk Assessment</h4>
+                    <div class="property-item">
+                        <span>Hurricane Risk:</span>
+                        <span class="property-value risk-high">HIGH</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Flood Zone:</span>
+                        <span class="property-value">AE</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Wind Speed:</span>
+                        <span class="property-value">140 mph</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Map: Future Risk -->
+        <div class="map-section">
+            <div class="map-header">
+                <h3>Future Risk Projection</h3>
+                <p>Climate-adjusted risk assessment for 2050</p>
+            </div>
+            
+            <div class="map-wrapper">
+                <div id="map2" class="map"></div>
+                <div id="loading2" class="loading">Loading projections...</div>
+                <div id="debug2" class="debug-panel">
+                    <div class="info">Map 2 Status:</div>
+                    <div id="status2">Initializing...</div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label>Projection Year</label>
+                    <select id="year2">
+                        <option value="2030">2030</option>
+                        <option value="2050" selected>2050</option>
+                        <option value="2070">2070</option>
+                    </select>
+                </div>
+                
+                <div class="control-group">
+                    <label>Adaptation Measures</label>
+                    <select id="adaptation2">
+                        <option value="none">No Adaptation</option>
+                        <option value="basic">Basic Hardening</option>
+                        <option value="full">Full Resilience</option>
+                    </select>
+                </div>
+                
+                <div class="property-panel">
+                    <h4>Future Risk Assessment</h4>
+                    <div class="property-item">
+                        <span>Hurricane Risk:</span>
+                        <span class="property-value risk-high">EXTREME</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Risk Change:</span>
+                        <span class="property-value risk-high">+45%</span>
+                    </div>
+                    <div class="property-item">
+                        <span>Insurance Cost:</span>
+                        <span class="property-value">$12,500/yr</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set Mapbox token
+        mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGtuZWU1IiwiYSI6ImNtZTl3NzRvZjByNXgybnEydHNlc2R6ZHoifQ.8k33LovefbfNKcYWT-VkcA';
+        
+        console.log('🚀 Starting C-bottle Risk Assessment...');
+        console.log('Mapbox GL version:', mapboxgl.version);
+        
+        let map1, map2;
+        let mapsInitialized = false;
+        
+        // Update debug status
+        function updateStatus(mapId, message, type = 'info') {
+            const statusEl = document.getElementById(`status${mapId}`);
+            if (statusEl) {
+                statusEl.innerHTML = `<span class="${type}">${message}</span>`;
+            }
+            console.log(`[Map ${mapId}] ${message}`);
+        }
+        
+        // Check container dimensions
+        function checkContainer(containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) {
+                console.error(`Container ${containerId} not found!`);
+                return false;
+            }
+            
+            const rect = container.getBoundingClientRect();
+            console.log(`Container ${containerId} dimensions:`, rect.width, 'x', rect.height);
+            
+            if (rect.width === 0 || rect.height === 0) {
+                console.error(`Container ${containerId} has zero dimensions!`);
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Create a single map
+        function createMap(containerId, mapNum) {
+            updateStatus(mapNum, 'Creating map...', 'info');
+            
+            if (!checkContainer(containerId)) {
+                updateStatus(mapNum, 'Container error!', 'error');
+                return null;
+            }
+            
+            try {
+                const map = new mapboxgl.Map({
+                    container: containerId,
+                    style: 'mapbox://styles/mapbox/satellite-streets-v12',
+                    center: [-80.13, 25.79], // Miami Beach
+                    zoom: mapNum === '1' ? 15 : 14, // Closer zoom for property view
+                    attributionControl: false
+                });
+                
+                updateStatus(mapNum, 'Map created, loading...', 'info');
+                
+                // Handle load event
+                map.on('load', () => {
+                    updateStatus(mapNum, 'Map loaded!', 'success');
+                    document.getElementById(`loading${mapNum}`).style.display = 'none';
+                    
+                    // Add property and risk data
+                    addPropertyData(map, mapNum);
+                    
+                    // Hide debug panel after 3 seconds
+                    setTimeout(() => {
+                        document.getElementById(`debug${mapNum}`).style.display = 'none';
+                    }, 3000);
+                });
+                
+                // Handle error event
+                map.on('error', (e) => {
+                    console.error('Map error:', e);
+                    updateStatus(mapNum, 'Map error: ' + (e.error?.message || 'Unknown'), 'error');
+                });
+                
+                return map;
+                
+            } catch (error) {
+                console.error('Exception creating map:', error);
+                updateStatus(mapNum, 'Exception: ' + error.message, 'error');
+                return null;
+            }
+        }
+        
+        // Add property and risk data to map
+        function addPropertyData(map, mapNum) {
+            const properties = generatePropertyData(mapNum);
+            
+            // Add risk zones
+            map.addSource('risk-zones', {
+                type: 'geojson',
+                data: generateRiskZones(mapNum)
+            });
+            
+            map.addLayer({
+                id: 'risk-zones-fill',
+                type: 'fill',
+                source: 'risk-zones',
+                paint: {
+                    'fill-color': [
+                        'case',
+                        ['>=', ['get', 'risk'], 0.8], 'rgba(255, 107, 107, 0.4)',
+                        ['>=', ['get', 'risk'], 0.5], 'rgba(255, 217, 61, 0.4)',
+                        'rgba(107, 207, 127, 0.4)'
+                    ],
+                    'fill-opacity': 0.6
+                }
+            });
+            
+            // Add properties
+            map.addSource('properties', {
+                type: 'geojson',
+                data: properties
+            });
+            
+            map.addLayer({
+                id: 'properties',
+                type: 'circle',
+                source: 'properties',
+                paint: {
+                    'circle-radius': [
+                        'interpolate',
+                        ['linear'],
+                        ['zoom'],
+                        12, 6,
+                        16, 20
+                    ],
+                    'circle-color': [
+                        'case',
+                        ['>=', ['get', 'risk'], 0.8], '#ff6b6b',
+                        ['>=', ['get', 'risk'], 0.5], '#ffd93d',
+                        '#6bcf7f'
+                    ],
+                    'circle-stroke-color': '#ffffff',
+                    'circle-stroke-width': 2,
+                    'circle-opacity': 0.9
+                }
+            });
+            
+            // Add property labels at high zoom
+            map.addLayer({
+                id: 'property-labels',
+                type: 'symbol',
+                source: 'properties',
+                minzoom: 14,
+                layout: {
+                    'text-field': ['get', 'address'],
+                    'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    'text-size': 12,
+                    'text-offset': [0, 1.5],
+                    'text-anchor': 'top'
+                },
+                paint: {
+                    'text-color': '#ffffff',
+                    'text-halo-color': '#000000',
+                    'text-halo-width': 1
+                }
+            });
+            
+            console.log(`Added ${properties.features.length} properties to map ${mapNum}`);
+        }
+        
+        // Generate property data using C-bottle property engine
+        function generatePropertyData(mapNum) {
+            // Use C-bottle property-level risk engine
+            const location = 'miami'; // Default to Miami for demo
+            const scenario = mapNum === '1' ? 'current' : 'severe';
+            
+            const data = cbottleEngine.generatePropertyRiskData(location, scenario);
+            
+            console.log(`C-bottle Property Data for ${location} (${scenario}):`, data);
+            console.log('Aggregate Stats:', data.properties.aggregateStats);
+            
+            // Convert polygon features to points for better visualization
+            const pointFeatures = data.features.map(feature => ({
+                type: 'Feature',
+                properties: {
+                    ...feature.properties,
+                    risk: feature.properties.riskScore / 10 // Normalize to 0-1
+                },
+                geometry: {
+                    type: 'Point',
+                    coordinates: [
+                        feature.geometry.coordinates[0][0][0] + 0.0002,
+                        feature.geometry.coordinates[0][0][1] + 0.0002
+                    ]
+                }
+            }));
+            
+            return {
+                type: 'FeatureCollection',
+                features: pointFeatures
+            };
+        }
+        
+        // Generate risk zones using C-bottle engine
+        function generateRiskZones(mapNum) {
+            // Use the same property data to create risk zones
+            const location = 'miami';
+            const scenario = mapNum === '1' ? 'current' : 'severe';
+            
+            const data = cbottleEngine.generatePropertyRiskData(location, scenario);
+            
+            // Keep original polygon features for zone visualization
+            return {
+                type: 'FeatureCollection',
+                features: data.features
+            };
+        }
+        
+        // Initialize maps when DOM is ready
+        function initializeMaps() {
+            if (mapsInitialized) return;
+            mapsInitialized = true;
+            
+            console.log('Initializing C-bottle maps...');
+            
+            // Create map 1
+            map1 = createMap('map1', '1');
+            
+            // Create map 2 with slight delay
+            setTimeout(() => {
+                map2 = createMap('map2', '2');
+            }, 500);
+            
+            // Force resize after creation
+            setTimeout(() => {
+                if (map1) {
+                    map1.resize();
+                    console.log('Map 1 resized');
+                }
+                if (map2) {
+                    map2.resize();
+                    console.log('Map 2 resized');
+                }
+            }, 2000);
+        }
+        
+        // Wait for DOM to be fully loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeMaps);
+        } else {
+            // DOM already loaded
+            setTimeout(initializeMaps, 100);
+        }
+        
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (map1) map1.resize();
+            if (map2) map2.resize();
+        });
+        
+        // Add dropdown event listeners
+        function setupDropdownListeners() {
+            // Building type dropdown for map 1
+            const buildingSelect = document.getElementById('building1');
+            if (buildingSelect) {
+                buildingSelect.addEventListener('change', (e) => {
+                    const buildingType = e.target.value;
+                    console.log('Building type changed to:', buildingType);
+                    updateBuildingRisk(map1, buildingType);
+                });
+            }
+            
+            // Projection year dropdown for map 2
+            const yearSelect = document.getElementById('year2');
+            if (yearSelect) {
+                yearSelect.addEventListener('change', (e) => {
+                    const year = e.target.value;
+                    console.log('Projection year changed to:', year);
+                    updateProjectionYear(map2, year);
+                });
+            }
+            
+            // Adaptation measures dropdown for map 2
+            const adaptationSelect = document.getElementById('adaptation2');
+            if (adaptationSelect) {
+                adaptationSelect.addEventListener('change', (e) => {
+                    const adaptation = e.target.value;
+                    console.log('Adaptation changed to:', adaptation);
+                    updateAdaptationMeasures(map2, adaptation);
+                });
+            }
+            
+            // Address input for map 1
+            const addressInput = document.getElementById('address1');
+            if (addressInput) {
+                addressInput.addEventListener('change', (e) => {
+                    const address = e.target.value;
+                    console.log('Address changed to:', address);
+                    geocodeAndUpdateMap(map1, address);
+                });
+            }
+        }
+        
+        // Update risk based on building type
+        function updateBuildingRisk(map, buildingType) {
+            if (!map || !map.getSource('properties')) return;
+            
+            // Adjust risk colors based on building type
+            const riskMultipliers = {
+                'residential': 1.0,
+                'commercial': 0.8,
+                'industrial': 0.6
+            };
+            
+            const multiplier = riskMultipliers[buildingType] || 1.0;
+            
+            // Update property circles color based on adjusted risk
+            map.setPaintProperty('properties', 'circle-color', [
+                'case',
+                ['>=', ['*', ['get', 'risk'], multiplier], 0.8], '#ff6b6b',
+                ['>=', ['*', ['get', 'risk'], multiplier], 0.5], '#ffd93d',
+                '#6bcf7f'
+            ]);
+            
+            // Update risk assessment panel
+            updateRiskAssessment(buildingType);
+        }
+        
+        // Update projection based on year
+        function updateProjectionYear(map, year) {
+            if (!map || !map.getSource('risk-zones')) return;
+            
+            // Adjust risk zones based on projection year
+            const yearMultipliers = {
+                '2030': 1.2,
+                '2050': 1.45,
+                '2070': 1.8
+            };
+            
+            const multiplier = yearMultipliers[year] || 1.0;
+            
+            // Generate new risk zones for the year
+            const newZones = generateRiskZones('2');
+            newZones.features.forEach(feature => {
+                feature.properties.risk *= multiplier;
+            });
+            
+            map.getSource('risk-zones').setData(newZones);
+            
+            // Update future risk panel
+            updateFutureRiskPanel(year);
+        }
+        
+        // Update based on adaptation measures
+        function updateAdaptationMeasures(map, adaptation) {
+            if (!map || !map.getSource('properties')) return;
+            
+            // Risk reduction based on adaptation
+            const adaptationReductions = {
+                'none': 0,
+                'basic': 0.25,
+                'full': 0.5
+            };
+            
+            const reduction = adaptationReductions[adaptation] || 0;
+            
+            // Update visualization to show reduced risk
+            map.setPaintProperty('properties', 'circle-opacity', 0.9 - reduction * 0.3);
+            
+            // Update insurance cost estimate
+            updateInsuranceCost(adaptation);
+        }
+        
+        // Geocode address and center map
+        function geocodeAndUpdateMap(map, address) {
+            // Simple geocoding simulation (in real app, use Mapbox Geocoding API)
+            console.log('Geocoding address:', address);
+            
+            // For demo, just update the center slightly
+            if (address.toLowerCase().includes('miami')) {
+                map.flyTo({
+                    center: [-80.2, 25.76],
+                    zoom: 15
+                });
+            }
+        }
+        
+        // Update risk assessment display
+        function updateRiskAssessment(buildingType) {
+            const riskLevels = {
+                'residential': { risk: 'HIGH', zone: 'AE', speed: '140 mph' },
+                'commercial': { risk: 'MEDIUM', zone: 'AE', speed: '130 mph' },
+                'industrial': { risk: 'MEDIUM', zone: 'X', speed: '120 mph' }
+            };
+            
+            const assessment = riskLevels[buildingType] || riskLevels['residential'];
+            
+            // Update DOM elements
+            const riskElement = document.querySelector('.property-panel .risk-high');
+            if (riskElement) {
+                riskElement.textContent = assessment.risk;
+                riskElement.className = `property-value risk-${assessment.risk.toLowerCase()}`;
+            }
+        }
+        
+        // Update future risk panel
+        function updateFutureRiskPanel(year) {
+            const risks = {
+                '2030': { risk: 'HIGH', change: '+25%', insurance: '$8,500/yr' },
+                '2050': { risk: 'EXTREME', change: '+45%', insurance: '$12,500/yr' },
+                '2070': { risk: 'EXTREME', change: '+80%', insurance: '$18,000/yr' }
+            };
+            
+            const futureRisk = risks[year] || risks['2050'];
+            
+            // Update future risk display
+            const elements = document.querySelectorAll('.map-section:nth-child(2) .property-value');
+            if (elements.length >= 3) {
+                elements[0].textContent = futureRisk.risk;
+                elements[1].textContent = futureRisk.change;
+                elements[2].textContent = futureRisk.insurance;
+            }
+        }
+        
+        // Update insurance cost based on adaptation
+        function updateInsuranceCost(adaptation) {
+            const baseCost = 12500;
+            const reductions = {
+                'none': 0,
+                'basic': 0.2,
+                'full': 0.4
+            };
+            
+            const reduction = reductions[adaptation] || 0;
+            const newCost = baseCost * (1 - reduction);
+            
+            // Update insurance cost display
+            const costElement = document.querySelector('.map-section:nth-child(2) .property-value:last-child');
+            if (costElement) {
+                costElement.textContent = `$${newCost.toLocaleString()}/yr`;
+            }
+        }
+        
+        // Setup listeners after maps are loaded
+        setTimeout(setupDropdownListeners, 3000);
+    </script>
+</body>
+</html>

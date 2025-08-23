@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Framework Comparison - Climate Risk Analysis</title>
+    <meta name="description" content="Comprehensive comparison of CLIMADA, Climate-OS, and C-bottle frameworks for climate risk analysis">
+    
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared-styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0c1445 0%, #1a1a2e 50%, #16213e 100%);
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .header {
+            padding: 40px 20px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.8em;
+            font-weight: 300;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: #888;
+            margin-bottom: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .comparison-matrix {
+            margin-bottom: 60px;
+        }
+        
+        .section-title {
+            font-size: 2em;
+            color: #00d4ff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+        
+        .matrix-container {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+            overflow-x: auto;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+            font-size: 0.95em;
+        }
+        
+        .comparison-table th {
+            background: rgba(0, 212, 255, 0.1);
+            color: #00d4ff;
+            padding: 15px 12px;
+            text-align: left;
+            border-bottom: 2px solid #00d4ff;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .comparison-table td {
+            padding: 15px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ddd;
+            vertical-align: top;
+        }
+        
+        .comparison-table tr:hover {
+            background: rgba(0, 212, 255, 0.05);
+        }
+        
+        .framework-column {
+            min-width: 200px;
+        }
+        
+        .climada-cell {
+            border-left: 4px solid #2196F3;
+        }
+        
+        .climate-os-cell {
+            border-left: 4px solid #A23B72;
+        }
+        
+        .cbottle-cell {
+            border-left: 4px solid #4285F4;
+        }
+        
+        .rating {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .rating-stars {
+            color: #FFD700;
+            font-size: 1.1em;
+        }
+        
+        .rating-text {
+            font-size: 0.85em;
+            color: #aaa;
+        }
+        
+        .pros-cons-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .framework-analysis {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .framework-analysis.climada {
+            border-top: 4px solid #2196F3;
+        }
+        
+        .framework-analysis.climate-os {
+            border-top: 4px solid #A23B72;
+        }
+        
+        .framework-analysis.cbottle {
+            border-top: 4px solid #4285F4;
+        }
+        
+        .framework-name {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .framework-name.climada {
+            color: #2196F3;
+        }
+        
+        .framework-name.climate-os {
+            color: #A23B72;
+        }
+        
+        .framework-name.cbottle {
+            color: #4285F4;
+        }
+        
+        .pros, .cons {
+            margin-bottom: 25px;
+        }
+        
+        .pros-title, .cons-title {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+        
+        .pros-title {
+            color: #4CAF50;
+        }
+        
+        .cons-title {
+            color: #FF9800;
+        }
+        
+        .pros ul, .cons ul {
+            list-style: none;
+            font-size: 0.9em;
+        }
+        
+        .pros li, .cons li {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+            color: #ccc;
+        }
+        
+        .pros li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        
+        .cons li::before {
+            content: '⚠';
+            position: absolute;
+            left: 0;
+            color: #FF9800;
+            font-weight: bold;
+        }
+        
+        .decision-matrix {
+            background: rgba(30, 30, 30, 0.9);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+        }
+        
+        .decision-title {
+            font-size: 1.8em;
+            color: #00d4ff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+        
+        .use-cases {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .use-case {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .use-case-title {
+            font-size: 1.2em;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        
+        .use-case-description {
+            color: #bbb;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .recommended-framework {
+            font-size: 1.1em;
+            font-weight: 600;
+            padding: 10px 15px;
+            border-radius: 25px;
+            display: inline-block;
+        }
+        
+        .recommended-framework.climada {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+            border: 1px solid #2196F3;
+        }
+        
+        .recommended-framework.climate-os {
+            background: rgba(162, 59, 114, 0.2);
+            color: #A23B72;
+            border: 1px solid #A23B72;
+        }
+        
+        .recommended-framework.cbottle {
+            background: rgba(66, 133, 244, 0.2);
+            color: #4285F4;
+            border: 1px solid #4285F4;
+        }
+        
+        .performance-section {
+            margin-bottom: 60px;
+        }
+        
+        .performance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .performance-card {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .performance-metric {
+            font-size: 1.1em;
+            color: #00d4ff;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .performance-values {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        
+        .framework-perf {
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        
+        .framework-perf.climada {
+            background: rgba(33, 150, 243, 0.2);
+            color: #2196F3;
+        }
+        
+        .framework-perf.climate-os {
+            background: rgba(162, 59, 114, 0.2);
+            color: #A23B72;
+        }
+        
+        .framework-perf.cbottle {
+            background: rgba(66, 133, 244, 0.2);
+            color: #4285F4;
+        }
+        
+        .navigation {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            margin: 0 10px;
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: #000;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+            z-index: 100;
+            pointer-events: auto;
+        }
+        
+        .btn:hover {
+            background: linear-gradient(135deg, #33ddff, #00b3e6);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #00d4ff;
+            border: 1px solid #00d4ff;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+        
+        /* Application Comparison Styles */
+        .app-comparison-section {
+            margin-bottom: 60px;
+        }
+        
+        .app-comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .app-preview {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .app-preview:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        
+        .app-preview.climada {
+            border-top: 4px solid var(--climada-primary);
+        }
+        
+        .app-preview.climate-os {
+            border-top: 4px solid var(--climate-os-primary);
+        }
+        
+        .app-preview.cbottle {
+            border-top: 4px solid var(--cbottle-primary);
+        }
+        
+        .app-preview-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .app-preview-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+            color: var(--text);
+            font-weight: 500;
+        }
+        
+        .app-preview-content {
+            margin-bottom: 20px;
+        }
+        
+        .ui-feature {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 12px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .ui-feature:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-label {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.9em;
+            min-width: 80px;
+            text-align: left;
+        }
+        
+        .feature-value {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            text-align: right;
+            flex: 1;
+            margin-left: 15px;
+            line-height: 1.4;
+        }
+        
+        .app-preview-footer {
+            text-align: center;
+        }
+        
+        .preview-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+            position: relative;
+            z-index: 100;
+            pointer-events: auto;
+        }
+        
+        .preview-btn.climada {
+            background: linear-gradient(135deg, var(--climada-primary), var(--climada-secondary));
+            color: white;
+        }
+        
+        .preview-btn.climada:hover {
+            background: linear-gradient(135deg, var(--climada-secondary), var(--climada-primary));
+            transform: translateY(-2px);
+        }
+        
+        .preview-btn.climate-os {
+            background: linear-gradient(135deg, var(--climate-os-primary), var(--climate-os-secondary));
+            color: white;
+        }
+        
+        .preview-btn.climate-os:hover {
+            background: linear-gradient(135deg, var(--climate-os-secondary), var(--climate-os-primary));
+            transform: translateY(-2px);
+        }
+        
+        .preview-btn.cbottle {
+            background: linear-gradient(135deg, var(--cbottle-primary), var(--cbottle-secondary));
+            color: white;
+        }
+        
+        .preview-btn.cbottle:hover {
+            background: linear-gradient(135deg, var(--cbottle-secondary), var(--cbottle-primary));
+            transform: translateY(-2px);
+        }
+
+        /* UX Comparison Styles */
+        .ux-comparison-section {
+            margin-bottom: 60px;
+        }
+        
+        .ux-comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+        
+        .ux-aspect {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+        }
+        
+        .ux-title {
+            font-size: 1.2em;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 500;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .ux-details {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .ux-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border-left: 3px solid transparent;
+        }
+        
+        .ux-item:nth-child(1) {
+            border-left-color: var(--climada-primary);
+        }
+        
+        .ux-item:nth-child(2) {
+            border-left-color: var(--climate-os-primary);
+        }
+        
+        .ux-item:nth-child(3) {
+            border-left-color: var(--cbottle-primary);
+        }
+        
+        .ux-framework {
+            font-weight: 600;
+            font-size: 0.9em;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            width: fit-content;
+        }
+        
+        .ux-framework.climada {
+            background: rgba(33, 150, 243, 0.2);
+            color: var(--climada-primary);
+        }
+        
+        .ux-framework.climate-os {
+            background: rgba(162, 59, 114, 0.2);
+            color: var(--climate-os-primary);
+        }
+        
+        .ux-framework.cbottle {
+            background: rgba(66, 133, 244, 0.2);
+            color: var(--cbottle-primary);
+        }
+        
+        .ux-description {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .comparison-table {
+                font-size: 0.85em;
+            }
+            
+            .comparison-table th,
+            .comparison-table td {
+                padding: 10px 8px;
+            }
+            
+            .pros-cons-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .use-cases {
+                grid-template-columns: 1fr;
+            }
+            
+            .app-comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ui-feature {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .feature-value {
+                text-align: left;
+                margin-left: 0;
+            }
+            
+            .ux-comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Executive Summary Styles */
+        .executive-summary {
+            margin-bottom: 60px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .summary-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        
+        .summary-card h3 {
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+        
+        .summary-card p {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        /* Business Methodology Styles */
+        .methodology-comparison-section {
+            margin-bottom: 60px;
+        }
+        
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .methodology-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+        
+        .methodology-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+        
+        .methodology-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .methodology-header h3 {
+            margin: 0 0 5px 0;
+            font-size: 1.4em;
+            color: var(--text);
+            font-weight: 500;
+        }
+        
+        .methodology-subtitle {
+            font-size: 0.9em;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+        
+        .methodology-content {
+            margin-bottom: 25px;
+        }
+        
+        .business-value {
+            margin-bottom: 20px;
+        }
+        
+        .business-value h4 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+        
+        .business-value p {
+            color: var(--text-muted);
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        
+        .business-value ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .business-value li {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .business-value li::before {
+            content: '•';
+            color: var(--primary);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .methodology-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        
+        .roi-indicator {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .roi-label {
+            font-size: 0.8em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .roi-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* Business Impact Styles */
+        .business-impact {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Implementation Timeline Styles */
+        .implementation-timeline {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border);
+        }
+        
+        .implementation-timeline h3 {
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.3em;
+            font-weight: 500;
+        }
+        
+        .timeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        
+        .timeline-card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid var(--border);
+        }
+        
+        .timeline-card h4 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            font-weight: 500;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .timeline-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 6px;
+        }
+        
+        .timeline-phase {
+            font-weight: 600;
+            color: var(--text);
+            font-size: 0.9em;
+        }
+        
+        .timeline-desc {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            line-height: 1.4;
+        }
+        
+        .total-investment {
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <!-- Standardized Header -->
+    <header class="app-header">
+        <div class="header-left">
+            <div class="framework-logo">
+                <div class="framework-icon" style="background: linear-gradient(135deg, var(--primary), #0099cc);">CP</div>
+                <div>
+                    <h1 class="app-title" style="color: var(--primary);">Framework Comparison</h1>
+                    <div class="app-subtitle">CLIMADA vs Climate-OS vs C-bottle</div>
+                </div>
+            </div>
+        </div>
+        <nav class="header-nav">
+            <a href="climada-hurricane-analysis.html" class="nav-link framework climada">CLIMADA</a>
+            <a href="climate-os-statistical.html" class="nav-link framework climate-os">Climate-OS</a>
+            <a href="cbottle-risk-assessment.html" class="nav-link framework cbottle">C-bottle</a>
+            <a href="index.html" class="nav-link primary">Overview</a>
+        </nav>
+    </header>
+    
+    <div class="container">
+        <!-- Executive Summary -->
+        <div class="executive-summary">
+            <h2 class="section-title">Executive Summary for Financial Services</h2>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h3>Investment Decision Support</h3>
+                    <p>Choose the right climate risk framework based on your institution's specific needs for portfolio analysis, regulatory compliance, and strategic planning.</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Risk Management Integration</h3>
+                    <p>Each framework offers different approaches to quantifying climate risk for loan portfolios, real estate investments, and corporate lending.</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Regulatory Compliance</h3>
+                    <p>Understanding methodology differences is crucial for TCFD reporting, stress testing, and regulatory capital calculations.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Business Methodology Comparison -->
+        <div class="methodology-comparison-section">
+            <h2 class="section-title">Methodology & Business Capability Analysis</h2>
+            <div class="methodology-grid">
+                <div class="methodology-card climada">
+                    <div class="methodology-header">
+                        <div class="framework-icon climada">CL</div>
+                        <h3>CLIMADA Framework</h3>
+                        <div class="methodology-subtitle">Probabilistic Climate Impact Assessment</div>
+                    </div>
+                    <div class="methodology-content">
+                        <div class="business-value">
+                            <h4>Core Methodology</h4>
+                            <p><strong>Physics-based probabilistic modeling</strong> using peer-reviewed algorithms from ETH Zurich. Integrates meteorological data with economic exposure models to quantify physical climate risks.</p>
+                        </div>
+                        
+                        <div class="business-value">
+                            <h4>Banking Applications</h4>
+                            <ul>
+                                <li><strong>Mortgage Portfolio Risk:</strong> Property-level hurricane damage probability with uncertainty bounds</li>
+                                <li><strong>Corporate Lending:</strong> Supply chain disruption analysis for borrowers</li>
+                                <li><strong>Insurance Partnerships:</strong> Catastrophe bond pricing and reinsurance strategy</li>
+                                <li><strong>Capital Planning:</strong> Regulatory stress test scenarios (Fed, ECB, BoE)</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="business-value">
+                            <h4>Competitive Advantages</h4>
+                            <ul>
+                                <li>Regulatory acceptance for TCFD and stress testing</li>
+                                <li>Peer-reviewed methodology reduces model risk</li>
+                                <li>Global coverage for multinational portfolios</li>
+                                <li>Integration with economic damage functions</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="business-value">
+                            <h4>Investment Requirements</h4>
+                            <p><strong>High initial cost:</strong> $150K-500K implementation. Requires PhD-level risk modeling team. 6-12 month deployment timeline.</p>
+                        </div>
+                    </div>
+                    <div class="methodology-footer">
+                        <div class="roi-indicator">
+                            <span class="roi-label">ROI Timeline:</span>
+                            <span class="roi-value">18-24 months</span>
+                        </div>
+                        <a href="climada-hurricane-analysis.html" class="preview-btn climada" target="_blank">View Technical Demo</a>
+                    </div>
+                </div>
+
+                <div class="methodology-card climate-os">
+                    <div class="methodology-header">
+                        <div class="framework-icon climate-os">CO</div>
+                        <h3>Climate-OS Framework</h3>
+                        <div class="methodology-subtitle">Statistical Trend Analysis & Historical Patterns</div>
+                    </div>
+                    <div class="methodology-content">
+                        <div class="business-value">
+                            <h4>Core Methodology</h4>
+                            <p><strong>Statistical trend analysis</strong> using 40+ years of NOAA hurricane data. Employs linear regression, return period calculations, and confidence interval analysis to identify patterns and project future activity.</p>
+                        </div>
+                        
+                        <div class="business-value">
+                            <h4>Banking Applications</h4>
+                            <ul>
+                                <li><strong>Portfolio Screening:</strong> Rapid assessment of geographic risk concentration</li>
+                                <li><strong>Economic Capital:</strong> Historical loss frequency for regulatory capital models</li>
+                                <li><strong>Strategic Planning:</strong> Long-term trend analysis for business planning</li>
+                                <li><strong>Due Diligence:</strong> Quick risk assessment for M&A transactions</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="business-value">
+                            <h4>Competitive Advantages</h4>
+                            <ul>
+                                <li>Immediate deployment with existing data teams</li>
+                                <li>Low computational requirements</li>
+                                <li>Transparent methodology for audit purposes</li>
+                                <li>Cost-effective for regional banks</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="business-value">
+                            <h4>Investment Requirements</h4>
+                            <p><strong>Low initial cost:</strong> $25K-75K implementation. Can be managed by existing analytics team. 2-4 week deployment timeline.</p>
+                        </div>
+                    </div>
+                    <div class="methodology-footer">
+                        <div class="roi-indicator">
+                            <span class="roi-label">ROI Timeline:</span>
+                            <span class="roi-value">3-6 months</span>
+                        </div>
+                        <a href="climate-os-statistical.html" class="preview-btn climate-os" target="_blank">View Technical Demo</a>
+                    </div>
+                </div>
+
+                <div class="methodology-card cbottle">
+                    <div class="methodology-header">
+                        <div class="framework-icon cbottle">CB</div>
+                        <h3>C-bottle Framework</h3>
+                        <div class="methodology-subtitle">Synthetic Scenario Generation & Rapid Prototyping</div>
+                    </div>
+                    <div class="methodology-content">
+                        <div class="business-value">
+                            <h4>Core Methodology</h4>
+                            <p><strong>Monte Carlo simulation</strong> with synthetic hurricane generation calibrated to historical patterns. Enables rapid scenario testing and what-if analysis using machine learning-enhanced storm modeling.</p>
+                        </div>
+                        
+                        <div class="business-value">
+                            <h4>Banking Applications</h4>
+                            <ul>
+                                <li><strong>Scenario Analysis:</strong> Custom climate scenarios for strategic planning</li>
+                                <li><strong>Product Development:</strong> Rapid testing of new insurance products</li>
+                                <li><strong>Client Presentations:</strong> Interactive risk visualization for wealth management</li>
+                                <li><strong>Innovation Labs:</strong> Experimental modeling for fintech partnerships</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="business-value">
+                            <h4>Competitive Advantages</h4>
+                            <ul>
+                                <li>Unlimited scenario generation capability</li>
+                                <li>Real-time analysis for client meetings</li>
+                                <li>Modern visualization for executive presentations</li>
+                                <li>Flexible parameter adjustment</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="business-value">
+                            <h4>Investment Requirements</h4>
+                            <p><strong>Medium initial cost:</strong> $75K-200K implementation. Requires data science team with ML experience. 3-6 month deployment timeline.</p>
+                        </div>
+                    </div>
+                    <div class="methodology-footer">
+                        <div class="roi-indicator">
+                            <span class="roi-label">ROI Timeline:</span>
+                            <span class="roi-value">6-12 months</span>
+                        </div>
+                        <a href="cbottle-risk-assessment.html" class="preview-btn cbottle" target="_blank">View Technical Demo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comprehensive Comparison Matrix -->
+        <div class="comparison-matrix">
+            <h2 class="section-title">Technical Framework Comparison</h2>
+            <div class="matrix-container">
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Criteria</th>
+                            <th class="framework-column climada-cell">CLIMADA Framework</th>
+                            <th class="framework-column climate-os-cell">Climate-OS Framework</th>
+                            <th class="framework-column cbottle-cell">C-bottle Framework</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Regulatory Compliance</strong></td>
+                            <td class="climada-cell">TCFD, Fed/ECB stress tests, Basel III</td>
+                            <td class="climate-os-cell">TCFD reporting, regional compliance</td>
+                            <td class="cbottle-cell">Internal models, innovation sandbox</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Implementation Cost</strong></td>
+                            <td class="climada-cell">$150K-500K (High)</td>
+                            <td class="climate-os-cell">$25K-75K (Low)</td>
+                            <td class="cbottle-cell">$75K-200K (Medium)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Business Use Cases</strong></td>
+                            <td class="climada-cell">
+                                <div class="rating">
+                                    <span class="rating-stars">★★★★★</span>
+                                    <span class="rating-text">Regulatory & Research</span>
+                                </div>
+                            </td>
+                            <td class="climate-os-cell">
+                                <div class="rating">
+                                    <span class="rating-stars">★★★★☆</span>
+                                    <span class="rating-text">Portfolio Analysis</span>
+                                </div>
+                            </td>
+                            <td class="cbottle-cell">
+                                <div class="rating">
+                                    <span class="rating-stars">★★★☆☆</span>
+                                    <span class="rating-text">Scenario Planning</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Time to Value</strong></td>
+                            <td class="climada-cell">
+                                <div class="rating">
+                                    <span class="rating-stars">★★☆☆☆</span>
+                                    <span class="rating-text">18-24 months</span>
+                                </div>
+                            </td>
+                            <td class="climate-os-cell">
+                                <div class="rating">
+                                    <span class="rating-stars">★★★★★</span>
+                                    <span class="rating-text">3-6 months</span>
+                                </div>
+                            </td>
+                            <td class="cbottle-cell">
+                                <div class="rating">
+                                    <span class="rating-stars">★★★★☆</span>
+                                    <span class="rating-text">6-12 months</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Team Requirements</strong></td>
+                            <td class="climada-cell">PhD-level climate scientists, risk modelers</td>
+                            <td class="climate-os-cell">Existing analytics team, statisticians</td>
+                            <td class="cbottle-cell">Data scientists, ML engineers</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Spatial Granularity</strong></td>
+                            <td class="climada-cell">Property-level (1km resolution)</td>
+                            <td class="climate-os-cell">Regional/Basin (100km+)</td>
+                            <td class="cbottle-cell">Configurable (1-50km)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Model Validation</strong></td>
+                            <td class="climada-cell">Peer-reviewed, regulatory accepted</td>
+                            <td class="climate-os-cell">Statistical backtesting, transparent</td>
+                            <td class="cbottle-cell">Calibrated to historical, experimental</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Client Presentation</strong></td>
+                            <td class="climada-cell">Technical reports, scientific charts</td>
+                            <td class="climate-os-cell">Executive dashboards, trend analysis</td>
+                            <td class="cbottle-cell">Interactive maps, scenario comparisons</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Integration Capability</strong></td>
+                            <td class="climada-cell">APIs, batch processing, research platforms</td>
+                            <td class="climate-os-cell">Excel, BI tools, existing analytics</td>
+                            <td class="cbottle-cell">Web apps, mobile, real-time dashboards</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Competitive Differentiation</strong></td>
+                            <td class="climada-cell">Regulatory credibility, scientific rigor</td>
+                            <td class="climate-os-cell">Speed to market, cost efficiency</td>
+                            <td class="cbottle-cell">Innovation capability, flexibility</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- User Experience Comparison -->
+        <div class="ux-comparison-section">
+            <h2 class="section-title">User Experience & Interface Comparison</h2>
+            <div class="ux-comparison-grid">
+                <div class="ux-aspect">
+                    <h3 class="ux-title">Visual Design</h3>
+                    <div class="ux-details">
+                        <div class="ux-item">
+                            <span class="ux-framework climada">CLIMADA</span>
+                            <span class="ux-description">Scientific dashboard with single map focus, blue accent theme</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework climate-os">Climate-OS</span>
+                            <span class="ux-description">Dashboard layout with statistical charts, purple accent theme</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework cbottle">C-bottle</span>
+                            <span class="ux-description">Dual-map comparison interface, modern blue accent theme</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ux-aspect">
+                    <h3 class="ux-title">Navigation Pattern</h3>
+                    <div class="ux-details">
+                        <div class="ux-item">
+                            <span class="ux-framework climada">CLIMADA</span>
+                            <span class="ux-description">Left controls for filtering, right stats panel, single view focus</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework climate-os">Climate-OS</span>
+                            <span class="ux-description">Right sidebar controls, dashboard grid layout, statistical focus</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework cbottle">C-bottle</span>
+                            <span class="ux-description">Overlay controls on each map, synchronized dual-view interaction</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ux-aspect">
+                    <h3 class="ux-title">Data Interaction</h3>
+                    <div class="ux-details">
+                        <div class="ux-item">
+                            <span class="ux-framework climada">CLIMADA</span>
+                            <span class="ux-description">Filter-based exploration, scientific precision, detailed metadata</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework climate-os">Climate-OS</span>
+                            <span class="ux-description">Statistical method switching, trend analysis, confidence metrics</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework cbottle">C-bottle</span>
+                            <span class="ux-description">Scenario comparison, side-by-side analysis, future projections</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ux-aspect">
+                    <h3 class="ux-title">Learning Curve</h3>
+                    <div class="ux-details">
+                        <div class="ux-item">
+                            <span class="ux-framework climada">CLIMADA</span>
+                            <span class="ux-description">High - requires meteorological knowledge and scientific understanding</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework climate-os">Climate-OS</span>
+                            <span class="ux-description">Low - intuitive statistical interface, familiar dashboard patterns</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework cbottle">C-bottle</span>
+                            <span class="ux-description">Medium - comparison concept is clear, but scenario understanding needed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ux-aspect">
+                    <h3 class="ux-title">Mobile Experience</h3>
+                    <div class="ux-details">
+                        <div class="ux-item">
+                            <span class="ux-framework climada">CLIMADA</span>
+                            <span class="ux-description">Responsive with stacked layout, maintains full functionality</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework climate-os">Climate-OS</span>
+                            <span class="ux-description">Grid adapts to mobile, sidebar becomes horizontal sections</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework cbottle">C-bottle</span>
+                            <span class="ux-description">Dual maps stack vertically, controls become relative positioned</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ux-aspect">
+                    <h3 class="ux-title">Export Capabilities</h3>
+                    <div class="ux-details">
+                        <div class="ux-item">
+                            <span class="ux-framework climada">CLIMADA</span>
+                            <span class="ux-description">Scientific datasets with uncertainty bounds, research reports</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework climate-os">Climate-OS</span>
+                            <span class="ux-description">Statistical analysis reports, trend datasets with confidence intervals</span>
+                        </div>
+                        <div class="ux-item">
+                            <span class="ux-framework cbottle">C-bottle</span>
+                            <span class="ux-description">Scenario comparison data, synthetic datasets for modeling</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Framework Analysis -->
+        <div class="pros-cons-section">
+            <div class="framework-analysis climada">
+                <h3 class="framework-name climada">CLIMADA Framework</h3>
+                
+                <div class="pros">
+                    <h4 class="pros-title">Advantages</h4>
+                    <ul>
+                        <li>Peer-reviewed scientific methodology</li>
+                        <li>Comprehensive hazard modeling</li>
+                        <li>Uncertainty quantification</li>
+                        <li>Global climate data integration</li>
+                        <li>Industry standard for research</li>
+                        <li>Detailed physical process modeling</li>
+                        <li>Extensive validation against observations</li>
+                    </ul>
+                </div>
+                
+                <div class="cons">
+                    <h4 class="cons-title">Limitations</h4>
+                    <ul>
+                        <li>Complex installation (conda required)</li>
+                        <li>Slow execution for large portfolios</li>
+                        <li>Requires meteorological expertise</li>
+                        <li>Limited real-time capabilities</li>
+                        <li>High computational requirements</li>
+                        <li>Steep learning curve</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="framework-analysis climate-os">
+                <h3 class="framework-name climate-os">Climate-OS Framework</h3>
+                
+                <div class="pros">
+                    <h4 class="pros-title">Advantages</h4>
+                    <ul>
+                        <li>Fast execution (&lt;1 minute)</li>
+                        <li>Real historical data integration</li>
+                        <li>Statistical rigor and validation</li>
+                        <li>Minimal system dependencies</li>
+                        <li>Return period analysis</li>
+                        <li>Trend identification capabilities</li>
+                        <li>Insurance industry metrics</li>
+                    </ul>
+                </div>
+                
+                <div class="cons">
+                    <h4 class="cons-title">Limitations</h4>
+                    <ul>
+                        <li>Assumes historical patterns continue</li>
+                        <li>Limited physical modeling</li>
+                        <li>Cannot model unprecedented events</li>
+                        <li>Basin-wide analysis only</li>
+                        <li>Linear trend projections</li>
+                        <li>No spatial risk details</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="framework-analysis cbottle">
+                <h3 class="framework-name cbottle">C-bottle Framework</h3>
+                
+                <div class="pros">
+                    <h4 class="pros-title">Advantages</h4>
+                    <ul>
+                        <li>Rapid prototyping and iteration</li>
+                        <li>Modern visualization interface</li>
+                        <li>Property-level risk assessment</li>
+                        <li>GPU acceleration support</li>
+                        <li>Easy experimentation</li>
+                        <li>Dual-map comparison views</li>
+                        <li>Glass morphism UI design</li>
+                    </ul>
+                </div>
+                
+                <div class="cons">
+                    <h4 class="cons-title">Limitations</h4>
+                    <ul>
+                        <li>Synthetic data only</li>
+                        <li>Not scientifically validated</li>
+                        <li>Experimental R&D framework</li>
+                        <li>Limited real-world accuracy</li>
+                        <li>Requires manual calibration</li>
+                        <li>No uncertainty quantification</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Performance Metrics -->
+        <div class="performance-section">
+            <h2 class="section-title">Performance Benchmarks</h2>
+            <div class="performance-grid">
+                <div class="performance-card">
+                    <div class="performance-metric">Execution Time</div>
+                    <div class="performance-values">
+                        <span>CLIMADA:</span>
+                        <span class="framework-perf climada">5-10 min</span>
+                    </div>
+                    <div class="performance-values">
+                        <span>Climate-OS:</span>
+                        <span class="framework-perf climate-os">&lt;1 min</span>
+                    </div>
+                    <div class="performance-values">
+                        <span>C-bottle:</span>
+                        <span class="framework-perf cbottle">1-2 min</span>
+                    </div>
+                </div>
+                
+                <div class="performance-card">
+                    <div class="performance-metric">Memory Usage</div>
+                    <div class="performance-values">
+                        <span>CLIMADA:</span>
+                        <span class="framework-perf climada">2-8 GB</span>
+                    </div>
+                    <div class="performance-values">
+                        <span>Climate-OS:</span>
+                        <span class="framework-perf climate-os">&lt;100 MB</span>
+                    </div>
+                    <div class="performance-values">
+                        <span>C-bottle:</span>
+                        <span class="framework-perf cbottle">500 MB</span>
+                    </div>
+                </div>
+                
+                <div class="performance-card">
+                    <div class="performance-metric">Data Period</div>
+                    <div class="performance-values">
+                        <span>CLIMADA:</span>
+                        <span class="framework-perf climada">Global</span>
+                    </div>
+                    <div class="performance-values">
+                        <span>Climate-OS:</span>
+                        <span class="framework-perf climate-os">1980-2024</span>
+                    </div>
+                    <div class="performance-values">
+                        <span>C-bottle:</span>
+                        <span class="framework-perf cbottle">Synthetic</span>
+                    </div>
+                </div>
+                
+                <div class="performance-card">
+                    <div class="performance-metric">Dependencies</div>
+                    <div class="performance-values">
+                        <span>CLIMADA:</span>
+                        <span class="framework-perf climada">50+ packages</span>
+                    </div>
+                    <div class="performance-values">
+                        <span>Climate-OS:</span>
+                        <span class="framework-perf climate-os">5 packages</span>
+                    </div>
+                    <div class="performance-values">
+                        <span>C-bottle:</span>
+                        <span class="framework-perf cbottle">15 packages</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Banking Use Case Decision Matrix -->
+        <div class="decision-matrix">
+            <h2 class="decision-title">Banking & Financial Services Framework Selection</h2>
+            <div class="use-cases">
+                <div class="use-case">
+                    <h3 class="use-case-title">Regulatory Stress Testing</h3>
+                    <p class="use-case-description">
+                        <strong>Fed, ECB, BoE Requirements:</strong> Quantitative climate scenarios for regulatory capital. 
+                        Requires peer-reviewed methodology with uncertainty quantification. 
+                        <em>Annual testing cycles, $1B+ portfolio impact.</em>
+                    </p>
+                    <div class="recommended-framework climada">CLIMADA</div>
+                    <div class="business-impact">Regulatory Capital Impact: $50M-500M</div>
+                </div>
+                
+                <div class="use-case">
+                    <h3 class="use-case-title">Mortgage Portfolio Risk</h3>
+                    <p class="use-case-description">
+                        <strong>Property-Level Assessment:</strong> Hurricane damage probability for individual properties.
+                        Loan-to-value adjustment, insurance requirements, geographic concentration limits.
+                        <em>Real estate lending, mortgage securitization.</em>
+                    </p>
+                    <div class="recommended-framework climada">CLIMADA</div>
+                    <div class="business-impact">Portfolio Protection: $100M-2B</div>
+                </div>
+                
+                <div class="use-case">
+                    <h3 class="use-case-title">Commercial Lending Due Diligence</h3>
+                    <p class="use-case-description">
+                        <strong>Quick Risk Screening:</strong> Rapid assessment of borrower locations and supply chains.
+                        M&A transactions, credit decisions, portfolio management.
+                        <em>Turnaround time: 24-48 hours for deal decisions.</em>
+                    </p>
+                    <div class="recommended-framework climate-os">Climate-OS</div>
+                    <div class="business-impact">Deal Flow Efficiency: 30-50% faster</div>
+                </div>
+                
+                <div class="use-case">
+                    <h3 class="use-case-title">Wealth Management Client Advisory</h3>
+                    <p class="use-case-description">
+                        <strong>Interactive Client Presentations:</strong> Real-time scenario analysis for high-net-worth clients.
+                        Real estate investments, climate-conscious portfolios, family office strategy.
+                        <em>Client meeting tools, investment recommendations.</em>
+                    </p>
+                    <div class="recommended-framework cbottle">C-bottle</div>
+                    <div class="business-impact">AUM Growth: $500M-5B potential</div>
+                </div>
+                
+                <div class="use-case">
+                    <h3 class="use-case-title">Insurance Product Development</h3>
+                    <p class="use-case-description">
+                        <strong>Parametric Insurance Design:</strong> Rapid testing of hurricane triggers and payouts.
+                        New product launches, partnership structuring, risk transfer mechanisms.
+                        <em>Innovation labs, fintech collaboration.</em>
+                    </p>
+                    <div class="recommended-framework cbottle">C-bottle</div>
+                    <div class="business-impact">Revenue Diversification: $10M-100M annually</div>
+                </div>
+                
+                <div class="use-case">
+                    <h3 class="use-case-title">TCFD Climate Disclosures</h3>
+                    <p class="use-case-description">
+                        <strong>Annual Reporting Requirements:</strong> Standardized climate risk metrics and scenarios.
+                        Board reporting, investor communications, sustainability ratings.
+                        <em>Public company compliance, ESG scoring impact.</em>
+                    </p>
+                    <div class="recommended-framework climate-os">Climate-OS</div>
+                    <div class="business-impact">Compliance Cost Savings: $200K-500K annually</div>
+                </div>
+            </div>
+            
+            <!-- Implementation Timeline -->
+            <div class="implementation-timeline">
+                <h3>Typical Implementation Timeline by Institution Size</h3>
+                <div class="timeline-grid">
+                    <div class="timeline-card">
+                        <h4>Regional Banks ($1B-10B Assets)</h4>
+                        <div class="timeline-item">
+                            <span class="timeline-phase">Phase 1 (Months 1-3):</span>
+                            <span class="timeline-desc">Climate-OS for basic TCFD compliance</span>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-phase">Phase 2 (Months 6-12):</span>
+                            <span class="timeline-desc">Expand to loan portfolio screening</span>
+                        </div>
+                        <div class="total-investment">Total Investment: $50K-150K</div>
+                    </div>
+                    
+                    <div class="timeline-card">
+                        <h4>Large Banks ($10B-100B Assets)</h4>
+                        <div class="timeline-item">
+                            <span class="timeline-phase">Phase 1 (Months 1-6):</span>
+                            <span class="timeline-desc">CLIMADA for regulatory stress testing</span>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-phase">Phase 2 (Months 6-18):</span>
+                            <span class="timeline-desc">Climate-OS for operational efficiency</span>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-phase">Phase 3 (Months 12-24):</span>
+                            <span class="timeline-desc">C-bottle for innovation initiatives</span>
+                        </div>
+                        <div class="total-investment">Total Investment: $300K-800K</div>
+                    </div>
+                    
+                    <div class="timeline-card">
+                        <h4>Global Banks ($100B+ Assets)</h4>
+                        <div class="timeline-item">
+                            <span class="timeline-phase">Phase 1 (Months 1-12):</span>
+                            <span class="timeline-desc">Full CLIMADA deployment across regions</span>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-phase">Phase 2 (Months 6-18):</span>
+                            <span class="timeline-desc">Climate-OS for business unit efficiency</span>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="timeline-phase">Phase 3 (Months 12-36):</span>
+                            <span class="timeline-desc">C-bottle for client-facing applications</span>
+                        </div>
+                        <div class="total-investment">Total Investment: $1M-3M</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="navigation">
+            <a href="climada-hurricane-analysis.html" class="btn" target="_blank">Try CLIMADA</a>
+            <a href="climate-os-statistical.html" class="btn" target="_blank">Try Climate-OS</a>
+            <a href="cbottle-risk-assessment.html" class="btn" target="_blank">Try C-bottle</a>
+            <a href="index.html" class="btn btn-secondary">Back to Overview</a>
+        </div>
+    </div>
+
+    <script>
+        // Debug script to ensure CLIMADA buttons work
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Framework comparison page loaded');
+            
+            // Find all CLIMADA buttons
+            const climadaButtons = document.querySelectorAll('a[href="climada-hurricane-analysis.html"]');
+            console.log('Found', climadaButtons.length, 'CLIMADA buttons');
+            
+            // Add click event listeners to debug
+            climadaButtons.forEach((button, index) => {
+                console.log(`CLIMADA button ${index + 1}:`, button);
+                
+                button.addEventListener('click', function(e) {
+                    console.log(`CLIMADA button ${index + 1} clicked!`);
+                    console.log('Target URL:', this.href);
+                    console.log('Target:', this.target);
+                    
+                    // Force navigation if needed
+                    if (this.target === '_blank') {
+                        window.open(this.href, '_blank');
+                    } else {
+                        window.location.href = this.href;
+                    }
+                });
+                
+                // Ensure button is visible and clickable
+                button.style.pointerEvents = 'auto';
+                button.style.zIndex = '1000';
+                button.style.position = 'relative';
+            });
+            
+            // Test if the target file exists by trying to fetch it
+            fetch('climada-hurricane-analysis.html', { method: 'HEAD' })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('CLIMADA file exists and is accessible');
+                    } else {
+                        console.error('CLIMADA file not found:', response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking CLIMADA file:', error);
+                });
+        });
+    </script>
+</body>
+</html><!-- Cache buster: 1755472785 -->
