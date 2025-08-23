@@ -211,20 +211,16 @@ export class RCPScenarioAnalyzer {
     // Geographic risk breakdown
     const geographicBreakdown = this.calculateGeographicBreakdown(loans, climateAdjustedMetrics);
     
-    // Sensitivity analysis for this scenario
-    const sensitivityMetrics = this.calculateScenarioSensitivity(
-      loans,
-      climateData,
-      rcpScenario,
-      timeframe.analysis_year
-    );
+    // Sensitivity analysis for this scenario (simplified)
+    const sensitivityMetrics = {
+      temperature_sensitivity: 0.1, // 10% loss increase per degree
+      precipitation_sensitivity: 0.05, // 5% loss increase per 10% precipitation change
+      sea_level_sensitivity: 0.2, // 20% loss increase per meter
+      transition_risk_sensitivity: 0.08 // 8% loss increase per transition risk unit
+    };
     
     // Business impact assessment
-    const businessImpact = this.calculateBusinessImpact(
-      portfolioMetrics,
-      businessObjective,
-      timeframe
-    );
+    const businessImpact = this.calculateBusinessImpact(portfolioMetrics);
     
     return {
       scenario: rcpScenario,
@@ -558,29 +554,13 @@ export class RCPScenarioAnalyzer {
       .map((item, index) => ({ ...item, risk_ranking: index + 1 }));
   }
   
-  private static calculateScenarioSensitivity(
-    _loans: LoanData[],
-    _climateData: ClimateXData[],
-    _rcpScenario: string,
-    _analysisYear: number
-  ) {
-    // Simplified sensitivity calculation
-    return {
-      temperature_sensitivity: 0.1, // 10% loss increase per degree
-      precipitation_sensitivity: 0.05, // 5% loss increase per 10% precipitation change
-      sea_level_sensitivity: 0.2, // 20% loss increase per meter
-      transition_risk_sensitivity: 0.08 // 8% loss increase per transition risk unit
-    };
-  }
   
   private static calculateBusinessImpact(
     portfolioMetrics: {
       climate_adjusted_expected_loss: number;
       baseline_expected_loss: number;
       total_exposure: number;
-    },
-    _businessObjective: BusinessObjective,
-    _timeframe: TimeframedAnalysis
+    }
   ) {
     const lossIncrease = portfolioMetrics.climate_adjusted_expected_loss - portfolioMetrics.baseline_expected_loss;
     const lossRate = lossIncrease / portfolioMetrics.total_exposure;
