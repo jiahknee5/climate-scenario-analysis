@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit",
+    "check-all": "npm run type-check && npm run lint && npm run build",
+    "check-build": "./check-build.sh"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
