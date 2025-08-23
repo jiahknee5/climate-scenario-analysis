@@ -67,9 +67,7 @@ export default function GeographicalOptimizationDashboard({
     if (!geographicMetrics.length) return []
     
     return GeographicalOptimizer.generateOptimizationRecommendations(
-      geographicMetrics,
-      0.15, // 15% risk budget
-      0.08  // 8% return requirement
+      geographicMetrics
     )
   }, [geographicMetrics])
 

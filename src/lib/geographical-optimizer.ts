@@ -85,19 +85,13 @@ export class GeographicalOptimizer {
    * @param returnRequirement Minimum required portfolio return
    */
   static generateOptimizationRecommendations(
-    currentMetrics: GeographicRiskMetrics[],
-    riskBudget: number,
-    returnRequirement: number
+    currentMetrics: GeographicRiskMetrics[]
   ): OptimizationRecommendation[] {
     
     const recommendations: OptimizationRecommendation[] = [];
     
     // Calculate optimal allocations using mean-variance optimization
-    const optimalAllocations = this.calculateOptimalAllocations(
-      currentMetrics,
-      riskBudget,
-      returnRequirement
-    );
+    const optimalAllocations = this.calculateOptimalAllocations(currentMetrics);
     
     currentMetrics.forEach((metric, index) => {
       const optimalAllocation = optimalAllocations[index];
@@ -217,9 +211,7 @@ export class GeographicalOptimizer {
    * Calculate optimal allocations using modern portfolio theory
    */
   private static calculateOptimalAllocations(
-    metrics: GeographicRiskMetrics[],
-    riskBudget: number,
-    returnRequirement: number
+    metrics: GeographicRiskMetrics[]
   ): number[] {
     
     // Build covariance matrix (simplified approach)

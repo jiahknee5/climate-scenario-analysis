@@ -161,16 +161,12 @@ export class RCPScenarioAnalyzer {
     });
     
     // Generate CCAR-specific stress tests
-    const ccar3yr = this.generateCCARStressTest(scenarioResults, '3_year', businessObjective);
-    const ccar5yr = this.generateCCARStressTest(scenarioResults, '5_year', businessObjective);
+    const ccar3yr = this.generateCCARStressTest(scenarioResults, '3_year');
+    const ccar5yr = this.generateCCARStressTest(scenarioResults, '5_year');
     ccarStressTests.push(ccar3yr, ccar5yr);
     
     // Perform comprehensive sensitivity analysis
-    const sensitivityAnalysis = this.performComprehensiveSensitivityAnalysis(
-      loans,
-      scenarioResults,
-      businessObjective
-    );
+    const sensitivityAnalysis = this.performComprehensiveSensitivityAnalysis();
     
     // Generate business recommendations
     const businessRecommendations = this.generateBusinessRecommendations(
@@ -562,7 +558,12 @@ export class RCPScenarioAnalyzer {
       .map((item, index) => ({ ...item, risk_ranking: index + 1 }));
   }
   
-  private static calculateScenarioSensitivity() {
+  private static calculateScenarioSensitivity(
+    loans: LoanData[],
+    climateData: ClimateXData[],
+    rcpScenario: string,
+    analysisYear: number
+  ) {
     // Simplified sensitivity calculation
     return {
       temperature_sensitivity: 0.1, // 10% loss increase per degree
@@ -573,7 +574,13 @@ export class RCPScenarioAnalyzer {
   }
   
   private static calculateBusinessImpact(
-    portfolioMetrics: any
+    portfolioMetrics: {
+      climate_adjusted_expected_loss: number;
+      baseline_expected_loss: number;
+      total_exposure: number;
+    },
+    businessObjective: BusinessObjective,
+    timeframe: TimeframedAnalysis
   ) {
     const lossIncrease = portfolioMetrics.climate_adjusted_expected_loss - portfolioMetrics.baseline_expected_loss;
     const lossRate = lossIncrease / portfolioMetrics.total_exposure;
@@ -606,7 +613,6 @@ export class RCPScenarioAnalyzer {
     
     // Assume starting capital ratios
     const baseTier1Ratio = 0.12; // 12%
-    const baseCET1Ratio = 0.11; // 11%
     const baseLeverageRatio = 0.08; // 8%
     
     const stressedTier1 = baseTier1Ratio - (capitalImpact / 100000000); // Simplified calculation
@@ -630,11 +636,7 @@ export class RCPScenarioAnalyzer {
     };
   }
   
-  private static performComprehensiveSensitivityAnalysis(
-    loans: LoanData[],
-    scenarioResults: RCPScenarioResult[],
-    businessObjective: BusinessObjective
-  ): SensitivityAnalysis[] {
+  private static performComprehensiveSensitivityAnalysis(): SensitivityAnalysis[] {
     // Implementation would include detailed sensitivity analysis
     // This is a simplified version for demonstration
     return [
