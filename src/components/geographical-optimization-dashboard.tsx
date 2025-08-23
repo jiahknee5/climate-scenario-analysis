@@ -8,11 +8,13 @@ import { GeographicalOptimizer } from '@/lib/geographical-optimizer'
 interface GeographicalOptimizationDashboardProps {
   loans: LoanData[]
   scenarios: string[]
+  selectedYear: number
 }
 
 export default function GeographicalOptimizationDashboard({ 
   loans, 
-  scenarios
+  scenarios,
+  selectedYear: _selectedYear
 }: GeographicalOptimizationDashboardProps) {
 
   const geographicMetrics = useMemo(() => {
