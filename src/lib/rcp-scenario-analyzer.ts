@@ -559,10 +559,10 @@ export class RCPScenarioAnalyzer {
   }
   
   private static calculateScenarioSensitivity(
-    loans: LoanData[],
-    climateData: ClimateXData[],
-    rcpScenario: string,
-    analysisYear: number
+    _loans: LoanData[],
+    _climateData: ClimateXData[],
+    _rcpScenario: string,
+    _analysisYear: number
   ) {
     // Simplified sensitivity calculation
     return {
@@ -579,8 +579,8 @@ export class RCPScenarioAnalyzer {
       baseline_expected_loss: number;
       total_exposure: number;
     },
-    businessObjective: BusinessObjective,
-    timeframe: TimeframedAnalysis
+    _businessObjective: BusinessObjective,
+    _timeframe: TimeframedAnalysis
   ) {
     const lossIncrease = portfolioMetrics.climate_adjusted_expected_loss - portfolioMetrics.baseline_expected_loss;
     const lossRate = lossIncrease / portfolioMetrics.total_exposure;
